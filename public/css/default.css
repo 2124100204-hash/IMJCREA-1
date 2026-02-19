@@ -1,18 +1,33 @@
+   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        :root {
+            --cream:      #d9e7f0;
+            --cream-dark: #e0e9f5;
+            --paper:      #fffcf7;
+            --warm-white: #ffffff;
+            --ink:        #1a1208;
+            --ink-light:  #5c4a2a;
+            --ink-muted:  #9c8a6e;
+            --amber:      #e8820c;
+            --amber-soft: #f5a843;
+            --teal:       #0d7a6e;
+            --teal-light: #12a090;
+            --rose:       #c94f6d;
+            --border:     rgba(90,60,20,0.12);
+            --shadow:     rgba(90,60,20,0.10);
+        }
 
-html, body {
-    height: 100%;
-    font-family: 'Instrument Sans', sans-serif;
-}
+        html { scroll-behavior: smooth; }
 
-body {
-    background-color: #F5F5F5;
-}
+        body {
+            background-color: var(--cream);
+            color: var(--ink);
+            font-family: 'DM Sans', sans-serif;
+            overflow-x: hidden;
+          
+        }
+
+       
 
 .cancel-btn {
     display: inline-block;
@@ -56,3 +71,111 @@ body {
 .option-btn:hover {
     transform: translateY(-2px);
 }
+ .footer {
+            margin-top: auto;
+            padding: 48px 8vw;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .footer-logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: var(--text-main);
+        }
+
+        .footer-copy {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-icons a {
+            width: 36px; height: 36px;
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            transition: border-color 0.3s, color 0.3s;
+            cursor: none;
+        }
+
+        .social-icons a:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
+
+        /* ============================================================
+           ANIMATIONS
+        ============================================================ */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        @keyframes pulse-line {
+            0%, 100% { opacity: 0.4; }
+            50%       { opacity: 1; }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.2; }
+        }
+
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to   { transform: translateX(-50%); }
+        }
+
+        /* ============================================================
+           RESPONSIVE
+        ============================================================ */
+        @media (max-width: 600px) {
+            .hero-title { letter-spacing: -2px; }
+            .footer { flex-direction: column; align-items: flex-start; }
+            .stats-band { grid-template-columns: 1fr 1fr; }
+        }
+         /* ============================================================
+           CUSTOM CURSOR
+        ============================================================ */
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background: var(--neon-cyan);
+            border-radius: 50%;
+            position: fixed;
+            top: 0; left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: screen;
+        }
+
+        .cursor-ring {
+            width: 36px; height: 36px;
+            border: 1px solid var(--neon-cyan);
+            border-radius: 50%;
+            position: fixed;
+            top: 0; left: 0;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.15s ease, width 0.3s, height 0.3s, border-color 0.3s;
+            mix-blend-mode: screen;
+        }
