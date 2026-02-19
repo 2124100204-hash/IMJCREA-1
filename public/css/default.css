@@ -1,7 +1,7 @@
    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --cream:      #d9e7f0;
+            --cream:      #c2d5ec;
             --cream-dark: #e0e9f5;
             --paper:      #fffcf7;
             --warm-white: #ffffff;
@@ -12,6 +12,7 @@
             --amber-soft: #f5a843;
             --teal:       #0d7a6e;
             --teal-light: #12a090;
+            --blue-light:     #E6F0F5;
             --rose:       #c94f6d;
             --border:     rgba(90,60,20,0.12);
             --shadow:     rgba(90,60,20,0.10);

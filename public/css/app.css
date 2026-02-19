@@ -20,7 +20,7 @@
             position: fixed; top: 24px; right: 28px;
             width: 48px; height: 48px;
             display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px;
-            cursor: none; z-index: 9000;
+         z-index: 9000;
             border: 1.5px solid var(--border); border-radius: 6px;
             background: rgba(255,252,247,0.85); backdrop-filter: blur(12px);
             box-shadow: 0 2px 12px var(--shadow);
@@ -58,7 +58,7 @@
             font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700;
             color: var(--ink-light); text-decoration: none; display: block;
             padding: 6px 0; border-bottom: 1px solid transparent;
-            transition: color 0.3s, transform 0.3s, border-color 0.3s; cursor: none;
+            transition: color 0.3s, transform 0.3s, border-color 0.3s;
         }
         .menu-list a:hover { color: var(--amber); transform: translateX(6px); border-bottom-color: var(--amber); }
         .menu-footer { font-size: 11px; color: var(--ink-muted); letter-spacing: 1px; }
@@ -136,7 +136,8 @@
             font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
             text-decoration: none; border-radius: 100px;
             box-shadow: 0 4px 20px rgba(232,130,12,0.35);
-            transition: transform 0.2s, box-shadow 0.3s; cursor: none;
+            transition: transform 0.2s, box-shadow 0.3s; 
+        
         }
         .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(232,130,12,0.45); }
         .btn-ghost {
@@ -144,7 +145,7 @@
             padding: 13px 28px; border: 1.5px solid var(--border);
             color: var(--ink-light); font-family: 'DM Sans', sans-serif;
             font-size: 14px; font-weight: 400; text-decoration: none; border-radius: 100px;
-            transition: border-color 0.3s, color 0.3s, background 0.3s; cursor: none;
+            transition: border-color 0.3s, color 0.3s, background 0.3s; 
         }
         .btn-ghost:hover { border-color: var(--teal); color: var(--teal); background: rgba(13,122,110,0.06); }
 
@@ -188,9 +189,9 @@
             gap: 20px;
         }
         .card {
-            background: var(--cream); border: 1.5px solid var(--border);
+            background: var(--blue-light); border: 1.5px solid var(--border);
             border-radius: 16px; padding: 40px 32px 72px;
-            position: relative; overflow: hidden; cursor: none;
+            position: relative; overflow: hidden; 
             box-shadow: 0 2px 12px var(--shadow);
             transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), box-shadow 0.35s, border-color 0.3s;
         }
@@ -214,7 +215,7 @@
             position: absolute; bottom: 28px; left: 32px;
             font-size: 12px; letter-spacing: 1px; color: var(--card-accent, var(--amber));
             background: none; border: none; font-family: 'DM Sans', sans-serif; font-weight: 500;
-            cursor: none; padding: 0; display: flex; align-items: center; gap: 6px;
+             padding: 0; display: flex; align-items: center; gap: 6px;
             transition: gap 0.2s;
         }
         .card:hover .card-btn { gap: 10px; }
@@ -242,7 +243,7 @@
             position: absolute; top: 20px; right: 20px;
             width: 32px; height: 32px; border: 1.5px solid var(--border); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            cursor: none; color: var(--ink-muted); font-size: 13px;
+            color: var(--ink-muted); font-size: 13px;
             background: none; transition: border-color 0.3s, color 0.3s;
         }
         .modal-close:hover { border-color: var(--amber); color: var(--amber); }
@@ -320,7 +321,7 @@
             width: 28px; height: 28px; border: 1.5px solid var(--border); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             font-size: 10px; color: var(--ink-muted); text-decoration: none;
-            transition: border-color 0.3s, color 0.3s; cursor: none;
+            transition: border-color 0.3s, color 0.3s; 
         }
         .team-socials a:hover { border-color: var(--member-color, var(--amber)); color: var(--member-color, var(--amber)); }
 
@@ -336,7 +337,7 @@
             width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.15); border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             color: rgba(255,255,255,0.45); text-decoration: none; font-size: 13px;
-            transition: border-color 0.3s, color 0.3s; cursor: none;
+            transition: border-color 0.3s, color 0.3s; 
         }
         .social-icons a:hover { border-color: var(--amber); color: var(--amber); }
 

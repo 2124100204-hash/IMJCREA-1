@@ -10,6 +10,40 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// =======================
+// ruta tienda de libro
+// =======================
+Route::get('/storebook', function () {
+    return view('storebook');
+})->name('storebook');
+
+// =======================
+// ruta inicio
+// =======================
+Route::get('/welcome', function () {
+    return view('welcome');
+})->name('welcome');
+// =======================
+// ruta contacto
+// =======================
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
+// =======================
+// ruta realidad virtual
+// =======================
+Route::get('/virtual-reality', function () {
+    return view('virtual-reality');
+})->name('virtual-reality');
+
+// =======================
+// ruta realidad aumentada
+// =======================
+Route::get('/augmented-reality', function () {
+    return view('augmented-reality');
+})->name('augmented-reality');
+
 
 // =======================
 // LOGIN

@@ -22,45 +22,23 @@
     </head>
   <body>
 
-    <!-- CURSOR -->
-    <div class="cursor-dot" id="cursorDot"></div>
-    <div class="cursor-ring" id="cursorRing"></div>
 
     <!-- BG CANVAS -->
     <canvas id="bg-canvas"></canvas>
     <div class="noise-overlay"></div>
 
-    <!-- MENU BACKDROP -->
-    <div class="menu-backdrop" id="menuBackdrop"></div>
+
 
     <div class="wrapper">
 
-        <!-- HAMBURGER -->
-        <div class="menu-toggle" id="menuToggle">
-            <span></span><span></span><span></span>
-        </div>
-
-        <!-- SIDEBAR MENU -->
-        <nav class="sidebar-menu" id="sidebarMenu">
-            <div>
-                <p class="menu-label">// Navegación</p>
-                <ul class="menu-list">
-                    <li><a href="#inicio">Inicio</a></li>
-                    <li><a href="#explorar">Explorar</a></li>
-                    <li><a href="#servicios">Servicios</a></li>
-                    <li><a href="#quienes">Quiénes Somos</a></li>
-                    <li><a href="{{ route('login') }}">Iniciar Sesión</a></li>
-                    <li><a href="#contacto">Contacto</a></li>
-                </ul>
-            </div>
-            <p class="menu-footer">© 2026 IMJCREA</p>
-        </nav>
+     
+     
 
         <!-- HERO -->
         <section class="hero" id="inicio">
             <div class="hero-badge">Sistema activo · AR/VR</div>
 
-            <span class="hero-eyebrow">// Fomento a la creatividad</span>
+            <span class="hero-eyebrow">// Inmersión real en un mundo inrreal</span>
 
             <h1 class="hero-title">
                 <span class="line-1">INMERSIA</span>
@@ -111,14 +89,16 @@
                 <span class="section-count">04 experiencias</span>
             </div>
 
-            <div class="cards-grid">
-                <div class="card">
-                    <span class="card-number">01</span>
-                    <div class="card-icon"><i class="fa fa-store"></i></div>
-                    <h3 class="card-title">Tienda Biblioteca</h3>
-                    <p class="card-desc">Accede a nuestra colección curada de experiencias inmersivas y contenido creativo.</p>
-                    <div class="card-arrow"><i class="fa fa-arrow-right"></i></div>
-                </div>
+         <div class="card" data-modal="1">
+    <div class="card-top-bar"></div>
+    <span class="card-number">01</span>
+    <div class="card-icon"><i class="fa fa-store"></i></div>
+    <h3 class="card-title">Tienda Biblioteca</h3>
+    <p class="card-desc">Accede a nuestra colección curada de experiencias inmersivas y contenido creativo para todas las edades.</p>
+    <a href="{{ route('storebook') }}" class="card-btn" onclick="event.stopPropagation()">
+        Ir a la tienda <i class="fa fa-arrow-right" style="font-size:10px;"></i>
+    </a>
+</div>
 
                 <div class="card">
                     <span class="card-number">02</span>
