@@ -182,7 +182,6 @@
         .section-label { font-size: 10px; letter-spacing: 5px; color: var(--ink-muted); text-transform: uppercase; }
         .section-count { font-size: 11px; color: var(--ink-muted); }
 
-        /* ── CARDS ── */
         .cards-section { padding: 80px 8vw 100px; background: var(--paper); }
         .cards-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
