@@ -18,7 +18,7 @@
 <canvas id="bg-canvas"></canvas>
 <div class="paper-overlay"></div>
 
-<!-- NAVBAR -->
+
 <nav class="navbar">
     <a href="{{ route('welcome') }}" class="navbar-logo">INMER<span>SIA</span></a>
 
