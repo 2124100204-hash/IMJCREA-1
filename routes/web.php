@@ -5,6 +5,9 @@ use Illuminate\Http\Request;
 use App\Models\Usuario;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\LibroController;
+use App\Models\Libro;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,8 +17,14 @@ Route::get('/', function () {
 // ruta tienda de libro
 // =======================
 Route::get('/storebook', function () {
-    return view('storebook');
+    $libros = Libro::all();
+    return view('storebook', compact('libros'));
 })->name('storebook');
+
+Route::get('/libros/{tipo}', function ($tipo) {
+    $libros = Libro::where('tipo', $tipo)->get();
+    return view('storebook', compact('libros'));
+})->name('libros.tipo');
 
 // =======================
 // ruta inicio
@@ -29,20 +38,6 @@ Route::get('/welcome', function () {
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
-
-// =======================
-// ruta realidad virtual
-// =======================
-Route::get('/virtual-reality', function () {
-    return view('virtual-reality');
-})->name('virtual-reality');
-
-// =======================
-// ruta realidad aumentada
-// =======================
-Route::get('/augmented-reality', function () {
-    return view('augmented-reality');
-})->name('augmented-reality');
 
 
 // =======================

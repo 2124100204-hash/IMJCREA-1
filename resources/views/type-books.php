@@ -14,5 +14,20 @@
     <link rel="stylesheet" href="{{ asset('css/virtual-reality.css') }}">
 </head>
 <body>
+<nav class="navbar">
+    <a href="{{ route('welcome') }}" class="navbar-logo">INMER<span>SIA</span></a>
 
+    <div class="navbar-links" id="navLinks">
+        <a href="{{ route('welcome') }}"><i class="fa fa-home" style="font-size:11px;"></i> Inicio</a>
+        <a href="#" class="active"><i class="fa fa-store" style="font-size:11px;"></i> Tienda</a>
+        <a href="{{ route('virtual-reality') }}">Realidad Virtual</a>
+        <a href="{{ route('augmented-reality') }}">Realidad Aumentada</a>
+        <a href="{{ route('contact') }}">Contacto</a>
+        <a href="{{ route('login') }}" class="btn-nav-primary">Iniciar Sesión</a>
+    </div>
+
+    <button class="navbar-toggle" id="navToggle" aria-label="Menú">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
 </body>

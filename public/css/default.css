@@ -115,6 +115,42 @@
             transition: border-color 0.3s, color 0.3s;
             cursor: none;
         }
+ .navbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            z-index: 9000;
+            background: rgba(255,252,247,0.92);
+            backdrop-filter: blur(16px);
+            border-bottom: 1.5px solid var(--border);
+            padding: 0 8vw;
+            height: 68px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 20px var(--shadow);
+        }
+
+        .navbar-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px; font-weight: 900; letter-spacing: 2px;
+            color: var(--ink); text-decoration: none;
+        }
+        .navbar-logo span { color: var(--amber); }
+
+        .navbar-links { display: flex; align-items: center; gap: 8px; }
+
+        .navbar-links a {
+            font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 400;
+            color: var(--ink-light); text-decoration: none;
+            padding: 8px 16px; border-radius: 100px;
+            border: 1px solid transparent;
+            transition: color 0.3s, border-color 0.3s, background 0.3s;
+        }
+        .navbar-links a:hover { color: var(--amber); border-color: rgba(232,130,12,0.2); background: rgba(232,130,12,0.06); }
+        .navbar-links a.active { color: var(--amber); border-color: rgba(232,130,12,0.3); background: rgba(232,130,12,0.08); font-weight: 500; }
+
+        .navbar-links a.btn-nav-primary {
+            background: var(--amber); color: #fff; border-color: var(--amber);
+            box-shadow: 0 3px 12px rgba(232,130,12,0.3);
+        }
+        .navbar-links a.btn-nav-primary:hover { background: #d4730a; transform: translateY(-1px); }
 
         .social-icons a:hover { border-color: var(--neon-cyan); color: var(--neon-cyan); }
 
