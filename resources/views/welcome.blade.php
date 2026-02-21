@@ -23,7 +23,6 @@
   <body>
 
 
-    <!-- BG CANVAS -->
     <canvas id="bg-canvas"></canvas>
     <div class="noise-overlay"></div>
 
@@ -33,8 +32,6 @@
 
      
      
-
-        <!-- HERO -->
         <section class="hero" id="inicio">
             <div class="hero-badge">Sistema activo · AR/VR</div>
 
@@ -65,7 +62,7 @@
             </div>
         </section>
 
-        <!-- MARQUEE -->
+    
         <div class="marquee-band">
             <div class="marquee-inner">
                 <span class="marquee-text">Realidad Aumentada <span class="marquee-sep">✦</span></span>
@@ -73,7 +70,6 @@
                 <span class="marquee-text">Creatividad Inmersiva <span class="marquee-sep">✦</span></span>
                 <span class="marquee-text">Biblioteca Digital <span class="marquee-sep">✦</span></span>
                 <span class="marquee-text">IMJCREA 2026 <span class="marquee-sep">✦</span></span>
-                <!-- duplicate for seamless loop -->
                 <span class="marquee-text">Realidad Aumentada <span class="marquee-sep">✦</span></span>
                 <span class="marquee-text">Realidad Virtual <span class="marquee-sep">✦</span></span>
                 <span class="marquee-text">Creatividad Inmersiva <span class="marquee-sep">✦</span></span>
@@ -87,17 +83,26 @@
         <span class="section-label">// Nuestros servicios</span>
         <span class="section-count">04 experiencias</span>
     </div>
- <div class="cards-grid"> 
-         <div class="card" data-modal="1">
-    <div class="card-top-bar"></div>
-    <span class="card-number">01</span>
-    <div class="card-icon"><i class="fa fa-store"></i></div>
-    <h3 class="card-title">Tienda Biblioteca</h3>
-    <p class="card-desc">Accede a nuestra colección curada de experiencias inmersivas y contenido creativo para todas las edades.</p>
-    <a href="{{ route('storebook') }}" class="card-btn" onclick="event.stopPropagation()">
-        Ir a la tienda <i class="fa fa-arrow-right" style="font-size:10px;"></i>
+
+
+
+<div class="cards-grid"> 
+
+    
+    <a href="{{ route('storebook') }}" class="card">
+        <div class="card-top-bar"></div>
+        <span class="card-number">01</span>
+        <div class="card-icon"><i class="fa fa-store"></i></div>
+        <h3 class="card-title">Tienda Biblioteca</h3>
+        <p class="card-desc">
+            Accede a nuestra colección curada de experiencias inmersivas y contenido creativo para todas las edades.
+        </p>
+        <div class="card-arrow">
+            <i class="fa fa-arrow-right"></i>
+        </div>
     </a>
-</div>
+
+
 
 <a href="{{ route('libros.tipo', 'ar') }}" class="card">
     <span class="card-number">02</span>
