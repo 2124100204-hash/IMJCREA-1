@@ -11,7 +11,13 @@ class Libro extends Model
     protected $fillable = [
         'titulo',
         'descripcion',
-        'precio',
-        'tipo'
+        'autor',
+        'nivel_edad',
+        'duracion'
     ];
+
+    public function formatos()
+    {
+        return $this->hasMany(\App\Models\LibroFormato::class);
+    }
 }

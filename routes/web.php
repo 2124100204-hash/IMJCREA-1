@@ -17,15 +17,20 @@ Route::get('/', function () {
 // ruta tienda de libro
 // =======================
 Route::get('/storebook', function () {
-    $libros = Libro::all();
+    $libros = \App\Models\Libro::with('formatos')->get();
     return view('storebook', compact('libros'));
 })->name('storebook');
 
-Route::get('/libros/{tipo}', function ($tipo) {
-    $libros = Libro::where('tipo', $tipo)->get();
+Route::get('/storebook/{tipo}', function ($tipo) {
+    $libros = \App\Models\Libro::whereHas('formatos', function ($query) use ($tipo) {
+        $query->where('formato', $tipo)
+              ->where('stock', '>', 0);
+    })->with(['formatos' => function ($query) use ($tipo) {
+        $query->where('formato', $tipo);
+    }])->get();
+
     return view('storebook', compact('libros'));
 })->name('libros.tipo');
-
 // =======================
 // ruta inicio
 // =======================

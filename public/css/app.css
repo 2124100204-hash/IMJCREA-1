@@ -452,7 +452,7 @@
 
         @media (max-width: 640px) {
             .cards-grid {
-        grid-template-columns: 1fr; /* ← 1 columna en móvil */
+        grid-template-columns: 1fr;
     }
             .hero-title { letter-spacing: -1px; }
             .footer { flex-direction: column; align-items: flex-start; }

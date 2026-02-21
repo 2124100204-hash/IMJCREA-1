@@ -104,3 +104,23 @@
             margin-top:8px;
             opacity:.7;
         }
+        .search-container{
+            display:flex;
+            justify-content:center;
+            margin:20px 0;
+        }
+        .search-input{
+            width:300px;
+            padding:10px 15px;
+            border:1px solid #ccc;
+            border-radius:4px 0 0 4px;
+            outline:none;
+        }
+        .search-btn{
+            padding:10px 15px;
+            border:none;
+            background:#333;
+            color:white;
+            border-radius:0 4px 4px 0;
+            cursor:pointer;
+        }

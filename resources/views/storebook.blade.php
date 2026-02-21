@@ -17,7 +17,9 @@
 
     <div class="navbar-links" id="navLinks">
         <a href="{{ route('welcome') }}"><i class="fa fa-home" style="font-size:11px;"></i> Inicio</a>
-        <a href="#" class="active"><i class="fa fa-store" style="font-size:11px;"></i> Tienda</a>
+      <a href="{{ route('storebook') }}" class="active">
+    <i class="fa fa-store" style="font-size:11px;"></i> Tienda
+</a>
 <a href="{{ route('libros.tipo', 'vr') }}">Realidad Virtual</a>
 <a href="{{ route('libros.tipo', 'ar') }}">Realidad Aumentada</a>
         <a href="{{ route('contact') }}">Contacto</a>
@@ -27,7 +29,12 @@
     <button class="navbar-toggle" id="navToggle" aria-label="Menú">
         <span></span><span></span><span></span>
     </button>
+    <div class="search-container">
+    <input type="text" placeholder="Buscar libros..." class="search-input">
+    <button class="search-btn"><i class="fa fa-search"></i></button>
+</div>
 </nav>
+
 <div class="page-hero">
     <h1 class="page-title">Explora & <span>Descubre</span></h1>
     <p>Libros físicos con experiencias inmersivas opcionales.</p>
@@ -39,48 +46,52 @@
         @foreach($libros as $libro)
 
         @php
-            $config = [
-                'normal' => [
-                    'color' => '#c4a484',
-                    'icon' => 'fa-book',
-                    'badge' => 'Físico',
-                    'bg' => 'linear-gradient(135deg,#fff8e1,#ffe0b2)',
-                    'btn' => 'Comprar'
-                ],
-                'ar' => [
-                    'color' => '#12a090',
-                    'icon' => 'fa-camera',
-                    'badge' => 'AR',
-                    'bg' => 'linear-gradient(135deg,#e8f5e9,#c8e6c9)',
-                    'btn' => 'Incluye AR'
-                ],
-                'vr' => [
-                    'color' => '#6c3bd1',
-                    'icon' => 'fa-vr-cardboard',
-                    'badge' => 'VR',
-                    'bg' => 'linear-gradient(135deg,#ede7f6,#d1c4e9)',
-                    'btn' => 'Experiencia VR'
-                ],
-            ];
+   $config = [
+    'fisico' => [
+        'color' => '#c4a484',
+        'icon' => 'fa-book',
+        'badge' => 'Físico',
+        'bg' => 'linear-gradient(135deg,#fff8e1,#ffe0b2)',
+        'btn' => 'Comprar'
+    ],
+    'ar' => [
+        'color' => '#12a090',
+        'icon' => 'fa-camera',
+        'badge' => 'AR',
+        'bg' => 'linear-gradient(135deg,#e8f5e9,#c8e6c9)',
+        'btn' => 'Incluye AR'
+    ],
+    'vr' => [
+        'color' => '#6c3bd1',
+        'icon' => 'fa-vr-cardboard',
+        'badge' => 'VR',
+        'bg' => 'linear-gradient(135deg,#ede7f6,#d1c4e9)',
+        'btn' => 'Experiencia VR'
+    ],
+];
+@endphp
+       @php
+    $formato = $libro->formatos->first();
+    $tipo = $formato->formato ?? 'fisico';
+    $precio = $formato->precio ?? 0;
 
-            $tipo = $libro->tipo;
-            $current = $config[$tipo] ?? $config['normal'];
-        @endphp
+    $current = $config[$tipo] ?? $config['normal'];
+@endphp
 
 
         <div class="book-card">
 
             <div class="book-cover" style="background: {{ $current['bg'] }}">
-                <img src="{{ asset('storage/'.$libro->imagenes[0] ?? 'default.jpg') }}">
+                <img src="{{ asset('img/libro1.jpeg') }}">
                 <span class="book-badge" style="background: {{ $current['color'] }}">
                     {{ $current['badge'] }}
                 </span>
             </div>
 
             <div class="book-body">
-                <p class="book-category">{{ $libro->categoria }}</p>
-                <h3 class="book-title">{{ $libro->nombre }}</h3>
-                <p class="book-author">{{ $libro->autor->nombre }}</p>
+          <p class="book-category">{{ strtoupper($tipo) }}</p>
+<h3 class="book-title">{{ $libro->titulo }}</h3>
+<p class="book-author">{{ $libro->autor }}</p>
 
                 @if($tipo === 'ar')
                     <p class="experience-note">
@@ -97,7 +108,7 @@
 
             <div class="book-footer">
                 <div class="book-price">
-                    ${{ $libro->costo }} <span>MXN</span>
+                  ${{ number_format($precio, 2) }}
                 </div>
 
                 <button class="book-btn"
