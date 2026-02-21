@@ -16,7 +16,9 @@
     <div class="login-container">
         <div class="login-box">
             <h1>Iniciar Sesión</h1>
-
+ <div class="back-link">
+                <a href="/">← Volver al inicio</a>
+            </div>
             @if(session('error'))
                 <p style="color:red;">{{ session('error') }}</p>
             @endif
@@ -33,15 +35,19 @@
                     <label for="password">Contraseña</label>
                     <input type="password" id="password" name="password" required placeholder="•••••••">
                 </div>
-
+            <div class="button-container">
                 <button type="submit" class="accept-btn">
                     Iniciar Sesión
                 </button>
-            </form>
-
-            <div class="back-link">
-                <a href="/">← Volver al inicio</a>
             </div>
+            </form>
+        <div class="button-container">
+            <button class="option-btn" onclick="window.location.href='{{ route('register') }}'">
+                Registrarte aquí
+            </button>
+
+
+           
         </div>
     </div>
 </body>

@@ -82,13 +82,12 @@
             </div>
         </div>
 
-        <!-- CARDS SECTION -->
-        <section class="cards-section" id="explorar">
-            <div class="section-header">
-                <span class="section-label">// Nuestros servicios</span>
-                <span class="section-count">04 experiencias</span>
-            </div>
-
+   <section class="cards-section" id="explorar">
+    <div class="section-header">
+        <span class="section-label">// Nuestros servicios</span>
+        <span class="section-count">04 experiencias</span>
+    </div>
+ <div class="cards-grid"> 
          <div class="card" data-modal="1">
     <div class="card-top-bar"></div>
     <span class="card-number">01</span>
@@ -100,37 +99,49 @@
     </a>
 </div>
 
-                <div class="card">
-                    <span class="card-number">02</span>
-                    <div class="card-icon"><i class="fa fa-book-open"></i></div>
-                    <h3 class="card-title">Libros AR</h3>
-                    <p class="card-desc">Libros que despiertan con realidad aumentada. Apunta tu dispositivo y observa el mundo expandirse.</p>
-                    <div class="card-arrow"><i class="fa fa-arrow-right"></i></div>
-                </div>
+<a href="{{ route('libros.tipo', 'ar') }}" class="card">
+    <span class="card-number">02</span>
+    <div class="card-icon"><i class="fa fa-book-open"></i></div>
+    <h3 class="card-title">Libros AR</h3>
+    <p class="card-desc">
+        Libros que despiertan con realidad aumentada.
+    </p>
+    <div class="card-arrow">
+        <i class="fa fa-arrow-right"></i>
+    </div>
+</a>
 
-                <div class="card">
-                    <span class="card-number">03</span>
-                    <div class="card-icon"><i class="fa fa-vr-cardboard"></i></div>
-                    <h3 class="card-title">Libros VR</h3>
-                    <p class="card-desc">Sumérgete completamente en narrativas que te transportan a universos sin límites.</p>
-                    <div class="card-arrow"><i class="fa fa-arrow-right"></i></div>
-                </div>
+           <a href="{{ route('libros.tipo', 'vr') }}" class="card">
+    <span class="card-number">03</span>
+    <div class="card-icon"><i class="fa fa-vr-cardboard"></i></div>
+    <h3 class="card-title">Libros VR</h3>
+    <p class="card-desc">
+        Narrativas inmersivas en realidad virtual.
+    </p>
+    <div class="card-arrow">
+        <i class="fa fa-arrow-right"></i>
+    </div>
+</a>
 
-                <div class="card">
-                    <span class="card-number">04</span>
-                    <div class="card-icon"><i class="fa fa-compass"></i></div>
-                    <h3 class="card-title">Explorar</h3>
-                    <p class="card-desc">Descubre contenido nuevo, conecta con creadores y expande tu universo creativo.</p>
-                    <div class="card-arrow"><i class="fa fa-arrow-right"></i></div>
-                </div>
-            </div>
+             <a href="{{ route('storebook') }}" class="card">
+    <span class="card-number">04</span>
+    <div class="card-icon"><i class="fa fa-compass"></i></div>
+    <h3 class="card-title">Explorar</h3>
+    <p class="card-desc">
+        Descubre contenido nuevo.
+    </p>
+    <div class="card-arrow">
+        <i class="fa fa-arrow-right"></i>
+    </div>
+</a>
+</div>
         </section>
 
         <!-- STATS -->
         <div class="stats-band">
             <div class="stat-item">
-                <div class="stat-number">+500</div>
-                <div class="stat-label">Experiencias</div>
+                <div class="stat-number">Experiencias</div>
+                <div class="stat-label">Inimaginables</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">AR</div>
