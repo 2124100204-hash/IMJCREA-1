@@ -1,5 +1,5 @@
 # Proyecto IMJCREA-1
-## Desarrollado por: [Axel Isai Andrade]
+## Desarrollado por: [Axel Isai Andrade Lozano]
 
 Este proyecto es un sistema basado en **Laravel**. He actualizado este repositorio hoy para reflejar mis propios cambios y avances.
 
