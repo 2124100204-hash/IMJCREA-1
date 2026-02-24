@@ -64,8 +64,7 @@
 
         .card:hover { transform: translateY(-5px); }
         .card-num { color: #FF8C00; font-size: 0.7rem; font-weight: 700; margin-bottom: 20px; }
-        .card-img { width: 45px; height: 45px; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; }
-        .icon-svg { width: 100%; height: 100%; }
+        .card-img { font-size: 40px; margin-bottom: 25px; display: flex; align-items: center; justify-content: flex-start; }
         .card-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; color: #111; font-family: 'serif'; }
         .card-desc { font-size: 0.9rem; line-height: 1.6; color: #666; }
 
@@ -129,36 +128,28 @@
                 
                 <a href="{{ route('storebook') }}" class="card">
                     <span class="card-num">01</span>
-                    <div class="card-img">
-                        <svg class="icon-svg" viewBox="0 0 24 24" fill="#E67E22"><path d="M20 4H4v2h16V4zm1 10v-2l-1-5H4l-1 5v2h1v6h10v-6h4v6h2v-6h1zm-9 4H6v-4h6v4z"/></svg>
-                    </div>
+                    <div class="card-img">🏪</div>
                     <h3 class="card-title">Tienda Biblioteca</h3>
                     <p class="card-desc">Accede a nuestra colección curada de experiencias inmersivas.</p>
                 </a>
 
                 <a href="{{ route('libros.tipo', 'ar') }}" class="card">
                     <span class="card-num">02</span>
-                    <div class="card-img">
-                        <svg class="icon-svg" viewBox="0 0 24 24" fill="#16A085"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20s3.4.45 4.75 1.14c.1.06.2.06.25.06.25 0 .5-.25.5-.5V7.5c1.35-.99 3.35-1.5 5.25-1.5 1.75 0 3.35.25 4.75.85.1.05.15.05.25.05.25 0 .5-.25.5-.5V6c-.6-.45-1.45-.75-2.25-1z"/></svg>
-                    </div>
+                    <div class="card-img">📖</div>
                     <h3 class="card-title">Libros AR</h3>
                     <p class="card-desc">Libros que despiertan con realidad aumentada.</p>
                 </a>
 
                 <a href="{{ route('libros.tipo', 'vr') }}" class="card">
                     <span class="card-num">03</span>
-                    <div class="card-img">
-                        <svg class="icon-svg" viewBox="0 0 24 24" fill="#D35400"><path d="M21 9H3c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zM7 14.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm10 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-                    </div>
+                    <div class="card-img">👓</div>
                     <h3 class="card-title">Libros VR</h3>
                     <p class="card-desc">Narrativas inmersivas en realidad virtual.</p>
                 </a>
 
                 <a href="{{ route('storebook') }}" class="card">
                     <span class="card-num">04</span>
-                    <div class="card-img">
-                        <svg class="icon-svg" viewBox="0 0 24 24" fill="#F39C12"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
-                    </div>
+                    <div class="card-img">🧭</div>
                     <h3 class="card-title">Explorar</h3>
                     <p class="card-desc">Descubre contenido nuevo y expansivo.</p>
                 </a>
