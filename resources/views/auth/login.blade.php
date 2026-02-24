@@ -224,7 +224,6 @@
         }
 
         items.forEach(item => item.addEventListener('mouseenter', () => movePill(item)));
-        window.addEventListener('load', () => setTimeout(() => movePill(items[1]), 1000));
     </script>
 
     <script type="module">
