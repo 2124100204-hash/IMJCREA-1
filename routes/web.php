@@ -31,12 +31,14 @@ Route::get('/storebook/{tipo}', function ($tipo) {
 
     return view('storebook', compact('libros'));
 })->name('libros.tipo');
+
 // =======================
 // ruta inicio
 // =======================
 Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
+
 // =======================
 // ruta contacto
 // =======================
@@ -46,11 +48,32 @@ Route::get('/contact', function () {
 
 
 // =======================
-// LOGIN
+// LOGIN Y REGISTRO
 // =======================
 Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
+
+// 👇 ESTA ES LA RUTA POST QUE FALTABA Y CAUSABA EL ERROR 👇
+Route::post('/register', function (Request $request) {
+    $request->validate([
+        'codigo'   => 'required|unique:usuarios,codigo',
+        'password' => 'required|min:4', 
+    ]);
+
+    try {
+        Usuario::create([
+            'codigo'       => $request->codigo,
+            'password'     => Hash::make($request->password),
+            'tipo_usuario' => 'cliente' 
+        ]);
+        
+        return redirect()->route('login')->with('success', '¡Registrado con éxito!');
+    } catch (\Exception $e) {
+        return back()->withErrors(['db_error' => 'Error al guardar: ' . $e->getMessage()]);
+    }
+});
+// 👆 -------------------------------------------------- 👆
 
 Route::get('/login', function () {
     return view('auth.login');
@@ -115,10 +138,10 @@ Route::post('/admin/empleado/eliminar/{id}', function ($id) {
 
     return back()->with('success', 'Empleado eliminado');
 })->name('admin.empleado.eliminar');
+
 // =======================
 // LOGOUT
 // =======================
-
 Route::post('/logout', function () {
     Session::forget('usuario');
     return redirect()->route('login');
@@ -129,38 +152,25 @@ Route::post('/logout', function () {
 // DASHBOARDS PROTEGIDOS
 // =======================
 
-// =======================
-// DASHBOARDS PROTEGIDOS
-// =======================
-
 Route::get('/dashboard/admin', function () {
-
     if (!Session::has('usuario') || Session::get('usuario')->tipo_usuario !== 'admin') {
         return redirect()->route('login');
     }
-
     return view('employer.dashboard-admin');
-
 })->name('dashboard.dashboard-admin');
 
 
 Route::get('/dashboard/employee', function () {
-
     if (!Session::has('usuario') || Session::get('usuario')->tipo_usuario !== 'empleado') {
         return redirect()->route('login');
     }
-
     return view('employer.employee');
-
 })->name('dashboard.employee');
 
 
 Route::get('/dashboard/client', function () {
-
     if (!Session::has('usuario') || Session::get('usuario')->tipo_usuario !== 'cliente') {
         return redirect()->route('login');
     }
-
     return view('client.dashboard-client');
-
 })->name('dashboard.dashboard-client');
