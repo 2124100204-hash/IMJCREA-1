@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\LibroController;
 use App\Models\Libro;
 
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -54,16 +53,20 @@ Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
 
-// 👇 ESTA ES LA RUTA POST QUE FALTABA Y CAUSABA EL ERROR 👇
+// 🔥 RUTA CORREGIDA: Ahora guarda name y email 🔥
 Route::post('/register', function (Request $request) {
     $request->validate([
+        'name'     => 'required|string|max:255',
+        'email'    => 'required|email|unique:usuarios,email',
         'codigo'   => 'required|unique:usuarios,codigo',
-        'password' => 'required|min:4', 
+        'password' => 'required|min:4|confirmed', 
     ]);
 
     try {
         Usuario::create([
-            'codigo'       => $request->codigo,
+            'name'         => $request->name,     // Guarda el nombre
+            'email'        => $request->email,    // Guarda el email
+            'codigo'       => $request->codigo,   // Guarda el código
             'password'     => Hash::make($request->password),
             'tipo_usuario' => 'cliente' 
         ]);
@@ -73,7 +76,6 @@ Route::post('/register', function (Request $request) {
         return back()->withErrors(['db_error' => 'Error al guardar: ' . $e->getMessage()]);
     }
 });
-// 👆 -------------------------------------------------- 👆
 
 Route::get('/login', function () {
     return view('auth.login');
