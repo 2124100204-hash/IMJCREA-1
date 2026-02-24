@@ -167,7 +167,7 @@
             @csrf
 
             <div class="form-group">
-                <label>Código de usuario </label>
+                <label>Código del usuario </label>
                 <input type="text" name="codigo" required placeholder="Código">
             </div>
 
