@@ -2,25 +2,34 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Usuario extends Model
+class Usuario extends Authenticatable
 {
-    protected $table = 'usuarios';
+    use Notifiable;
 
+    protected $table = 'usuarios';
     protected $fillable = [
-        'codigo',
+        'username',
+        'email',
         'password',
-        'tipo_usuario'
+        'nombre',
+        'rol',
+        'activo'
     ];
 
-    public function cliente()
+    protected $hidden = [
+        'password',
+    ];
+
+    public function esAdmin()
     {
-        return $this->hasOne(Cliente::class);
+        return $this->rol === 'admin';
     }
 
-    public function empleado()
+    public function esEmpleado()
     {
-        return $this->hasOne(Empleado::class);
+        return $this->rol === 'empleado';
     }
 }

@@ -7,17 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Libro extends Model
 {
     protected $table = 'libros';
-
-    protected $fillable = [
-        'titulo',
-        'descripcion',
-        'autor',
-        'nivel_edad',
-        'duracion'
-    ];
-
-    public function formatos()
-    {
-        return $this->hasMany(\App\Models\LibroFormato::class);
-    }
+    protected $fillable = ['titulo', 'autor', 'descripcion', 'formato', 'usuario_id'];
+    public $timestamps = true;
 }

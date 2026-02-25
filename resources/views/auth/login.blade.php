@@ -16,38 +16,39 @@
     <div class="login-container">
         <div class="login-box">
             <h1>Iniciar Sesión</h1>
- <div class="back-link">
+            <div class="back-link">
                 <a href="/">← Volver al inicio</a>
             </div>
-            @if(session('error'))
-                <p style="color:red;">{{ session('error') }}</p>
+
+            @if($errors->any())
+                <p style="color:red;">{{ $errors->first('mensaje') ?? 'Error en la autenticación' }}</p>
             @endif
 
-            <form action="{{ route('login') }}" method="POST">
+            <form action="{{ route('login.procesar') }}" method="POST">
                 @csrf
                 
                 <div class="form-group">
-                    <label for="codigo">Código</label>
-                    <input type="text" id="codigo" name="codigo" required placeholder="Código">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" name="username" required placeholder="admin">
                 </div>
 
                 <div class="form-group">
                     <label for="password">Contraseña</label>
                     <input type="password" id="password" name="password" required placeholder="•••••••">
                 </div>
-            <div class="button-container">
-                <button type="submit" class="accept-btn">
-                    Iniciar Sesión
-                </button>
-            </div>
+
+                <div class="button-container">
+                    <button type="submit" class="accept-btn">
+                        Iniciar Sesión
+                    </button>
+                </div>
             </form>
-        <div class="button-container">
-            <button class="option-btn" onclick="window.location.href='{{ route('register') }}'">
-                Registrarte aquí
-            </button>
 
-
-           
+            <div class="button-container">
+                <p style="text-align: center; margin: 15px 0; font-size: 12px; color: #666;">
+                    Cuentas de prueba disponibles
+                </p>
+            </div>
         </div>
     </div>
 </body>
