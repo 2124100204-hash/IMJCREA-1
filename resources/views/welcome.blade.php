@@ -10,122 +10,121 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+    
     <link rel="stylesheet" href="{{ asset('css/default.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
     <style>
-        :root { --accent: #FF8C00; --bg: #000000; }
-        
-        body { background-color: var(--bg); margin: 0; overflow-x: hidden; font-family: 'Instrument Sans', sans-serif; }
-
-        #bg-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -2;
-        }
-
-        .noise-overlay {
+        #silk-container {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: url('https://grainy-gradients.vercel.app/noise.svg');
-            opacity: 0.04;
-            pointer-events: none;
             z-index: -1;
+            background: #000;
         }
-
-        .wrapper { position: relative; z-index: 1; }
-
-        /* Ajustes de visibilidad inicial para GSAP */
-        .hero-badge, .hero-eyebrow, .line-1, .line-2, .hero-subtitle, .hero-actions, .card, .stat-item {
+        .wrapper { position: relative; z-index: 1; background: transparent; }
+        
+        /* Preparación para animaciones (opacidad 0 inicial) */
+        .hero-badge, .hero-eyebrow, .hero-title, .hero-subtitle, .hero-actions, .card, .footer-item {
             opacity: 0;
         }
 
-        .hero-title { 
-            font-size: 5rem; 
-            line-height: 0.9; 
-            font-weight: 700; 
-            margin: 20px 0;
-            cursor: default;
-        }
-        .line-2 { color: var(--accent); }
+        .hero-title { cursor: default; display: flex; flex-direction: column; }
+        .line-1 { color: #FFFFFF !important; } 
+        .line-2 { color: #FF8C00 !important; } 
+        .cursor { margin-left: 5px; color: #FF8C00; font-weight: bold; }
 
-        .cards-section { background: #fdfbf7; color: #1a1a1a; padding: 100px 10%; border-radius: 40px 40px 0 0; }
-        
-        .marquee-band {
-            background: var(--accent);
-            padding: 20px 0;
-            overflow: hidden;
+        .cards-section {
+            background-color: #FDFBF7;
+            padding: 100px 10%;
+            color: #1a1a1a;
+        }
+
+        .section-header-line {
             display: flex;
-            white-space: nowrap;
-        }
-        .marquee-inner {
-            display: flex;
-            animation: marquee 30s linear infinite;
-        }
-        .marquee-text {
-            color: #000;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 1.2rem;
-            margin-right: 50px;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 60px;
+            color: #B5A89A;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
         }
 
-        @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        .stats-band {
-            background: #120F0D;
-            padding: 80px 10%;
+        .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #FFFFFF;
+            padding: 40px 30px;
+            border-radius: 24px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.02);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover { transform: translateY(-5px); }
+        .card-num { color: #FF8C00; font-size: 0.7rem; font-weight: 700; margin-bottom: 20px; }
+        .card-img { font-size: 40px; margin-bottom: 25px; display: flex; align-items: center; justify-content: flex-start; }
+        .card-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 12px; color: #111; font-family: 'serif'; }
+        .card-desc { font-size: 0.9rem; line-height: 1.6; color: #666; }
+
+        .custom-footer {
+            background-color: #120F0D;
+            padding: 80px 10% 40px 10%;
+            color: #FF8C00;
             text-align: center;
         }
-        .stat-number { color: var(--accent); font-size: 2.5rem; font-weight: 700; }
-        .stat-label { color: #888; text-transform: uppercase; letter-spacing: 2px; font-size: 0.7rem; }
+
+        .footer-main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .footer-item h2 { font-size: 2.2rem; font-weight: 700; margin-bottom: 5px; }
+        .footer-item span { color: #888; font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #555;
+        }
+
+        .footer-brand { color: #FFFFFF; font-weight: 700; letter-spacing: 1px; }
+        .social-dots { display: flex; gap: 15px; }
+        .dot { width: 35px; height: 35px; border: 1px solid #333; border-radius: 50%; }
     </style>
 </head>
 <body>
 
-    <canvas id="bg-canvas"></canvas>
-    <div class="noise-overlay"></div>
+    <div id="silk-container"></div>
 
     <div class="wrapper">
-        <section class="hero" id="inicio" style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 0 10%;">
-            <div class="hero-badge" style="color: var(--accent); border: 1px solid var(--accent); padding: 5px 15px; border-radius: 20px; width: fit-content; font-size: 0.8rem; margin-bottom: 20px;">
-                Sistema activo · AR/VR
-            </div>
-
-            <span class="hero-eyebrow" style="color: #666; font-family: monospace;">// Inmersión real en un mundo inrreal</span>
-
+        <section class="hero" id="inicio">
+            <div class="hero-badge">Sistema activo · AR/VR</div>
+            <span class="hero-eyebrow">// Inmersión real en un mundo inrreal</span>
             <h1 class="hero-title" id="decrypt-title">
-                <span class="line-1" style="display: block; color: white;">INMERSIA</span>
-                <span class="line-2" style="display: block;">CREA.</span>
+                <span class="line-1">INMERSIA</span>
+                <span class="line-2">CREA.</span>
             </h1>
-
-            <p class="hero-subtitle" style="color: #ccc; max-width: 600px; font-size: 1.1rem; margin-bottom: 30px;">
-                Explora mundos de conocimiento a través de la realidad aumentada y virtual. 
-                Libros que cobran vida, experiencias que trascienden la pantalla.
-            </p>
-
-            <div class="hero-actions" style="display: flex; gap: 20px;">
-                <a href="#explorar" class="btn-primary" style="background: var(--accent); color: black; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: 600;">
-                    <i class="fa fa-play" style="font-size:10px;"></i> Explorar ahora
-                </a>
-                <a href="{{ route('login') }}" class="btn-ghost" style="border: 1px solid var(--accent); color: var(--accent); padding: 15px 30px; border-radius: 8px; text-decoration: none;">
-                    Iniciar sesión →
-                </a>
+            <div class="hero-subtitle">
+                <p id="typed-slogan" style="display: inline; color: #fff;"></p>
+                <span id="cursor" class="cursor">|</span>
             </div>
-
-            <div class="scroll-indicator" style="margin-top: 50px; color: #444; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 4px;">
-                <div class="scroll-line" style="width: 1px; height: 50px; background: var(--accent); margin-bottom: 10px;"></div>
-                scroll
+            <div class="hero-actions">
+                <a href="#explorar" class="btn-primary" style="background-color: #FF8C00; border-color: #FF8C00;">Explorar ahora</a>
+                <a href="/login" class="btn-ghost" style="color: #FF8C00; border-color: #FF8C00;">Iniciar sesión →</a>
             </div>
         </section>
 
@@ -181,84 +180,54 @@
             </div>
         </section>
 
-        <div class="stats-band">
-            <div class="stat-item">
-                <div class="stat-number">Experiencias</div>
-                <div class="stat-label">Inimaginables</div>
+        <footer class="custom-footer">
+            <div class="footer-main-grid">
+                <div class="footer-item">
+                    <h2>Experiencias</h2>
+                    <span>Inimaginables</span>
+                </div>
+                <div class="footer-item">
+                    <h2>AR</h2>
+                    <span>Realidad Aumentada</span>
+                </div>
+                <div class="footer-item">
+                    <h2>VR</h2>
+                    <span>Realidad Virtual</span>
+                </div>
+                <div class="footer-item">
+                    <h2>∞</h2>
+                    <span>Creatividad</span>
+                </div>
             </div>
-            <div class="stat-item">
-                <div class="stat-number">AR</div>
-                <div class="stat-label">Realidad Aumentada</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">VR</div>
-                <div class="stat-label">Realidad Virtual</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number">∞</div>
-                <div class="stat-label">Creatividad</div>
-            </div>
-        </div>
-
-        <footer class="footer" id="contacto" style="padding: 60px 10%; background: #000; color: white; text-align: center;">
-            <div class="footer-logo" style="font-size: 2rem; font-weight: 800; letter-spacing: 5px; margin-bottom: 20px;">INMERSIA</div>
-            <p class="footer-copy" style="color: #444; font-size: 0.9rem;">© 2026 IMJCREA. Todos los derechos reservados.</p>
-            <div class="social-icons" style="margin-top: 30px; display: flex; justify-content: center; gap: 20px;">
-                <a href="#" style="color: #333;"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" style="color: #333;"><i class="fab fa-instagram"></i></a>
-                <a href="#" style="color: #333;"><i class="fab fa-twitter"></i></a>
+            
+            <div class="footer-bottom">
+                <div class="footer-brand">INMERSIA</div>
+                <div>© 2026 IMJCREA. Todos los derechos reservados.</div>
+                <div class="social-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
             </div>
         </footer>
     </div>
 
     <script type="module">
-        // --- 1. THREE.JS BACKGROUND ---
-        const canvas = document.getElementById('bg-canvas');
-        const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
 
-        const scene = new THREE.Scene();
-        const geometry = new THREE.PlaneGeometry(2, 2);
-        const material = new THREE.ShaderMaterial({
-            uniforms: { uTime: { value: 0 } },
-            vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }`,
-            fragmentShader: `
-                varying vec2 vUv; uniform float uTime;
-                void main() {
-                    vec2 uv = vUv;
-                    float t = uTime * 0.2;
-                    // Efecto de flujo oscuro con toques de naranja quemado
-                    float wave = sin(uv.x * 3.0 + t) * Math.cos(uv.y * 2.0 - t * 0.5);
-                    vec3 color1 = vec3(0.01, 0.01, 0.01); // Negro
-                    vec3 color2 = vec3(0.15, 0.06, 0.0);  // Naranja oscuro
-                    vec3 finalColor = mix(color1, color2, wave * 0.5 + 0.5);
-                    gl_FragColor = vec4(finalColor, 1.0);
-                }
-            `
-        });
-        const mesh = new THREE.Mesh(geometry, material);
-        scene.add(mesh);
-
-        function anim(t) {
-            material.uniforms.uTime.value = t * 0.001;
-            renderer.render(scene, new THREE.Camera());
-            requestAnimationFrame(anim);
-        }
-        anim(0);
-
-        window.addEventListener('resize', () => renderer.setSize(window.innerWidth, window.innerHeight));
-
-        // --- 2. GSAP ANIMATIONS ---
+        // --- ANIMACIONES DE GSAP ---
         gsap.registerPlugin(ScrollTrigger);
-        const tl = gsap.timeline({ defaults: { ease: "power4.out", duration: 1.2 }});
 
+        // Timeline para la carga inicial (Hero)
+        const tl = gsap.timeline({ defaults: { ease: "power4.out", duration: 1.2 }});
+        
         tl.to(".hero-badge", { opacity: 1, y: 0 })
           .to(".hero-eyebrow", { opacity: 1, x: 0 }, "-=0.8")
-          .to(".line-1, .line-2", { opacity: 1, y: 0, stagger: 0.2 }, "-=1")
+          .to(".hero-title", { opacity: 1, y: 0 }, "-=1")
           .to(".hero-subtitle", { opacity: 1, y: 0 }, "-=0.8")
           .to(".hero-actions", { opacity: 1, y: 0 }, "-=0.8");
 
-        // Scroll Trigger for Cards
+        // Animación de las tarjetas al hacer Scroll
         gsap.to(".card", {
             scrollTrigger: {
                 trigger: ".cards-grid",
@@ -266,39 +235,83 @@
             },
             opacity: 1,
             y: -20,
-            stagger: 0.2,
+            stagger: 0.15,
             duration: 1,
             ease: "power2.out"
         });
 
-        // Scroll Trigger for Stats
-        gsap.to(".stat-item", {
+        // Animación de los items del footer
+        gsap.to(".footer-item", {
             scrollTrigger: {
-                trigger: ".stats-band",
+                trigger: ".custom-footer",
                 start: "top 90%",
             },
             opacity: 1,
             scale: 1,
-            stagger: 0.2
+            stagger: 0.2,
+            duration: 0.8
         });
 
-        // --- 3. DECRYPT EFFECT ---
-        const titleLines = document.querySelectorAll('.line-1, .line-2');
-        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*";
+        // --- DECRYPT EFFECT ---
+        const titleEl = document.getElementById('decrypt-title');
+        const originalText = "INMERSIA CREA.";
+        const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+";
+        
+        titleEl.addEventListener("mouseover", () => {
+            let iter = 0;
+            const inv = setInterval(() => {
+                const currentStatus = originalText.split("").map((l, i) => {
+                    if(i < iter) return originalText[i];
+                    return letters[Math.floor(Math.random() * letters.length)];
+                }).join("");
+                titleEl.innerHTML = `<span class="line-1">${currentStatus.substring(0, 8)}</span><span class="line-2">${currentStatus.substring(8)}</span>`;
+                if(iter >= originalText.length) {
+                    clearInterval(inv);
+                    titleEl.innerHTML = `<span class="line-1">INMERSIA</span><span class="line-2">CREA.</span>`;
+                }
+                iter += 1/3;
+            }, 30);
+        });
 
-        titleLines.forEach(line => {
-            const originalText = line.innerText;
-            line.addEventListener("mouseover", () => {
-                let iter = 0;
-                const interval = setInterval(() => {
-                    line.innerText = originalText.split("").map((char, index) => {
-                        if(index < iter) return originalText[index];
-                        return letters[Math.floor(Math.random() * letters.length)];
-                    }).join("");
-                    if(iter >= originalText.length) clearInterval(interval);
-                    iter += 1/3;
-                }, 30);
-            });
+        // --- TYPING EFFECT ---
+        const sloganEl = document.getElementById('typed-slogan');
+        const phrases = ["Explora mundos de conocimiento a través de la realidad aumentada y virtual. Libros que cobran vida, experiencias que trascienden la pantalla."];
+        let charIndex = 0;
+
+        function typeSlogan() {
+            sloganEl.textContent = phrases[0].substring(0, charIndex + 1);
+            charIndex++;
+            if (charIndex < phrases[0].length) setTimeout(typeSlogan, 40);
+        }
+        typeSlogan();
+        gsap.to("#cursor", { opacity: 0, repeat: -1, yoyo: true, duration: 0.5 });
+
+        // --- THREE.JS BACKGROUND ---
+        const vertex = `varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position, 1.0); }`;
+        const fragment = `
+            varying vec2 vUv; uniform float uTime;
+            void main() {
+                vec2 uv = vUv; float t = uTime * 0.15;
+                float pattern = 0.6 + 0.4 * sin(4.0 * (uv.x + uv.y + cos(2.5 * uv.x + 4.0 * uv.y) + t));
+                gl_FragColor = vec4(vec3(0.05, 0.1, 0.6) * pattern, 1.0);
+            }
+        `;
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('silk-container').appendChild(renderer.domElement);
+        const scene = new THREE.Scene();
+        const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({ uniforms: { uTime: { value: 0 } }, vertexShader: vertex, fragmentShader: fragment }));
+        scene.add(mesh);
+        function animate(t) { 
+            mesh.material.uniforms.uTime.value = t * 0.001; 
+            renderer.render(scene, new THREE.Camera()); 
+            requestAnimationFrame(animate); 
+        }
+        animate(0);
+        
+        // Ajuste de tamaño al redimensionar ventana
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
         });
     </script>
 </body>

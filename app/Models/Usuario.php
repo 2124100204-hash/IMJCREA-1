@@ -10,26 +10,29 @@ class Usuario extends Authenticatable
     use Notifiable;
 
     protected $table = 'usuarios';
+
+    // Ajustado a las columnas reales de tu tabla: name, email, codigo, password, tipo_usuario
     protected $fillable = [
-        'username',
+        'name',
         'email',
         'password',
-        'nombre',
-        'rol',
-        'activo'
+        'codigo',
+        'tipo_usuario',
     ];
 
     protected $hidden = [
         'password',
     ];
 
+    // Ajustado a la columna 'tipo_usuario' de tu base de datos
     public function esAdmin()
     {
-        return $this->rol === 'admin';
+        return $this->tipo_usuario === 'admin';
     }
 
+    // Ajustado para verificar si es cliente o empleado según tu lógica
     public function esEmpleado()
     {
-        return $this->rol === 'empleado';
+        return $this->tipo_usuario === 'cliente'; 
     }
 }
