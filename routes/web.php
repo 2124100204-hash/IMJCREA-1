@@ -6,35 +6,23 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\LibroController;
 
-/*
-|--------------------------------------------------------------------------
-| RUTAS PÚBLICAS (ACCESO LIBRE)
-|--------------------------------------------------------------------------
-*/
-
-// 1. PÁGINA DE INICIO (La de INMERSIA)
+// 1. PÁGINA DE INICIO (welcome.blade.php)
 Route::get('/', function () {
     return view('welcome');
 })->name('inicio');
 
-// 2. RUTAS QUE PIDE TU DISEÑO (Para evitar errores)
-Route::get('/tienda', function () {
-    return "Pantalla de Tienda en construcción";
-})->name('storebook');
-
-Route::get('/libros/{tipo}', function ($tipo) {
-    return "Filtro de libros: " . $tipo;
-})->name('libros.tipo');
-
-// 3. LOGIN
+// 2. RUTAS DE AUTENTICACIÓN
 Route::get('/login', [AuthController::class, 'mostrarLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.procesar');
 
-/*
-|--------------------------------------------------------------------------
-| RUTAS PROTEGIDAS (REQUIEREN LOGIN)
-|--------------------------------------------------------------------------
-*/
+// ESTA ES LA RUTA PARA TU DISEÑO DE ESFERAS 3D
+Route::get('/registrar', function () {
+    return view('auth.register'); 
+})->name('register');
+
+Route::post('/registrar', [AuthController::class, 'registrar'])->name('register.procesar');
+
+// 3. RUTAS PROTEGIDAS
 Route::middleware('auth.custom')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
@@ -57,9 +45,5 @@ Route::middleware('auth.custom')->group(function () {
     Route::middleware('rol:empleado')->group(function () {
         Route::get('/empleado/dashboard', [EmpleadoController::class, 'dashboard'])->name('empleado.dashboard');
         Route::get('/empleado/libros', [EmpleadoController::class, 'libros'])->name('empleado.libros');
-        
-        Route::post('/empleado/libro/crear', [LibroController::class, 'crear'])->name('empleado.libro.crear');
-        Route::post('/empleado/libro/eliminar/{id}', [LibroController::class, 'eliminar'])->name('empleado.libro.eliminar');
-        Route::post('/empleado/libro/actualizar/{id}', [LibroController::class, 'actualizar'])->name('empleado.libro.actualizar');
     });
 });
