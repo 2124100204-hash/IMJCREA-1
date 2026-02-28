@@ -44,19 +44,6 @@ Route::get('/inicio', function () {
     return view('welcome');
 })->name('inicio');
 
-// Tienda y Contacto
-Route::get('/tienda', function () {
-    return "Tienda en construcción";
-})->name('storebook');
-
-Route::get('/contacto', function () {
-    return "Contacto en construcción";
-})->name('contact');
-
-Route::get('/libros/{tipo}', function ($tipo) {
-    return "Filtro de libros: " . $tipo;
-})->name('libros.tipo');
-
 
 /*
 |--------------------------------------------------------------------------
