@@ -84,7 +84,7 @@
                 <h3 style="color: #333; margin-bottom: 15px;">Mis Libros Creados</h3>
 
                 @php
-                    $misLibros = \App\Models\Libro::where('usuario_id', session('usuario_id'))->get();
+                    $misLibros = \App\Models\Libro::all();
                 @endphp
 
                 @if($misLibros->count() > 0)

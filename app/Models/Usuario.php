@@ -16,11 +16,16 @@ class Usuario extends Authenticatable
         'password',
         'nombre',
         'rol',
-        'activo'
+        'activo',
+        'favoritos'
     ];
 
     protected $hidden = [
         'password',
+    ];
+
+    protected $casts = [
+        'favoritos' => 'json',
     ];
 
     public function esAdmin()

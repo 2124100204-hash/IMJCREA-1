@@ -66,6 +66,11 @@ class LibroSeeder extends Seeder
             $formatos = $data['formatos'];
             unset($data['formatos']);
 
+            // Ensure categoria exists (DB requires it) and keep defaults
+            if (!isset($data['categoria'])) {
+                $data['categoria'] = 'general';
+            }
+
             $libro = Libro::create($data);
 
             foreach ($formatos as $formato) {

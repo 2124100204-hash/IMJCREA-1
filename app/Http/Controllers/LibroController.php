@@ -7,11 +7,48 @@ use Illuminate\Http\Request;
 
 class LibroController extends Controller
 {
+    public function index()
+    {
+        $libros = Libro::all();
+
+        return view('storebook', [
+            'libros' => $libros,
+            'filterTipo' => null,
+        ]);
+    }
+
+    public function show($id)
+    {
+        $libro = Libro::with('formatos')->findOrFail($id);
+        return view('details', [
+            'libro' => $libro,
+        ]);
+    }
+
+    public function tipo($tipo)
+    {
+        // Delegate to porTipo but pass the filter to the view
+        $libros = Libro::whereHas('formatos', function ($query) use ($tipo) {
+            $query->where('formato', $tipo);
+        })->get();
+
+        return view('storebook', [
+            'libros' => $libros,
+            'filterTipo' => $tipo,
+        ]);
+    }
+
     public function porTipo($tipo)
     {
-        $libros = Libro::where('tipo', $tipo)->get();
+        // kept for backwards compatibility but now unused
+        $libros = Libro::whereHas('formatos', function ($query) use ($tipo) {
+            $query->where('formato', $tipo);
+        })->get();
 
-        return view('storebook', compact('libros'));
+        return view('storebook', [
+            'libros' => $libros,
+            'filterTipo' => $tipo,
+        ]);
     }
 
     public function crear(Request $request)

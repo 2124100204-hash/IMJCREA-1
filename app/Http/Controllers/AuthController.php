@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -28,7 +29,10 @@ class AuthController extends Controller
             return back()->withErrors(['mensaje' => 'Usuario o contraseña incorrectos']);
         }
 
-      
+        // Usar el sistema de autenticación nativo de Laravel
+        Auth::login($usuario, $request->filled('remember'));
+        
+        // También guardar en sesión para compatibilidad
         session([
             'usuario_id' => $usuario->id,
             'usuario_rol' => $usuario->rol,
@@ -39,13 +43,18 @@ class AuthController extends Controller
 
         if ($usuario->rol === 'admin') {
             return redirect()->route('admin.dashboard');
-        } else {
+        } elseif ($usuario->rol === 'empleado') {
             return redirect()->route('empleado.dashboard');
+        } elseif ($usuario->rol === 'cliente') {
+            return redirect()->route('cliente.dashboard');
+        } else {
+            return redirect()->route('welcome');
         }
     }
 
     public function logout()
     {
+        Auth::logout();
         session()->flush();
         return redirect()->route('login');
     }
