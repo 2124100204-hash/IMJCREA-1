@@ -13,10 +13,10 @@ class Usuario extends Authenticatable
 
     // Ajustado a las columnas reales de tu tabla: name, email, codigo, password, tipo_usuario
     protected $fillable = [
+        'username',
         'name',
         'email',
         'password',
-
         'nombre',
         'rol',
         'activo',
