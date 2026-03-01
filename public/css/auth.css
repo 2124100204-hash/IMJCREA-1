@@ -305,3 +305,103 @@
     border-color: var(--amber);
     box-shadow: 0 0 0 3px rgba(232,130,12,0.12);
 }
+/* ============================================================
+   PREMIUM WORD POP EFFECT
+============================================================ */
+
+.hero-words {
+  perspective: 500px;
+}
+
+.hero-words .word {
+  display: block;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(3rem, 10vw, 8rem);
+  font-weight: 600;
+  line-height: 0.85;
+
+  animation: show 0.01s forwards, pop-word 1.5s forwards;
+  animation-timing-function: cubic-bezier(0.14, 1.23, 0.33, 1.16);
+
+  opacity: 0;
+  transform: rotateX(120deg);
+  transform-origin: 50% 100%;
+}
+
+.hero-words .word:nth-child(2) {
+  animation-delay: 1.5s;
+  color: var(--amber); /* CREA naranja */
+}
+
+.hero-words .word:first-child {
+  color: #000; /* INMERSIA negro */
+}
+
+@keyframes pop-word {
+  to {
+    transform: rotateX(0);
+  }
+}
+
+@keyframes show {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   UNIVERSAL ANIMATED BUTTON
+============================================================ */
+
+.btn-animated {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 50px;
+  padding: 0 20px;
+  position: relative;
+
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  border-radius: 12px;
+  cursor: pointer;
+
+  background-color: var(--amber);
+  color: white;
+
+  box-shadow: 0 7px 0 0 #c25e00;
+
+  overflow: hidden;
+  transition: 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-animated:active {
+  transform: translateY(7px);
+  box-shadow: none;
+}
+
+.btn-animated::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255,255,255,0.3) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: 0.4s ease;
+}
+
+.btn-animated:hover::after {
+  transform: translateX(100%);
+}
+
+.text-white-btn {
+  color: #fff !important;
+}
