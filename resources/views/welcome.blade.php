@@ -37,12 +37,12 @@
 
             <span class="hero-eyebrow">// Inmersión real en un mundo inrreal</span>
 
-            <h1 class="hero-title">
-                <span class="line-1">INMERSIA</span>
-                <span class="line-2">CREA.</span>
-            </h1>
+            <h1 class="hero-words">
+  <span class="word">INMERSIA</span>
+  <span class="word">CREA</span>
+</h1>
 
-            <p class="hero-subtitle">
+            <p class="text-type">
                 Explora mundos de conocimiento a través de la realidad aumentada y virtual. 
                 Libros que cobran vida, experiencias que trascienden la pantalla.
             </p>

@@ -17,7 +17,9 @@
         <div class="login-box">
             <h1>Iniciar Sesión</h1>
             <div class="back-link">
-                <a href="/">← Volver al inicio</a>
+                <a href="/" class="btn-animated text-white-btn">
+    Volver al inicio
+</a>
             </div>
 
             @if($errors->any())
@@ -43,6 +45,12 @@
                     </button>
                 </div>
             </form>
+            
+            <div class="button-container">
+    <a href="http://127.0.0.1:8000/register" class="btn-animated">
+        Registrar
+    </a>
+</div>
 
             <div class="button-container">
                 <p style="text-align: center; margin: 15px 0; font-size: 12px; color: #666;">
