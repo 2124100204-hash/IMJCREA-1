@@ -20,18 +20,38 @@
             padding:40px 8vw 100px;
         }
 
-        .book-card{
-            background:white;
-            border-radius:20px;
-            overflow:hidden;
-            transition:.35s ease;
-            box-shadow:0 15px 40px rgba(0,0,0,.06);
+        /* --- ESTILO NEÓN UIVERSE --- */
+        .book-card-container {
+            background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
+            border-radius: 20px;
+            transition: all .3s;
         }
 
-        .book-card:hover{
-            transform:translateY(-10px);
+        .book-card-container:hover {
+            box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.30);
         }
 
+        .book-card-content {
+            width: 100%;
+            height: 100%;
+            background-color: #1a1a1a;
+            border-radius: 19px;
+            transition: all .2s;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .book-card-content:hover {
+            transform: scale(0.98);
+            border-radius: 20px;
+        }
+
+        /* Ajustes para texto sobre fondo negro */
+        .book-card-content .book-title { color: #ffffff; }
+        .book-card-content .book-author { color: rgba(255,255,255,0.7); }
+        .book-card-content .book-category { color: #00ff75; opacity: 1; }
+        .book-card-content .book-price { color: #00ff75; }
         .book-cover{
             height:230px;
             display:flex;

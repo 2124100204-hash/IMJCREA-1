@@ -53,6 +53,21 @@
     animation: fadeUp 0.9s 0.3s both;
 }
 
+/* --- ESTILO PARA EL MENSAJE DE ERROR --- */
+.login-box p[style*="color:red"] {
+    display: block;
+    background: rgba(255, 0, 0, 0.05); /* Un fondo rojo muy sutil */
+    color: #d93025 !important;        /* Un rojo más elegante */
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    padding: 10px;
+    margin: 10px 0 20px 0;            /* Espacio arriba y abajo para no encimarse */
+    border-radius: 8px;
+    border: 1px solid rgba(255, 0, 0, 0.1);
+    position: relative;
+    clear: both;                      /* Limpia cualquier elemento flotante */
+}
 .login-box::before {
     content: '';
     display: block;
@@ -350,38 +365,38 @@
 }
 
 /* ============================================================
-   UNIVERSAL ANIMATED BUTTON
+   UNIVERSAL ANIMATED BUTTON (MODIFICADO)
 ============================================================ */
 
 .btn-animated {
   display: flex;
   align-items: center;
   justify-content: center;
-
   height: 50px;
   padding: 0 20px;
   position: relative;
-
   font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
-
   border-radius: 12px;
   cursor: pointer;
-
-  background-color: var(--amber);
+  background-color: var(--amber); /* Color naranja original */
   color: white;
-
-  box-shadow: 0 7px 0 0 #c25e00;
-
+  border: none; /* Asegúrate de que no haya bordes extra */
+  
+  /* Sombra que da el efecto 3D inicial */
+  box-shadow: 0 7px 0 0 #c25e00; 
+  
   overflow: hidden;
-  transition: 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.1s ease;
   text-decoration: none;
 }
 
+/* ESTADO AL PRESIONAR (CLICK) */
 .btn-animated:active {
-  transform: translateY(7px);
-  box-shadow: none;
+  transform: translateY(7px); /* Baja el botón */
+  box-shadow: none;           /* Desaparece la sombra para simular que tocó el fondo */
+  background-color: #1a1a1a;  /* SE VUELVE NEGRO/OSCURO */
 }
 
 .btn-animated::after {
@@ -400,8 +415,4 @@
 
 .btn-animated:hover::after {
   transform: translateX(100%);
-}
-
-.text-white-btn {
-  color: #fff !important;
 }
