@@ -45,7 +45,7 @@
             </a>
             <a href="{{ route('libros.tipo', 'vr') }}">Realidad Virtual</a>
             <a href="{{ route('libros.tipo', 'ar') }}">Realidad Aumentada</a>
-            <a href="{{ route('contact') }}">Contacto</a>
+            <a href="{{ route('contact') }}">Contactos</a>
             <a href="{{ route('login') }}" class="btn-ghost">Iniciar Sesión</a>
         </div>
     @endauth
