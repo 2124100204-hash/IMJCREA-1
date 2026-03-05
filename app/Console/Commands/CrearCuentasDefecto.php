@@ -2,97 +2,51 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Cliente;
-use App\Models\Usuario;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Usuario;
 
-class CrearCuentasDefecto extends Command
+class CrearCuentasDefectos extends Command
 {
-    protected $signature = 'crear:cuentas-defecto';
-    protected $description = 'Crear cuentas de administrador y empleados por defecto';
+    protected $signature = 'crearCuentasDefectos';
+    protected $description = 'Crea 10 usuarios y 10 clientes por defecto';
 
     public function handle()
     {
-        $this->info('Creando cuentas por defecto...');
+        $this->info('Creando usuarios por defecto...');
 
-        $cuentas = [
-            [
-                'username' => 'admin',
-                'email' => 'admin@imjcrea.com',
-                'password' => 'admin123',
-                'nombre' => 'Administrador',
-                'rol' => 'admin'
-            ],
-            [
-                'username' => 'empleado1',
-                'email' => 'empleado1@imjcrea.com',
-                'password' => 'empleado123',
-                'nombre' => 'Juan Pérez',
-                'rol' => 'empleado'
-            ],
-            [
-                'username' => 'cliente',
-                'email' => 'cliente@imjcrea.com',
-                'password' => 'cliente123',
-                'nombre' => 'Cliente Ejemplo',
-                'rol' => 'cliente'
-            ],
-            [
-                'username' => 'empleado2',
-                'email' => 'empleado2@imjcrea.com',
-                'password' => 'empleado123',
-                'nombre' => 'María García',
-                'rol' => 'empleado'
-            ]
-        ];
+        // Crear 10 usuarios (admin o empleados)
+        for ($i = 1; $i <= 10; $i++) {
+            $rol = ($i % 2 == 0) ? 'admin' : 'empleado';
 
-        foreach ($cuentas as $cuenta) {
-            $usuarioExiste = Usuario::where('username', $cuenta['username'])->first();
+            Usuario::create([
+                'username' => 'usuario'.$i,
+                'email' => 'usuario'.$i.'@imjcrea.com',
+                'password' => Hash::make('123456'),
+                'nombre' => 'Usuario '.$i,
+                'rol' => $rol,
+                'activo' => 1,
+            ]);
 
-            if (!$usuarioExiste) {
-                $usuario = Usuario::create([
-                    'username' => $cuenta['username'],
-                    'email' => $cuenta['email'],
-                    'password' => Hash::make($cuenta['password']),
-                    'nombre' => $cuenta['nombre'],
-                    'rol' => $cuenta['rol'],
-                    'activo' => true
-                ]);
-                $this->info("✓ Cuenta creada: {$cuenta['username']}");
-
-                // Si es cliente, crear registro en tabla de clientes
-                if ($cuenta['rol'] === 'cliente') {
-                    $clienteExiste = Cliente::where('usuario_id', $usuario->id)->first();
-                    if (!$clienteExiste) {
-                        Cliente::create([
-                            'usuario_id' => $usuario->id,
-                            'nombre' => $cuenta['nombre'],
-                            'correo' => $cuenta['email'],
-                            'telefono' => null
-                        ]);
-                        $this->info("✓ Cliente creado para: {$cuenta['username']}");
-                    }
-                }
-            } else {
-                $this->info("ℹ Cuenta ya existe: {$cuenta['username']}");
-                
-                // Si el usuario es cliente, verificar que tenga registro en tabla clientes
-                if ($usuarioExiste->rol === 'cliente') {
-                    $clienteExiste = Cliente::where('usuario_id', $usuarioExiste->id)->first();
-                    if (!$clienteExiste) {
-                        Cliente::create([
-                            'usuario_id' => $usuarioExiste->id,
-                            'nombre' => $usuarioExiste->nombre,
-                            'correo' => $usuarioExiste->email,
-                            'telefono' => null
-                        ]);
-                        $this->info("✓ Cliente creado para: {$usuarioExiste->username}");
-                    }
-                }
-            }
+            $this->line("Usuario {$i} creado como {$rol}.");
         }
 
-        $this->info('✓ Cuentas e clientes inicializados correctamente');
+        $this->info('Creando clientes por defecto...');
+
+        // Crear 10 clientes
+        for ($i = 1; $i <= 10; $i++) {
+            Usuario::create([
+                'username' => 'cliente'.$i,
+                'email' => 'cliente'.$i.'@imjcrea.com',
+                'password' => Hash::make('123456'),
+                'nombre' => 'Cliente '.$i,
+                'rol' => 'cliente',
+                'activo' => 1,
+            ]);
+
+            $this->line("Cliente {$i} creado.");
+        }
+
+        $this->info('✅ 10 usuarios y 10 clientes creados correctamente.');
     }
 }

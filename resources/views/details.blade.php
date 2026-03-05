@@ -69,7 +69,10 @@
             <div class="book-info">
                 <span class="book-category">{{ strtoupper($libro->categoria ?? 'General') }}</span>
                 <h1>{{ $libro->titulo }}</h1>
-                <p class="book-author">Por {{ $libro->autor }}</p>
+                <p class="book-author">
+    <i class="fa fa-user"></i>
+    Por {{ $libro->autor->nombre ?? 'Autor desconocido' }}
+</p>
 
                 <p class="book-description">
                     {{ $libro->descripcion ?? 'Libro sin descripción disponible.' }}

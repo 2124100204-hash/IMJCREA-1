@@ -118,7 +118,9 @@
             <div class="book-body">
           <p class="book-category">{{ strtoupper($tipo) }}</p>
 <h3 class="book-title">{{ $libro->titulo }}</h3>
-<p class="book-author">{{ $libro->autor }}</p>
+<p class="book-author">
+    {{ $libro->autor->nombre ?? 'Autor desconocido' }}
+</p>
 
                 @if($tipo === 'ar')
                     <p class="experience-note">

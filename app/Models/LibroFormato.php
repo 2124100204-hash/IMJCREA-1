@@ -10,7 +10,7 @@ class LibroFormato extends Model
         'libro_id',
         'formato',
         'stock',
-        'precio'
+        'precio',
     ];
 
     public function libro()
