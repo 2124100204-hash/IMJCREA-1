@@ -45,8 +45,8 @@
             </a>
             <a href="{{ route('libros.tipo', 'vr') }}">Realidad Virtual</a>
             <a href="{{ route('libros.tipo', 'ar') }}">Realidad Aumentada</a>
-            <a href="{{ route('contact') }}">Contacto</a>
-            <a href="{{ route('login') }}" class="btn-nav-primary">Iniciar Sesión</a>
+            <a href="{{ route('contact') }}">Contactos</a>
+            <a href="{{ route('login') }}" class="btn-ghost">Iniciar Sesión</a>
         </div>
     @endauth
 
@@ -68,31 +68,21 @@
     <div class="books-grid">
 
         @foreach($libros as $libro)
+    @php
+        // Configuración de colores neón por tipo
+        $config = [
+            'fisico' => ['color' => '#ff9100', 'badge' => 'Físico', 'icon' => 'fa-book'],
+            'ar'     => ['color' => '#00ff75', 'badge' => 'AR', 'icon' => 'fa-camera'],
+            'vr'     => ['color' => '#cc00ff', 'badge' => 'VR', 'icon' => 'fa-vr-cardboard'],
+        ];
 
-        @php
-   $config = [
-    'fisico' => [
-        'color' => '#c4a484',
-        'icon' => 'fa-book',
-        'badge' => 'Físico',
-        'bg' => 'linear-gradient(135deg,#fff8e1,#ffe0b2)',
-        'btn' => 'Comprar'
-    ],
-    'ar' => [
-        'color' => '#12a090',
-        'icon' => 'fa-camera',
-        'badge' => 'AR',
-        'bg' => 'linear-gradient(135deg,#e8f5e9,#c8e6c9)',
-        'btn' => 'Incluye AR'
-    ],
-    'vr' => [
-        'color' => '#6c3bd1',
-        'icon' => 'fa-vr-cardboard',
-        'badge' => 'VR',
-        'bg' => 'linear-gradient(135deg,#ede7f6,#d1c4e9)',
-        'btn' => 'Experiencia VR'
-    ],
-];
+        $preferred = $filterTipo ?? null;
+        $formato = $preferred ? $libro->formatos->firstWhere('formato', $preferred) : null;
+        $formato = $formato ?? $libro->formatos->first();
+        $tipo = $formato?->formato ?? 'fisico';
+        $precio = $formato?->precio ?? 0;
+
+        $current = $config[$tipo] ?? $config['fisico'];
 @endphp
        @php
     // If the view was rendered with a filterTipo (e.g. 'vr' or 'ar'), prefer that formato
@@ -106,16 +96,18 @@
 @endphp
 
 
-        <div class="book-card">
+        <div class="book-card-container" style="--neon-color: {{ $current['color'] }};">
+        <div class="book-card-content">
 
-            <div class="book-cover" style="background: {{ $current['bg'] }}">
-                <img src="{{ asset('img/libro1.jpeg') }}">
-                <span class="book-badge" style="background: {{ $current['color'] }}">
+            <div class="book-cover">
+                <img src="{{ asset('img/libro1.jpeg') }}" alt="{{ $libro->titulo }}">
+                <span class="book-badge" style="background: {{ $current['color'] }}; color: #1a1a1a;">
                     {{ $current['badge'] }}
                 </span>
             </div>
 
             <div class="book-body">
+
           <p class="book-category">{{ strtoupper($tipo) }}</p>
 <h3 class="book-title">{{ $libro->titulo }}</h3>
 <p class="book-author">
@@ -123,31 +115,32 @@
 </p>
 
                 @if($tipo === 'ar')
-                    <p class="experience-note">
-                        Escanea el libro con nuestra app para contenido interactivo.
-                    </p>
-                @endif
+                <p class="book-category" style="color: {{ $current['color'] }};">{{ strtoupper($tipo) }}</p>
+                <h3 class="book-title">{{ $libro->titulo }}</h3>
+                <p class="book-author">Por {{ $libro->autor }}</p>
+                
+                @if($tipo === 'ar' || $tipo === 'vr')
 
-                @if($tipo === 'vr')
                     <p class="experience-note">
-                        Compatible con visor de realidad virtual.
+                        <i class="fa {{ $current['icon'] }}" style="margin-right: 5px;"></i>
+                        {{ $tipo === 'ar' ? 'Realidad Aumentada' : 'Realidad Virtual' }}
                     </p>
                 @endif
             </div>
 
             <div class="book-footer">
-                <div class="book-price">
-                  ${{ number_format($precio, 2) }}
+                <div class="book-price" style="color: {{ $current['color'] }};">
+                    ${{ number_format($precio, 2) }}
                 </div>
 
                 <a href="{{ route('libro.details', $libro->id) }}" class="book-btn"
-                        style="background: {{ $current['color'] }}; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: white;">
-                    <i class="fa {{ $current['icon'] }}"></i>
-                    {{ $current['btn'] }}
+                   style="border: 1px solid {{ $current['color'] }}; color: {{ $current['color'] }};">
+                    {{ $current['btn'] ?? 'Detalles' }}
                 </a>
             </div>
 
         </div>
+    </div>
 
         @endforeach
 
