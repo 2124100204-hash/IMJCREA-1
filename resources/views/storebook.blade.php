@@ -100,11 +100,11 @@
         <div class="book-card-content">
 
             <div class="book-cover">
-                <img src="{{ asset('img/libro1.jpeg') }}" alt="{{ $libro->titulo }}">
-                <span class="book-badge" style="background: {{ $current['color'] }}; color: #1a1a1a;">
-                    {{ $current['badge'] }}
-                </span>
-            </div>
+    <img src="{{ asset('img/libro1.jpeg') }}" alt="{{ $libro->titulo }}">
+    <span class="book-badge" style="background: {{ $current['color'] }}; color: #1a1a1a;">
+        {{ $current['badge'] }}
+    </span>
+</div>
 
             <div class="book-body">
                 <p class="book-category" style="color: {{ $current['color'] }};">{{ strtoupper($tipo) }}</p>

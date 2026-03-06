@@ -21,78 +21,121 @@
         }
 
         /* --- ESTILO NEÓN UIVERSE --- */
-        .book-card-container {
-            background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
-            border-radius: 20px;
-            transition: all .3s;
-        }
+        /* --- ESTILO MINIMALISTA BLANCO --- */
+/* --- CONTENEDOR PRINCIPAL (Equivale a tu .card) --- */
+.book-card-container {
+    box-sizing: border-box;
+    /* Quitamos el ancho fijo de 190px para que se adapte a tu grid */
+    background: rgba(255, 255, 255, 0.7); /* Blanco traslúcido para el efecto glass */
+    border: 1px solid white;
+    box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(6px);
+    border-radius: 17px;
+    cursor: pointer;
+    transition: all 0.5s;
+    user-select: none;
+    overflow: hidden; /* Para que nada se salga de las esquinas redondeadas */
+}
 
-        .book-card-container:hover {
-            box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.30);
-        }
+/* --- ANIMACIÓN HOVER (Escala y Borde) --- */
+.book-card-container:hover {
+    border: 1px solid black;
+    transform: scale(1.05);
+}
 
-        .book-card-content {
-            width: 100%;
-            height: 100%;
-            background-color: #1a1a1a;
-            border-radius: 19px;
-            transition: all .2s;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+/* --- ANIMACIÓN ACTIVE (El "clic" con rotación) --- */
+.book-card-container:active {
+    transform: scale(0.95) rotateZ(1.7deg);
+}
 
-        .book-card-content:hover {
-            transform: scale(0.98);
-            border-radius: 20px;
-        }
+/* --- AJUSTES DEL CONTENIDO INTERNO --- */
+.book-card-content {
+    background: transparent; /* Importante: transparente para ver el efecto del contenedor */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
 
-        /* Ajustes para texto sobre fondo negro */
-        .book-card-content .book-title { color: #ffffff; }
-        .book-card-content .book-author { color: rgba(255,255,255,0.7); }
-        .book-card-content .book-category { color: #00ff75; opacity: 1; }
-        .book-card-content .book-price { color: #00ff75; }
-        .book-cover{
-            height:230px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            position:relative;
-        }
+/* Aseguramos que los textos se vean bien con el nuevo estilo */
+.book-card-content .book-title { 
+    color: black; 
+    font-weight: bolder; 
+    margin-top: 10px;
+}
 
-        .book-cover img{
-            max-height:100%;
-        }
+.book-card-content .book-price { 
+    color: black; 
+    font-weight: bolder; 
+}
 
-        .book-badge{
-            position:absolute;
-            top:15px;
-            right:15px;
-            padding:6px 14px;
-            border-radius:50px;
-            font-size:12px;
-            color:white;
-        }
+/* El botón mantiene el estilo beige que te gustó antes */
+.book-btn {
+    background-color: #c5a98d;
+    color: white !important;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    transition: 0.3s;
+}
 
-        .book-body{
-            padding:20px;
-        }
+.book-btn:hover {
+    background-color: #b09378; /* Un poco más oscuro al pasar el mouse */
+    opacity: 1;
+}
 
-        .book-category{
-            font-size:12px;
-            opacity:.6;
-            margin-bottom:6px;
-        }
+/* Badge superior (Físico) */
+/* --- AJUSTE DE LA PALABRA FÍSICO (BADGE) --- */
+/* --- 1. EL CONTENEDOR DE LA IMAGEN (IMPORTANTE) --- */
+.book-cover {
+    position: relative; /* Esto permite que el badge se pegue a la foto */
+    overflow: hidden;
+    border-radius: 17px 17px 0 0; /* Redondea solo las esquinas de arriba */
+}
 
-        .book-title{
-            font-weight:600;
-            margin-bottom:6px;
-        }
+.book-cover img {
+    display: block;
+    width: 100%;
+    height: 250px; /* Ajusta la altura según necesites */
+    object-fit: cover;
+}
 
-        .book-author{
-            font-size:14px;
-            opacity:.7;
-        }
+/* --- 2. EL BADGE (FÍSICO) POSICIONADO ARRIBA --- */
+.book-badge {
+    position: absolute;
+    top: 15px;      /* Distancia desde el borde superior de la foto */
+    right: 15px;    /* Distancia desde el borde derecho de la foto */
+    padding: 5px 15px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-radius: 20px; /* Estilo píldora como en la imagen 2 */
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    /* El color de fondo y texto lo toma del estilo en línea de tu HTML */
+}
+
+/* --- 3. EL CUERPO DEL TEXTO --- */
+.book-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+
+.book-title {
+    color: #1a1a1a;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 4px;
+    margin-top: 0; /* Quitamos margen superior para que pegue al badge */
+}
+
+.book-author {
+    font-size: 13px;
+    color: #777;
+    margin-bottom: 15px;
+}
 
         .book-footer{
             display:flex;
