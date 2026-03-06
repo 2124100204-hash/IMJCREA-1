@@ -3,17 +3,25 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\LibroFormato;
 
 class Libro extends Model
 {
-    protected $table = 'libros';
-    protected $fillable = ['titulo', 'autor', 'descripcion', 'formato', 'usuario_id', 'nivel_edad', 'duracion', 'categoria'];
-    public $timestamps = true;
+    protected $fillable = [
+        'titulo',
+        'descripcion',
+        'autor_id',
+        'nivel_edad',
+        'duracion',
+        'categoria',
+    ];
 
-    public function formatos(): HasMany
+    public function autor()
     {
-        return $this->hasMany(LibroFormato::class, 'libro_id');
+        return $this->belongsTo(Autor::class);
+    }
+
+    public function formatos()
+    {
+        return $this->hasMany(LibroFormato::class);
     }
 }

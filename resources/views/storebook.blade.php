@@ -107,11 +107,20 @@
 </div>
 
             <div class="book-body">
+
+          <p class="book-category">{{ strtoupper($tipo) }}</p>
+<h3 class="book-title">{{ $libro->titulo }}</h3>
+<p class="book-author">
+    {{ $libro->autor->nombre ?? 'Autor desconocido' }}
+</p>
+
+                @if($tipo === 'ar')
                 <p class="book-category" style="color: {{ $current['color'] }};">{{ strtoupper($tipo) }}</p>
                 <h3 class="book-title">{{ $libro->titulo }}</h3>
                 <p class="book-author">Por {{ $libro->autor }}</p>
                 
                 @if($tipo === 'ar' || $tipo === 'vr')
+
                     <p class="experience-note">
                         <i class="fa {{ $current['icon'] }}" style="margin-right: 5px;"></i>
                         {{ $tipo === 'ar' ? 'Realidad Aumentada' : 'Realidad Virtual' }}

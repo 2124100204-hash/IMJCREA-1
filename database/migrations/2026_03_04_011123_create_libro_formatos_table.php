@@ -9,23 +9,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-   public function up(): void
+ public function up(): void
 {
-    Schema::create('usuarios', function (Blueprint $table) {
+    Schema::create('libro_formatos', function (Blueprint $table) {
         $table->id();
-        $table->string('codigo')->unique();
-        $table->string('password');
-        $table->enum('tipo_usuario', ['admin', 'cliente', 'empleado']);
+        $table->foreignId('libro_id')->constrained('libros')->onDelete('cascade');
+        $table->string('formato'); // fisico, vr, ar
+        $table->integer('stock');
+        $table->decimal('precio', 10, 2);
         $table->timestamps();
     });
 }
-
-
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('usuarios');
+        Schema::dropIfExists('libro_formatos');
     }
 };
