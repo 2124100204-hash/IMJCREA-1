@@ -429,50 +429,8 @@
     transition: background 0.25s, color 0.25s, transform 0.2s, box-shadow 0.25s;
 }
 
-.logout-btn:hover {
-    background: var(--rose);
-    color: var(--warm-white);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(201,79,109,0.25);
-}
-
-/* ── NAVBAR LINKS ─────────────────────────────────────────── */
-
-.navbar-links a {
-    position: relative;
-    padding: 8px 16px;
-    border-radius: 50px;
-    text-decoration: none;
-    color: var(--ink-light);
-    font-weight: 500;
-    font-size: 14px;
-    transition: color 0.25s ease;
-    overflow: hidden;
-    z-index: 1;
-}
-
-.navbar-links a::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--amber);
-    border-radius: 50px;
-    transform: scale(0);
-    opacity: 0;
-    transition: transform 0.38s cubic-bezier(.68,-.55,.27,1.55), opacity 0.25s;
-    z-index: -1;
-}
-
-.navbar-links a:hover {
-    color: var(--warm-white);
-}
-
-.navbar-links a:hover::after,
-.navbar-links a.active::after {
-    transform: scale(1);
-    opacity: 1;
-}
-
-.navbar-links a.active {
-    color: var(--warm-white);
-}
+        .logout-btn:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }

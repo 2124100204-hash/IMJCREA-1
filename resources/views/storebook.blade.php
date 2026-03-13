@@ -43,6 +43,9 @@
             <a href="{{ route('libros.tipo', 'ar') }}">Realidad Aumentada</a>
             <a href="{{ route('contact') }}">Contactos</a>
             <a href="{{ route('login') }}" class="btn-ghost">Iniciar Sesión</a>
+            <a href="{{ route('contact') }}">Contacto</a>
+            <a href="login.html">Iniciar Sesión</a>
+
         </div>
     @endauth
 
