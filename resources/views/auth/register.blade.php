@@ -37,17 +37,17 @@
                         <input type="password" id="password_confirmation" name="password_confirmation" required placeholder="••••••••">
                     </div>
 
-                    <button type="submit" class="login-btn">Registrarse</button>
-                </form>
+                    <button type="submit" class="button-register">Registrarse</button>
 
-                    <div class="button-container">
-                        <button class="accept-btn" onclick="window.location.href='{{ route('login') }}'">
-                             Iniciar sesión
-                        </button>
-
+<div class="button-container">
+    <button type="button" class="button-login-alt" onclick="window.location.href='{{ route('login') }}'">
+        Iniciar sesión
+    </button>
                 <div class="back-link">
-                    <a href="/">← Volver al inicio</a>
-                </div>
+    <a href="/" class="btn-back-gradient">
+        <span>← Volver al inicio</span>
+    </a>
+</div>
             </div>
         </div>
     </body>

@@ -99,15 +99,12 @@
             <div class="book-card-container">
                 <div class="book-card-content" style="--type-color: {{ $color }};">
 
-                    <div class="book-cover">
-                        <img src="{{ asset('img/libro1.jpeg') }}" alt="{{ $libro->titulo }}">
-
-                        {{-- Badge coloreado con icono del tipo --}}
-                        <span class="book-badge" style="background: {{ $color }};">
-                            <i class="fa {{ $current['icon'] }}" style="margin-right: 4px;"></i>
-                            {{ $current['badge'] }}
-                        </span>
-                    </div>
+            <div class="book-cover">
+                <img src="{{ asset('img/libro1.jpeg') }}" alt="{{ $libro->titulo }}">
+                <span class="book-badge" style="background: {{ $current['color'] }}; color: #1a1a1a;">
+                    {{ $current['badge'] }}
+                </span>
+            </div>
 
                     <div class="book-body">
 
