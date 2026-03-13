@@ -5,17 +5,33 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Models\Libro;
 use App\Models\Autor;
+use App\Models\Categoria;
 use App\Models\LibroFormato;
 
 class CrearLibrosDefecto extends Command
 {
     protected $signature = 'crear:libros-defecto';
-    protected $description = 'Crear libros de ejemplo con formatos físico, VR y AR';
+    protected $description = 'Crear categorías, autores y libros de ejemplo con relaciones limpias';
 
     public function handle()
     {
-        $this->info('Creando libros por defecto...');
+        $this->info('--- Iniciando inicialización de la base de datos ---');
 
+        // 1. 🔹 Crear las Categorías Base (Aseguramos que existan en la tabla 'categorias')
+        $categoriasBase = [
+            'Ciencia', 
+            'Naturaleza', 
+            'Historia', 
+            'Fantasía', 
+            'Tecnología'
+        ];
+
+        foreach ($categoriasBase as $nombreCat) {
+            Categoria::firstOrCreate(['nombre' => $nombreCat]);
+        }
+        $this->info('✓ Categorías base aseguradas.');
+
+        // 2. Definición de Libros de ejemplo
         $libros = [
             [
                 'titulo' => 'El Universo en tus Manos',
@@ -27,7 +43,6 @@ class CrearLibrosDefecto extends Command
                 'formatos' => [
                     ['formato' => 'fisico', 'stock' => 50, 'precio' => 299.99],
                     ['formato' => 'vr', 'stock' => 999, 'precio' => 149.99],
-                    ['formato' => 'ar', 'stock' => 999, 'precio' => 99.99],
                 ],
             ],
             [
@@ -40,57 +55,55 @@ class CrearLibrosDefecto extends Command
                 'formatos' => [
                     ['formato' => 'fisico', 'stock' => 80, 'precio' => 199.99],
                     ['formato' => 'vr', 'stock' => 999, 'precio' => 129.99],
-                    ['formato' => 'ar', 'stock' => 999, 'precio' => 79.99],
                 ],
             ],
+            [
+                'titulo' => 'Crónicas de la IA',
+                'autor' => 'Elena Torres',
+                'descripcion' => 'El futuro de la tecnología en tus ojos.',
+                'nivel_edad' => 'juvenil',
+                'duracion' => 45,
+                'categoria' => 'Tecnología',
+                'formatos' => [
+                    ['formato' => 'vr', 'stock' => 500, 'precio' => 180.00],
+                ],
+            ]
         ];
 
         foreach ($libros as $libroData) {
-
             $formatos = $libroData['formatos'];
-            unset($libroData['formatos']);
+            
+            // 🔹 Buscamos el objeto de la categoría para obtener su ID real
+            $categoriaObj = Categoria::where('nombre', $libroData['categoria'])->first();
+            
+            // 🔹 Buscamos o creamos el autor
+            $autor = Autor::firstOrCreate(['nombre' => $libroData['autor']]);
 
-            // 🔥 Crear o buscar autor
-            $autor = Autor::firstOrCreate([
-                'nombre' => $libroData['autor']
-            ]);
-
-            // Asignar autor_id
-            $libroData['autor_id'] = $autor->id;
-
-            // Eliminar campo autor (no existe en tabla libros)
-            unset($libroData['autor']);
-
-            // Crear o actualizar libro
+            // 🔹 Creamos/Actualizamos el libro usando solo categoria_id
             $libro = Libro::updateOrCreate(
                 [
                     'titulo' => $libroData['titulo'],
-                    'autor_id' => $autor->id
                 ],
-                $libroData
+                [
+                    'descripcion'  => $libroData['descripcion'],
+                    'nivel_edad'   => $libroData['nivel_edad'],
+                    'duracion'     => $libroData['duracion'],
+                    'categoria_id' => $categoriaObj->id, // Relación limpia
+                    'autor_id'     => $autor->id
+                ]
             );
 
-            $this->info("✓ Libro listo: {$libro->titulo}");
+            $this->info("✓ Libro listo: {$libro->titulo} [ID Cat: {$categoriaObj->id}]");
 
-            // Crear formatos
+            // 3. Crear formatos asociados
             foreach ($formatos as $fmt) {
-
                 LibroFormato::updateOrCreate(
-                    [
-                        'libro_id' => $libro->id,
-                        'formato' => $fmt['formato']
-                    ],
-                    [
-                        'stock' => $fmt['stock'],
-                        'precio' => $fmt['precio']
-                    ]
+                    ['libro_id' => $libro->id, 'formato' => $fmt['formato']],
+                    ['stock' => $fmt['stock'], 'precio' => $fmt['precio']]
                 );
-
-                $this->info("  └ Formato [{$fmt['formato']}] creado/actualizado");
             }
         }
 
-        $this->info('');
-        $this->info('✓ Libros inicializados correctamente');
+        $this->info('--- Proceso finalizado con éxito ---');
     }
 }

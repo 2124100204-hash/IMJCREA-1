@@ -29,7 +29,7 @@
                     <div class="user-avatar">{{ strtoupper(substr(auth()->user()->nombre ?? 'U', 0, 1)) }}</div>
                     <span>{{ auth()->user()->nombre ?? 'Usuario' }}</span>
                 </div>
-                <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                <form action="{{ route('logout') }}" method="POST" >
                     @csrf
                     <button type="submit" class="logout-btn">Salir</button>
                 </form>
@@ -107,7 +107,7 @@
                                 @endphp
                                 <div class="formato-card" data-formato="{{ $tipo }}" data-precio="{{ $formato->precio }}" data-stock="{{ $formato->stock }}">
                                     <div class="formato-icon">
-                                        <i class="fa {{ $info['icon'] }}" style="color: {{ $info['color'] }}"></i>
+                                        <i class="fa {{ $info['icon'] }}" ></i>
                                     </div>
                                     <div class="formato-name">{{ $info['name'] }}</div>
                                     <div class="formato-price">${{ number_format($formato->precio, 2) }}</div>
@@ -144,7 +144,7 @@
                         @endauth
                     </div>
                 @else
-                    <div style="background: var(--cream); padding: 20px; border-radius: 8px; text-align: center;">
+                    <div>
                         <p style="color: var(--ink-muted);">No hay formatos disponibles para este libro.</p>
                     </div>
                 @endif

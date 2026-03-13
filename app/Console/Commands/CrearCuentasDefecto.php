@@ -5,48 +5,67 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Usuario;
+use App\Models\Empleado;
+use App\Models\Cliente;
 
-class CrearCuentasDefectos extends Command
+class CrearCuentasDefecto extends Command
 {
-    protected $signature = 'crearCuentasDefectos';
-    protected $description = 'Crea 10 usuarios y 10 clientes por defecto';
+    protected $signature = 'crear:cuentas-defecto';
+    protected $description = 'Crea usuarios vinculados a sus perfiles de empleado o cliente';
 
     public function handle()
     {
-        $this->info('Creando usuarios por defecto...');
+        $this->info('Iniciando creación de perfiles vinculados...');
 
-        // Crear 10 usuarios (admin o empleados)
-        for ($i = 1; $i <= 10; $i++) {
+        // 1. Crear 10 Empleados (y sus respectivos Usuarios)
+        for ($i = 1; $i <= 4; $i++) {
             $rol = ($i % 2 == 0) ? 'admin' : 'empleado';
 
-            Usuario::create([
+            // Creamos el Usuario
+            $usuario = Usuario::create([
                 'username' => 'usuario'.$i,
                 'email' => 'usuario'.$i.'@imjcrea.com',
-                'password' => Hash::make('123456'),
+                'password' => Hash::make('123'),
                 'nombre' => 'Usuario '.$i,
                 'rol' => $rol,
                 'activo' => 1,
             ]);
 
-            $this->line("Usuario {$i} creado como {$rol}.");
+            // Creamos el Empleado vinculado
+            Empleado::create([
+                'usuario_id' => $usuario->id, // Vinculación
+                'nombre' => $usuario->nombre,
+                'puesto' => ucfirst($rol),
+                'salario' => 1500.00,
+            ]);
+
+            $this->line("✓ Usuario {$i} y su perfil de Empleado ({$rol}) creados.");
         }
 
-        $this->info('Creando clientes por defecto...');
+        $this->info('Creando perfiles de Clientes...');
 
-        // Crear 10 clientes
-        for ($i = 1; $i <= 10; $i++) {
-            Usuario::create([
+        // 2. Crear 10 Clientes (y sus respectivos Usuarios)
+        for ($i = 1; $i <= 4; $i++) {
+            $usuario = Usuario::create([
                 'username' => 'cliente'.$i,
                 'email' => 'cliente'.$i.'@imjcrea.com',
-                'password' => Hash::make('123456'),
+                'password' => Hash::make('123'),
                 'nombre' => 'Cliente '.$i,
                 'rol' => 'cliente',
                 'activo' => 1,
             ]);
 
-            $this->line("Cliente {$i} creado.");
+            // Creamos el Cliente vinculado
+            Cliente::create([
+                'usuario_id' => $usuario->id, // Vinculación
+                'nombre' => $usuario->nombre,
+                'correo' => $usuario->email,
+                'telefono' => '123456789',
+            ]);
+
+            $this->line("✓ Usuario {$i} y su perfil de Cliente creados.");
         }
 
-        $this->info('✅ 10 usuarios y 10 clientes creados correctamente.');
+        $this->info('✅ Proceso completado: Todas las tablas están sincronizadas.');
     }
 }

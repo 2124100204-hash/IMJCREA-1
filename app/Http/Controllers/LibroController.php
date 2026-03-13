@@ -88,48 +88,35 @@ class LibroController extends Controller
         return back()->with('success', 'Libro eliminado correctamente');
     }
 
-    public function actualizar(Request $request, $id)
-    {
-        $request->validate([
-            'titulo' => 'required|string|max:255',
-            'autor' => 'required|string|max:255',
-            'descripcion' => 'nullable|string',
-            'formato' => 'required|string|max:50',
-            'precio' => 'required|numeric',
-            'stock' => 'required|integer',
-        ]);
+ public function actualizar(Request $request, $id)
+{
+    $libro = Libro::findOrFail($id);
 
-        $libro = Libro::with('formatos')->findOrFail($id);
+    // 1. Actualizar datos del libro
+    $libro->update([
+        'titulo' => $request->titulo,
+        'descripcion' => $request->descripcion,
+        'nivel_edad' => $request->nivel_edad,
+        'duracion' => $request->duracion,
+        'autor_id' => $request->autor_id,
+        'categoria_id' => $request->categoria_id,
+    ]);
 
-        // Actualizar o crear autor
-        $autor = Autor::firstOrCreate([
-            'nombre' => $request->autor
-        ]);
+    // 2. Gestionar Formatos (Físico, VR, AR)
+    // Borramos los formatos actuales para insertar los nuevos seleccionados
+    \App\Models\LibroFormato::where('libro_id', $id)->delete();
 
-        // Actualizar libro
-        $libro->update([
-            'titulo' => $request->titulo,
-            'descripcion' => $request->descripcion,
-            'autor_id' => $autor->id,
-        ]);
-
-        // Actualizar formato (si existe)
-        $formato = $libro->formatos->firstWhere('formato', $request->formato);
-
-        if ($formato) {
-            $formato->update([
-                'precio' => $request->precio,
-                'stock' => $request->stock,
-            ]);
-        } else {
-            LibroFormato::create([
-                'libro_id' => $libro->id,
-                'formato' => $request->formato,
-                'precio' => $request->precio,
-                'stock' => $request->stock,
+    if ($request->has('formatos')) {
+        foreach ($request->formatos as $formato) {
+            \App\Models\LibroFormato::create([
+                'libro_id' => $id,
+                'formato' => $formato,
+                'stock' => 999, // Puedes cambiar esto por un input del request si lo deseas
+                'precio' => 0   // Igual aquí
             ]);
         }
-
-        return back()->with('success', 'Libro actualizado correctamente');
     }
+
+    return back()->with('success', '¡Libro actualizado con éxito!');
+}
 }

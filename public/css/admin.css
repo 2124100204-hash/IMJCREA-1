@@ -1,0 +1,227 @@
+/* ============================================================
+   ADMIN DASHBOARD — Paleta: --paper, --amber, --teal, --ink
+   ============================================================ */
+
+:root {
+    --paper: #fdfcf8;      /* Fondo principal claro */
+    --warm-white: #ffffff;
+    --amber: #d97706;      /* Color de acento principal */
+    --amber-soft: #f59e0b;
+    --teal: #0d7a6e;       /* Para botones de edición/éxito */
+    --ink: #1c1917;        /* Texto principal casi negro */
+    --ink-muted: #57534e;  /* Texto secundario */
+    --border: #e7e5e4;
+    --shadow: rgba(28, 25, 23, 0.08);
+    --rose: #c94f6d;       /* Para eliminar/peligro */
+}
+
+.dashboard-container {
+    background: var(--paper);
+    min-height: 100vh;
+    padding: 40px 8vw;
+}
+
+/* ── HEADER ── */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 20px;
+}
+
+.dashboard-header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: var(--ink);
+    margin: 0;
+}
+
+.aside-desc {
+    color: var(--ink-muted);
+    margin-top: 5px;
+}
+
+/* ── GRID DE ACCIONES ── */
+.modal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+}
+
+.modal-btn {
+    background: var(--warm-white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 30px;
+    text-align: left;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 10px var(--shadow);
+    width: 100%;
+}
+
+.modal-btn:hover {
+    border-color: var(--amber-soft);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 28px rgba(217, 119, 6, 0.15);
+}
+
+.modal-btn-icon { font-size: 32px; margin-bottom: 15px; }
+.modal-btn-title { 
+    font-family: 'Playfair Display', serif; 
+    font-size: 20px; 
+    font-weight: 700; 
+    color: var(--ink);
+    display: block;
+}
+
+.contact-card-label {
+    font-size: 12px;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 8px;
+}
+
+/* ── MODALES ── */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(28, 25, 23, 0.6); 
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content-large, .modal-content-form {
+    background: var(--warm-white);
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 18px;
+    padding: 40px;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    border-top: 5px solid var(--amber);
+}
+
+.modal-content-form { max-width: 500px; }
+
+/* ── FORMULARIOS ── */
+/* Estilo refinado para los campos del formulario */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--amber); /* El naranja que usas en el borde superior */
+    margin-bottom: 6px;
+}
+
+.form-input, 
+#editarLibroModal select, 
+#editarLibroModal textarea, 
+#editarLibroModal input[type="text"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    background: #fcfaf8; /* Un tono crema muy sutil */
+    color: var(--ink);
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-sizing: border-box; /* Crucial para que no se salgan del modal */
+}
+
+/* Efecto al hacer clic en el input */
+.form-input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--amber-soft);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.1);
+}
+
+/* Ajuste para el botón de Guardar en el modal */
+.btn-save {
+    background: var(--amber);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+}
+
+/* ── TABLAS ── */
+.table-container { margin-top: 20px; overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; }
+
+table { width: 100%; border-collapse: collapse; background: white; }
+
+th {
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--amber);
+    padding: 15px;
+    border-bottom: 2px solid var(--border);
+    text-align: left;
+    background: var(--paper);
+}
+
+td { padding: 15px; border-bottom: 1px solid var(--border); color: var(--ink-muted); vertical-align: middle; }
+
+tr:hover td { background: #fffaf0; color: var(--ink); }
+
+.badge-categoria {
+    background: var(--paper);
+    border: 1px solid var(--amber-soft);
+    color: var(--amber);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+/* ── BOTONES DE ACCIÓN ── */
+.btn-group, .modal-footer-btns { display: flex; justify-content: flex-end; gap: 12px; margin-top: 30px; }
+
+.save-btn, .btn-save {
+    background: var(--amber);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.save-btn:hover { background: var(--amber-soft); }
+
+.cancel-btn, .btn-cancel, .btn-close-modal {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--ink-muted);
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.cancel-btn:hover { background: var(--paper); color: var(--ink); }
+
+.btn-edit { color: var(--teal); background: transparent; border: 1px solid var(--teal); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.btn-edit:hover { background: var(--teal); color: white; }
+
+.btn-danger, .btn-delete { color: var(--rose); background: transparent; border: 1px solid var(--rose); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.btn-danger:hover { background: var(--rose); color: white; }

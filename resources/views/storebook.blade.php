@@ -16,7 +16,6 @@
     <a href="{{ route('welcome') }}" class="navbar-logo">INMER<span>SIA</span></a>
 
     @auth
-        <!-- Navbar para usuarios autenticados -->
         <div class="navbar-links" id="navLinks">
             <a href="{{ route('cliente.dashboard') }}"><i class="fa fa-home"></i> Mi Dashboard</a>
             <a href="{{ route('cliente.storebook') }}" class="active"><i class="fa fa-store"></i> Tienda</a>
@@ -31,18 +30,15 @@
                 </div>
                 <span>{{ auth()->user()->nombre ?? 'Usuario' }}</span>
             </div>
-            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+            <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit" class="logout-btn">Salir</button>
             </form>
         </div>
     @else
-        <!-- Navbar para usuarios no autenticados -->
         <div class="navbar-links" id="navLinks">
-            <a href="{{ route('welcome') }}"><i class="fa fa-home" style="font-size:11px;"></i> Inicio</a>
-            <a href="{{ route('storebook') }}" class="active">
-                <i class="fa fa-store" style="font-size:11px;"></i> Tienda
-            </a>
+            <a href="{{ route('welcome') }}"><i class="fa fa-home"></i> Inicio</a>
+            <a href="{{ route('storebook') }}" class="active"><i class="fa fa-store"></i> Tienda</a>
             <a href="{{ route('libros.tipo', 'vr') }}">Realidad Virtual</a>
             <a href="{{ route('libros.tipo', 'ar') }}">Realidad Aumentada</a>
             <a href="{{ route('contact') }}">Contactos</a>
@@ -68,80 +64,90 @@
     <div class="books-grid">
 
         @foreach($libros as $libro)
-    @php
-        // Configuración de colores neón por tipo
-        $config = [
-            'fisico' => ['color' => '#ff9100', 'badge' => 'Físico', 'icon' => 'fa-book'],
-            'ar'     => ['color' => '#00ff75', 'badge' => 'AR', 'icon' => 'fa-camera'],
-            'vr'     => ['color' => '#cc00ff', 'badge' => 'VR', 'icon' => 'fa-vr-cardboard'],
-        ];
+            @php
+                // Colores alineados con default.css
+                $config = [
+                    'fisico' => [
+                        'color'  => '#e8820c',          // --amber
+                        'badge'  => 'Físico',
+                        'icon'   => 'fa-book',
+                        'label'  => 'Libro Físico',
+                    ],
+                    'ar' => [
+                        'color'  => '#0d7a6e',          // --teal
+                        'badge'  => 'AR',
+                        'icon'   => 'fa-camera',
+                        'label'  => 'Realidad Aumentada',
+                    ],
+                    'vr' => [
+                        'color'  => '#c94f6d',          // --rose
+                        'badge'  => 'VR',
+                        'icon'   => 'fa-vr-cardboard',
+                        'label'  => 'Realidad Virtual',
+                    ],
+                ];
 
-        $preferred = $filterTipo ?? null;
-        $formato = $preferred ? $libro->formatos->firstWhere('formato', $preferred) : null;
-        $formato = $formato ?? $libro->formatos->first();
-        $tipo = $formato?->formato ?? 'fisico';
-        $precio = $formato?->precio ?? 0;
+                $preferred = $filterTipo ?? null;
+                $formato   = $preferred ? $libro->formatos->firstWhere('formato', $preferred) : null;
+                $formato   = $formato ?? $libro->formatos->first();
+                $tipo      = $formato?->formato ?? 'fisico';
+                $precio    = $formato?->precio ?? 0;
+                $current   = $config[$tipo] ?? $config['fisico'];
+                $color     = $current['color'];
+            @endphp
 
-        $current = $config[$tipo] ?? $config['fisico'];
-@endphp
-       @php
-    // If the view was rendered with a filterTipo (e.g. 'vr' or 'ar'), prefer that formato
-    $preferred = $filterTipo ?? null;
-    $formato = $preferred ? $libro->formatos->firstWhere('formato', $preferred) : null;
-    $formato = $formato ?? $libro->formatos->first();
-    $tipo = $formato?->formato ?? 'fisico';
-    $precio = $formato?->precio ?? 0;
+            <div class="book-card-container">
+                <div class="book-card-content" style="--type-color: {{ $color }};">
 
-    $current = $config[$tipo] ?? $config['fisico'];
-@endphp
+                    <div class="book-cover">
+                        <img src="{{ asset('img/libro1.jpeg') }}" alt="{{ $libro->titulo }}">
 
+                        {{-- Badge coloreado con icono del tipo --}}
+                        <span class="book-badge" style="background: {{ $color }};">
+                            <i class="fa {{ $current['icon'] }}" style="margin-right: 4px;"></i>
+                            {{ $current['badge'] }}
+                        </span>
+                    </div>
 
-        <div class="book-card-container" style="--neon-color: {{ $current['color'] }};">
-        <div class="book-card-content">
+                    <div class="book-body">
 
-            <div class="book-cover">
-                <img src="{{ asset('img/libro1.jpeg') }}" alt="{{ $libro->titulo }}">
-                <span class="book-badge" style="background: {{ $current['color'] }}; color: #1a1a1a;">
-                    {{ $current['badge'] }}
-                </span>
-            </div>
+                        {{-- Categoría: icono + texto con color del tipo --}}
+                        <p class="book-category" style="color: {{ $color }};">
+                            <i class="fa {{ $current['icon'] }}" style="margin-right: 5px;"></i>
+                            {{ strtoupper($tipo) }}
+                        </p>
 
-            <div class="book-body">
+                        <h3 class="book-title">{{ $libro->titulo }}</h3>
+                        <p class="book-author">{{ $libro->autor->nombre ?? 'Autor desconocido' }}</p>
 
-          <p class="book-category">{{ strtoupper($tipo) }}</p>
-<h3 class="book-title">{{ $libro->titulo }}</h3>
-<p class="book-author">
-    {{ $libro->autor->nombre ?? 'Autor desconocido' }}
-</p>
+                        {{-- Nota inmersiva solo para AR y VR --}}
+                        @if($tipo === 'ar' || $tipo === 'vr')
+                            <p class="experience-note"
+                               style="color: {{ $color }}; background: {{ $color }}18; border-color: {{ $color }}30;">
+                                <i class="fa {{ $current['icon'] }}"></i>
+                                {{ $current['label'] }}
+                            </p>
+                        @endif
 
-                @if($tipo === 'ar')
-                <p class="book-category" style="color: {{ $current['color'] }};">{{ strtoupper($tipo) }}</p>
-                <h3 class="book-title">{{ $libro->titulo }}</h3>
-                <p class="book-author">Por {{ $libro->autor }}</p>
-                
-                @if($tipo === 'ar' || $tipo === 'vr')
+                    </div>
 
-                    <p class="experience-note">
-                        <i class="fa {{ $current['icon'] }}" style="margin-right: 5px;"></i>
-                        {{ $tipo === 'ar' ? 'Realidad Aumentada' : 'Realidad Virtual' }}
-                    </p>
-                @endif
-            </div>
+                    <div class="book-footer">
 
-            <div class="book-footer">
-                <div class="book-price" style="color: {{ $current['color'] }};">
-                    ${{ number_format($precio, 2) }}
+                        <div class="book-price" style="color: {{ $color }};">
+                            ${{ number_format($precio, 2) }}
+                        </div>
+
+                        <a href="{{ route('libro.details', $libro->id) }}"
+                           class="book-btn"
+                           style="border-color: {{ $color }}; color: {{ $color }};">
+                            <i class="fa {{ $current['icon'] }}" style="font-size: 11px;"></i>
+                            {{ $current['btn'] ?? 'Detalles' }}
+                        </a>
+
+                    </div>
+
                 </div>
-
-                <a href="{{ route('libro.details', $libro->id) }}" class="book-btn"
-                   style="border: 1px solid {{ $current['color'] }}; color: {{ $current['color'] }};">
-                    {{ $current['btn'] ?? 'Detalles' }}
-                </a>
             </div>
-
-        </div>
-    </div>
-
         @endforeach
 
     </div>
