@@ -23,8 +23,10 @@
             </div>
 
             @if($errors->any())
-                <p style="color:red;">{{ $errors->first('mensaje') ?? 'Error en la autenticación' }}</p>
-            @endif
+    <p class="login-error">
+        {{ $errors->first('mensaje') ?? 'Usuario o contraseña incorrectos' }}
+    </p>
+@endif
 
             <form action="{{ route('login.procesar') }}" method="POST">
                 @csrf
