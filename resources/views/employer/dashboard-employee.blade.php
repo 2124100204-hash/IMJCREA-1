@@ -16,10 +16,13 @@
         <p>Bienvenido, {{ session('usuario_nombre') ?? session('usuario_username') }}</p>
 
         <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit" class="logout-btn">Cerrar Sesión</button>
-        </form>
-    </div>
+    @csrf
+    <button type="submit" class="logout-btn button">
+        <div class="wrap">
+            <p>Cerrar Sesión</p>
+        </div>
+    </button>
+</form>
 
     <div class="dashboard-content">
 
@@ -29,18 +32,23 @@
 
         <h2>Mis Opciones</h2>
         <div class="modal-grid">
-            <button onclick="openModal('librosModal')" class="modal-btn">
+        <button onclick="openModal('librosModal')" class="card-neon-outer">
+            <div class="card-neon-inner">
                 <div class="modal-btn-icon">📚</div>
                 <div class="modal-btn-title">Mis Libros</div>
                 <div class="modal-btn-desc">Gestionar mis libros</div>
-            </button>
-            
-            <button onclick="openModal('perfilModal')" class="modal-btn">
+            </div>
+        </button>
+        
+        <button onclick="openModal('perfilModal')" class="card-neon-outer">
+            <div class="card-neon-inner">
                 <div class="modal-btn-icon">👤</div>
                 <div class="modal-btn-title">Mi Perfil</div>
                 <div class="modal-btn-desc">Ver información personal</div>
-            </button>
-        </div>
+            </div>
+        </button>
+    </div>
+</div>
 
         <!-- MODAL MIS LIBROS -->
         <div id="librosModal" class="modal">
@@ -75,7 +83,9 @@
                             <input type="text" name="formato" placeholder="Ej: PDF, EPUB" required>
                         </div>
 
-                        <button type="submit" class="btn-primary">Crear Libro</button>
+                        <button type="submit" class="btn-crear-skew">
+    <span>Crear Libro</span>
+</button>
                     </form>
                 </div>
 
@@ -103,10 +113,18 @@
                                     <td>{{ $libro->autor }}</td>
                                     <td>{{ $libro->formato }}</td>
                                     <td>
-                                        <button onclick="editarLibro({{ $libro->id }}, '{{ $libro->titulo }}', '{{ $libro->autor }}', '{{ $libro->descripcion }}', '{{ $libro->formato }}')" class="btn-secondary" style="padding: 6px 12px; font-size: 12px;">Editar</button>
+                                        <button onclick="editarLibro({{ $libro->id }}, '{{ $libro->titulo }}', '{{ $libro->autor }}', '{{ $libro->descripcion }}', '{{ $libro->formato }}')" class="btn-3d btn-editar">
+  <span class="shadow"></span>
+  <span class="edge"></span>
+  <span class="front">Editar</span>
+</button>
                                         <form method="POST" action="{{ route('empleado.libro.eliminar', $libro->id) }}" style="display:inline;" onsubmit="return confirm('¿Estás seguro?');">
                                             @csrf
-                                            <button type="submit" class="btn-danger">Eliminar</button>
+                                            <button type="submit" class="btn-3d btn-eliminar">
+  <span class="shadow"></span>
+  <span class="edge"></span>
+  <span class="front">Eliminar</span>
+</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -118,7 +136,11 @@
                 @endif
 
                 <div class="modal-footer">
-                    <button type="button" onclick="closeModal('librosModal')" class="btn-close">Cerrar</button>
+                    <button type="button" onclick="closeModal('librosModal')" class="btn-3d btn-cerrar-modal">
+  <span class="shadow"></span>
+  <span class="edge"></span>
+  <span class="front">Cerrar</span>
+</button>
                 </div>
             </div>
         </div>
@@ -154,10 +176,15 @@
                         <input type="text" id="edit_formato" name="formato" required>
                     </div>
 
-                    <div class="modal-actions">
-                        <button type="submit" class="btn-primary">Actualizar Libro</button>
-                        <button type="button" onclick="closeModal('editarLibroModal')" class="btn-secondary">Cancelar</button>
-                    </div>
+                    <div class="modal-actions" style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+    <button type="submit" class="btn-neo">
+        Actualizar Libro
+    </button>
+
+    <button type="button" onclick="closeModal('editarLibroModal')" class="btn-neo btn-neo-red">
+        Cancelar
+    </button>
+</div>
                 </form>
             </div>
         </div>
@@ -192,9 +219,14 @@
                     </div>
                 </div>
 
-                <div class="modal-footer">
-                    <button type="button" onclick="closeModal('perfilModal')" class="btn-close">Cerrar</button>
-                </div>
+                <div class="modal-footer" style="text-align: center;">
+    <button type="button" onclick="closeModal('perfilModal')" class="btn-cerrar-neumorphic">
+        <div class="button-outer">
+            <div class="button-inner">
+                <span>Cerrar Perfil</span>
+            </div>
+        </div>
+    </button>
             </div>
         </div>
 
