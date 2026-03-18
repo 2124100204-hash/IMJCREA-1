@@ -182,7 +182,7 @@
     </button>
 
     <button type="button" onclick="closeModal('editarLibroModal')" class="btn-neo btn-neo-red">
-        Cancelar
+        Cancelar actualizacion
     </button>
 </div>
                 </form>
