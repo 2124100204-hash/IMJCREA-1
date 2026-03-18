@@ -67,7 +67,7 @@
 
             <!-- Información del libro -->
             <div class="book-info">
-                <span class="book-category">{{ strtoupper($libro->categoria ?? 'General') }}</span>
+                <span class="book-category">{{ strtoupper($libro->categoria->nombre ?? 'General') }}</span>
                 <h1>{{ $libro->titulo }}</h1>
                 <p class="book-author">
     <i class="fa fa-user"></i>

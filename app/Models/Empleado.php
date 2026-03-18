@@ -10,7 +10,8 @@ class Empleado extends Model
         'usuario_id',
         'nombre',
         'puesto',
-        'salario'
+        'salario',
+        'departamento',
     ];
 
     public function usuario()

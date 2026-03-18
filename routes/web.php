@@ -73,9 +73,9 @@ Route::middleware('rol:admin')->group(function () {
     Route::post('/admin/autor/crear', [AdminController::class, 'crearAutor'])->name('admin.autor.crear');
 
     // Empleados
-    Route::post('/admin/empleado/crear', [AdminController::class, 'crearEmpleado'])->name('admin.empleado.crear');
-    Route::put('/admin/empleado/actualizar/{id}', [AdminController::class, 'actualizarEmpleado'])->name('admin.empleado.actualizar');
-    Route::delete('/admin/empleado/eliminar/{id}', [AdminController::class, 'eliminarEmpleado'])->name('admin.empleado.eliminar');
+  Route::post('/admin/empleado/crear',            [EmpleadoController::class, 'crear'])->name('admin.empleado.crear');
+Route::put('/admin/empleado/actualizar/{id}',   [EmpleadoController::class, 'actualizar'])->name('admin.empleado.actualizar');
+Route::delete('/admin/empleado/eliminar/{id}',  [EmpleadoController::class, 'eliminar'])->name('admin.empleado.eliminar');
 });
     /*
     |--------------------------------------------------------------------------

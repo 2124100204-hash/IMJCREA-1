@@ -11,14 +11,14 @@
 <script src="{{ asset('js/app.js') }}" defer></script>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-        
+
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-        
+
         <link rel="stylesheet" href="{{ asset('css/default.css') }}">
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
-      
+
     </head>
   <body>
 
@@ -30,8 +30,8 @@
 
     <div class="wrapper">
 
-     
-     
+
+
         <section class="hero" id="inicio">
             <div class="hero-badge">Sistema activo · AR/VR</div>
 
@@ -43,7 +43,7 @@
 </h1>
 
             <p class="text-type">
-                Explora mundos de conocimiento a través de la realidad aumentada y virtual. 
+                Explora mundos de conocimiento a través de la realidad aumentada y virtual.
                 Libros que cobran vida, experiencias que trascienden la pantalla.
             </p>
 
@@ -62,7 +62,7 @@
             </div>
         </section>
 
-    
+
         <div class="marquee-band">
             <div class="marquee-inner">
                 <span class="marquee-text">Realidad Aumentada <span class="marquee-sep">✦</span></span>
@@ -80,15 +80,13 @@
 
    <section class="cards-section" id="explorar">
     <div class="section-header">
-        <span class="section-label">// Nuestros servicios</span>
-        <span class="section-count">04 experiencias</span>
     </div>
 
 
 
-<div class="cards-grid"> 
+<div class="cards-grid">
 
-    
+
     <a href="{{ route('storebook') }}" class="card">
         <div class="card-top-bar"></div>
         <span class="card-number">01</span>
@@ -128,12 +126,12 @@
     </div>
 </a>
 
-             <a href="{{ route('storebook') }}" class="card">
+             <a href="{{ route('contact') }}" class="card">
     <span class="card-number">04</span>
     <div class="card-icon"><i class="fa fa-compass"></i></div>
-    <h3 class="card-title">Explorar</h3>
+    <h3 class="card-title">Contacto</h3>
     <p class="card-desc">
-        Descubre contenido nuevo.
+        No Dudes en contactarnos para cualquier consulta, sugerencia o colaboración. Estamos aquí para ayudarte a sumergirte en el mundo de la creatividad.
     </p>
     <div class="card-arrow">
         <i class="fa fa-arrow-right"></i>

@@ -1,9 +1,3 @@
-/* ============================================================
-   STOREBOOK — Complementa default.css
-   Paleta: --paper, --amber, --teal, --ink, --cream
-   ============================================================ */
-
-/* ── HERO ─────────────────────────────────────────────────── */
 
 .page-hero {
     text-align: center;
@@ -85,10 +79,7 @@
     overflow: hidden;
     transition: transform 0.2s ease;
     position: relative;
-=======
-        /* --- ESTILO NEÓN UIVERSE --- */
-        /* --- ESTILO MINIMALISTA BLANCO --- */
-/* --- CONTENEDOR PRINCIPAL (Equivale a tu .card) --- */
+}
 .book-card-container {
     box-sizing: border-box;
     /* Quitamos el ancho fijo de 190px para que se adapte a tu grid */
@@ -102,7 +93,152 @@
     user-select: none;
     overflow: hidden; /* Para que nada se salga de las esquinas redondeadas */
 }
+ .filter-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 24px 36px;
+            flex-wrap: wrap;
+        }
 
+        .filter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 22px;
+            border-radius: 50px;
+            border: 2px solid transparent;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            background: #f4f4f0;
+            color: #555;
+            transition: all 0.2s ease;
+            letter-spacing: 0.3px;
+            text-decoration: none;
+        }
+
+        .filter-btn i {
+            font-size: 12px;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.10);
+        }
+
+        /* Todos */
+        .filter-btn.all        { --fc: #333; }
+        .filter-btn.all.active,
+        .filter-btn.all:hover  { background: #333; color: #fff; border-color: #333; }
+
+        /* Físico */
+        .filter-btn.fisico        { --fc: #e8820c; }
+        .filter-btn.fisico.active,
+        .filter-btn.fisico:hover  { background: #e8820c; color: #fff; border-color: #e8820c; }
+
+        /* AR */
+        .filter-btn.ar        { --fc: #0d7a6e; }
+        .filter-btn.ar.active,
+        .filter-btn.ar:hover  { background: #0d7a6e; color: #fff; border-color: #0d7a6e; }
+
+        /* VR */
+        .filter-btn.vr        { --fc: #c94f6d; }
+        .filter-btn.vr.active,
+        .filter-btn.vr:hover  { background: #c94f6d; color: #fff; border-color: #c94f6d; }
+
+        /* Active border outline when not filled */
+        .filter-btn.active {
+            font-weight: 600;
+        }
+
+        /* Count pill */
+        .filter-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 5px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            background: rgba(255,255,255,0.25);
+            line-height: 1;
+        }
+
+        .filter-btn:not(.active) .filter-count {
+            background: rgba(0,0,0,0.08);
+            color: #555;
+        }
+
+        /* Section label */
+        .section-label {
+            text-align: center;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #aaa;
+            margin-bottom: 18px;
+        }
+
+        /* Book card chips */
+        .formato-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .formato-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            padding: 3px 9px;
+            border-radius: 20px;
+            font-family: 'DM Sans', sans-serif;
+            white-space: nowrap;
+        }
+
+        /* Fade-in animation for cards */
+        .book-card-container {
+            animation: fadeUp 0.4s ease both;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .book-card-container:nth-child(1) { animation-delay: 0.05s; }
+        .book-card-container:nth-child(2) { animation-delay: 0.12s; }
+        .book-card-container:nth-child(3) { animation-delay: 0.19s; }
+        .book-card-container:nth-child(4) { animation-delay: 0.26s; }
+        .book-card-container:nth-child(5) { animation-delay: 0.33s; }
+        .book-card-container:nth-child(6) { animation-delay: 0.40s; }
+
+        /* Empty state */
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            color: #aaa;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            display: block;
+            opacity: 0.3;
+        }
+        .empty-state p {
+            font-size: 16px;
+        }
 /* --- ANIMACIÓN HOVER (Escala y Borde) --- */
 .book-card-container:hover {
     border: 1px solid black;
@@ -123,21 +259,19 @@
 }
 
 /* Aseguramos que los textos se vean bien con el nuevo estilo */
-.book-card-content .book-title { 
-    color: black; 
-    font-weight: bolder; 
+.book-card-content .book-title {
+    color: black;
+    font-weight: bolder;
     margin-top: 10px;
 }
 
-.book-card-content .book-price { 
-    color: black; 
-    font-weight: bolder; 
+.book-card-content .book-price {
+    color: black;
+    font-weight: bolder;
 }
 
-/* El botón mantiene el estilo beige que te gustó antes */
 .book-btn {
     background-color: #c5a98d;
-    color: white !important;
     border: none;
     border-radius: 8px;
     padding: 8px 14px;
@@ -145,15 +279,12 @@
 }
 
 .book-btn:hover {
-    background-color: #b09378; /* Un poco más oscuro al pasar el mouse */
+    background-color: #b09378;
     opacity: 1;
 }
 
-/* Badge superior (Físico) */
-/* --- AJUSTE DE LA PALABRA FÍSICO (BADGE) --- */
-/* --- 1. EL CONTENEDOR DE LA IMAGEN (IMPORTANTE) --- */
+
 .book-cover {
-    position: relative; /* Esto permite que el badge se pegue a la foto */
     overflow: hidden;
     border-radius: 17px 17px 0 0; /* Redondea solo las esquinas de arriba */
 }
@@ -194,7 +325,7 @@
     font-weight: 700;
     font-size: 18px;
     margin-bottom: 4px;
-    margin-top: 0; /* Quitamos margen superior para que pegue al badge */
+    margin-top: 0; 
 }
 
 .book-author {
@@ -203,7 +334,6 @@
     margin-bottom: 15px;
 }
 
-/* Línea de acento superior usando el color del tipo de libro */
 .book-card-content::before {
     content: '';
     display: block;

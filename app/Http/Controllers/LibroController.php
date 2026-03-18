@@ -92,7 +92,6 @@ class LibroController extends Controller
 {
     $libro = Libro::findOrFail($id);
 
-    // 1. Actualizar datos del libro
     $libro->update([
         'titulo' => $request->titulo,
         'descripcion' => $request->descripcion,
@@ -102,8 +101,11 @@ class LibroController extends Controller
         'categoria_id' => $request->categoria_id,
     ]);
 
-    // 2. Gestionar Formatos (Físico, VR, AR)
-    // Borramos los formatos actuales para insertar los nuevos seleccionados
+    $precio = $request->input('precio');
+    if ($precio !== null) {
+        $request->merge(['precio' => floatval($precio)]);
+    }
+
     \App\Models\LibroFormato::where('libro_id', $id)->delete();
 
     if ($request->has('formatos')) {
@@ -111,8 +113,8 @@ class LibroController extends Controller
             \App\Models\LibroFormato::create([
                 'libro_id' => $id,
                 'formato' => $formato,
-                'stock' => 999, // Puedes cambiar esto por un input del request si lo deseas
-                'precio' => 0   // Igual aquí
+                'stock' => 999,
+                'precio' => $request->input('precio', 0),
             ]);
         }
     }

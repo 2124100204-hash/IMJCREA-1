@@ -1,28 +1,29 @@
-/* ============================================================
-   ADMIN DASHBOARD — Paleta: --paper, --amber, --teal, --ink
-   ============================================================ */
 
 :root {
-    --paper: #fdfcf8;      /* Fondo principal claro */
+    --back: #bbd9fbc7;
+    --paper: #fdfcf8;
+    --paper-light: #fffaf0a8;
     --warm-white: #ffffff;
     --amber: #d97706;      /* Color de acento principal */
     --amber-soft: #f59e0b;
-    --teal: #0d7a6e;       /* Para botones de edición/éxito */
-    --ink: #1c1917;        /* Texto principal casi negro */
-    --ink-muted: #57534e;  /* Texto secundario */
+    --teal: #0d7a6e;
+    --ink: #1c1917;
+    --ink-muted: #57534e;
     --border: #e7e5e4;
     --shadow: rgba(28, 25, 23, 0.08);
-    --rose: #c94f6d;       /* Para eliminar/peligro */
+    --rose: #c94f6d;
 }
 
 .dashboard-container {
-    background: var(--paper);
+    background: var(--back);
     min-height: 100vh;
     padding: 40px 8vw;
 }
 
-/* ── HEADER ── */
 .dashboard-header {
+    box-shadow: 12px;
+    background-color: var(--paper);
+    border-radius: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -69,10 +70,10 @@
 }
 
 .modal-btn-icon { font-size: 32px; margin-bottom: 15px; }
-.modal-btn-title { 
-    font-family: 'Playfair Display', serif; 
-    font-size: 20px; 
-    font-weight: 700; 
+.modal-btn-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
     color: var(--ink);
     display: block;
 }
@@ -90,7 +91,7 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(28, 25, 23, 0.6); 
+    background: rgba(28, 25, 23, 0.6);
     backdrop-filter: blur(4px);
     justify-content: center;
     align-items: center;
@@ -128,23 +129,22 @@
     margin-bottom: 6px;
 }
 
-.form-input, 
-#editarLibroModal select, 
-#editarLibroModal textarea, 
+.form-input,
+#editarLibroModal select,
+#editarLibroModal textarea,
 #editarLibroModal input[type="text"] {
     width: 100%;
     padding: 12px 14px;
     border: 1.5px solid var(--border);
     border-radius: 10px;
-    background: #fcfaf8; /* Un tono crema muy sutil */
+    background: #fcfaf8;
     color: var(--ink);
     font-family: 'Instrument Sans', sans-serif;
     font-size: 14px;
     transition: all 0.2s ease;
-    box-sizing: border-box; /* Crucial para que no se salgan del modal */
+    box-sizing: border-box;
 }
 
-/* Efecto al hacer clic en el input */
 .form-input:focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--amber-soft);
@@ -152,9 +152,8 @@
     box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.1);
 }
 
-/* Ajuste para el botón de Guardar en el modal */
 .btn-save {
-    background: var(--amber);
+background-color: #0d7a6e;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -209,16 +208,29 @@ tr:hover td { background: #fffaf0; color: var(--ink); }
 }
 .save-btn:hover { background: var(--amber-soft); }
 
-.cancel-btn, .btn-cancel, .btn-close-modal {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--ink-muted);
-    padding: 11px 20px;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
+.close-btn{
+     box-shadow: 0 3px 12px rgba(18,160,144,0.3);
+      color: white !important;
+    background-color: #c59f4b;
+display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border: 1.5px solid var(--border);
+    border-radius: 100px;
+    color: var(--ink-light);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    text-decoration: none;
+    transition: border-color 0.3s, color 0.3s, background 0.3s;
 }
-.cancel-btn:hover { background: var(--paper); color: var(--ink); }
+.close-btn:hover {
+    transform: translateY(-2px);
+     background-color: #b88e3a;
+     color: white;
+     box-shadow: 0 3px 12px rgba(18,160,144,0.3);
+}
 
 .btn-edit { color: var(--teal); background: transparent; border: 1px solid var(--teal); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 .btn-edit:hover { background: var(--teal); color: white; }
