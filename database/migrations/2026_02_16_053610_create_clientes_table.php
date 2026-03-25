@@ -14,7 +14,6 @@ return new class extends Migration
     Schema::create('clientes', function (Blueprint $table) {
         $table->id();
 
-        // 🔗 Clave foránea
         $table->foreignId('usuario_id')
               ->constrained('usuarios')
               ->onDelete('cascade');

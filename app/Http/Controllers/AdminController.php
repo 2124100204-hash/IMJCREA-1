@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Venta;
 use App\Models\Usuario;
+use App\Models\Autor;      // IMPORTANTE: Añade esta línea
+use App\Models\Categoria;  // IMPORTANTE: Añade esta línea
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -10,7 +13,9 @@ class AdminController extends Controller
 {
     public function dashboard()
     {
-        return view('employer.dashboard-admin');
+    $ventas = Venta::orderBy('created_at', 'desc')->get();
+    return view('employer.dashboard-admin', compact('ventas'));
+
     }
 
     public function libros()
@@ -27,7 +32,26 @@ class AdminController extends Controller
     {
         return view('employer.dashboard-admin');
     }
+public function crearAutor(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|unique:autores,nombre'
+        ]);
 
+        Autor::create($request->all());
+
+        return back()->with('success', 'Autor añadido correctamente.');
+    }
+    public function crearCategoria(Request $request)
+    {
+        $request->validate([
+            'nombre' => 'required|unique:categorias,nombre'
+        ]);
+
+        Categoria::create($request->all());
+
+        return back()->with('success', 'Categoría añadida correctamente.');
+    }
     public function crearEmpleado(Request $request)
     {
         $request->validate([

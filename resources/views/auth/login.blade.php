@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Iniciar Sesión - {{ config('app.name', 'IMJCREA') }}</title>
-
+<script src="https://apis.google.com/js/platform.js" async defer></script>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
@@ -47,18 +47,18 @@
                     </button>
                 </div>
             </form>
-            
+      <div class="google-login">
+        <p>O inicia sesión con Google</p>
+      <a href="{{ route('login.google') }}" class="btn-google">
+        <img src="https://developers.google.com/identity/images/g-logo.png"  class="google-img"alt="Google">
+        Continuar con Google
+    </a>
+    </div>      
             <div class="button-container">
     <a href="http://127.0.0.1:8000/register" class="btn-animated">
         Registrarse
     </a>
 </div>
-
-            <div class="button-container">
-                <p style="text-align: center; margin: 15px 0; font-size: 12px; color: #666;">
-                    Cuentas de prueba disponibles
-                </p>
-            </div>
         </div>
     </div>
 </body>

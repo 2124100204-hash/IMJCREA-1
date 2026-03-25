@@ -9,13 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-     Schema::table('libros', function (Blueprint $table) {
-        $table->string('categoria')->after('titulo');
-        $table->integer('popularidad')->default(0);
+   public function up(): void
+{
+    Schema::table('libros', function (Blueprint $table) {
+        // Creamos la columna y la conectamos con la tabla categorias
+        $table->foreignId('categoria_id')->nullable()->after('descripcion')->constrained('categorias')->onDelete('set null');
     });
-    }
+}
 
     /**
      * Reverse the migrations.

@@ -6,7 +6,8 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\LibroController;
-
+use App\Http\Controllers\Auth\LoginController;
+use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\FavoritoController;
 
 
@@ -24,6 +25,7 @@ Route::get('/', function () {
 Route::get('/contact', function(){
     return view('contact');
 })->name('contact');    
+
 // Rutas públicas de login
 Route::get('/login', [AuthController::class, 'mostrarLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.procesar');
@@ -54,7 +56,10 @@ Route::get('/inicio', function () {
 // LOGIN
 Route::get('/login', [AuthController::class, 'mostrarLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.procesar');
-
+Route::get('/auth/google', function () {
+    return Socialite::driver('google')->redirect();
+})->name('login.google');
+Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 // Si en algún lugar usas route('mostrarLogin')
 Route::get('/mostrar-login', [AuthController::class, 'mostrarLogin'])->name('mostrarLogin');
 
@@ -100,8 +105,9 @@ Route::middleware('auth.custom')->group(function () {
         Route::get('/admin/libros', [AdminController::class, 'libros'])->name('admin.libros');
         Route::get('/admin/usuarios', [AdminController::class, 'usuarios'])->name('admin.usuarios');
         Route::get('/admin/formatos', [AdminController::class, 'formatos'])->name('admin.formatos');
-
-
+Route::post('/admin/categorias/crear', [AdminController::class, 'crearCategoria'])->name('admin.categoria.crear');
+        Route::post('/admin/autor/crear', [AdminController::class, 'crearAutor'])->name('admin.autor.crear');
+        Route::post('/admin/categoria/crear', [AdminController::class, 'crearCategoria'])->name('admin.categoria.crear');
         // Gestión de empleados
         Route::post('/admin/empleado/crear', [AdminController::class, 'crearEmpleado'])->name('admin.empleado.crear');
         Route::post('/admin/empleado/eliminar/{id}', [AdminController::class, 'eliminarEmpleado'])->name('admin.empleado.eliminar');
