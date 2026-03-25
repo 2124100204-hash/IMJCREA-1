@@ -11,20 +11,19 @@ return new class extends Migration
      */
   public function up(): void
 {
-    Schema::create('libros', function (Blueprint $table) {
-        $table->id();
-        $table->string('titulo');
-        $table->text('descripcion');
-        $table->decimal('precio', 8, 2);
-        $table->string('tipo');
-        $table->timestamps();
+    Schema::table('libros', function (Blueprint $table) {
+        $table->unsignedBigInteger('autor_id')->after('titulo')->nullable();
+        $table->foreign('autor_id')->references('id')->on('autores')->onDelete('cascade');
     });
 }
+
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('libros');
+        Schema::table('libros', function (Blueprint $table) {
+            //
+        });
     }
 };

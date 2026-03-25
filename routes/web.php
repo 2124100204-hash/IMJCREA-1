@@ -115,8 +115,7 @@ Route::post('/admin/categorias/crear', [AdminController::class, 'crearCategoria'
         // Gestión de libros (Admin)
 
         Route::post('/admin/empleado/crear', [AdminController::class, 'crearEmpleado'])->name('admin.empleado.crear');
-
-        Route::post('/admin/libro/crear', [LibroController::class, 'crear'])->name('admin.libro.crear');
+      Route::post('/admin/libro/crear', [AdminController::class, 'crearLibro'])->name('admin.libro.crear');
         Route::post('/admin/libro/eliminar/{id}', [LibroController::class, 'eliminar'])->name('admin.libro.eliminar');
         Route::post('/admin/libro/actualizar/{id}', [LibroController::class, 'actualizar'])->name('admin.libro.actualizar');
     });

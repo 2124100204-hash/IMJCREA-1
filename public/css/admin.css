@@ -195,7 +195,18 @@ tr:hover td { background: #fffaf0; color: var(--ink); }
 }
 /* ── BOTONES DE ACCIÓN ── */
 .btn-group, .modal-footer-btns { display: flex; justify-content: flex-end; gap: 12px; margin-top: 30px; }
-
+.btn-ver{
+background: var(--teal);
+    color: white;
+    border: none;
+    transition: background 0.2s;
+padding: 6px 14px; 
+border-radius: 8px;
+ cursor: pointer; 
+ font-weight: 600; 
+}
+.btn-ver:hover { background: #9daca9; 
+color: var(--ink);}
 .save-btn, .btn-save {
     background: var(--amber);
     color: white;
@@ -208,10 +219,10 @@ tr:hover td { background: #fffaf0; color: var(--ink); }
 }
 .save-btn:hover { background: var(--amber-soft); }
 
-.close-btn{
+.cancel-btn{
      box-shadow: 0 3px 12px rgba(18,160,144,0.3);
       color: white !important;
-    background-color: #c59f4b;
+    background-color: #773030;
 display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -225,14 +236,17 @@ display: inline-flex;
     text-decoration: none;
     transition: border-color 0.3s, color 0.3s, background 0.3s;
 }
-.close-btn:hover {
+.cancel-btn:hover {
     transform: translateY(-2px);
      background-color: #b88e3a;
      color: white;
      box-shadow: 0 3px 12px rgba(18,160,144,0.3);
 }
 
-.btn-edit { color: var(--teal); background: transparent; border: 1px solid var(--teal); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.btn-edit { color: var(--teal);
+     background: transparent;
+      border: 1px solid var(--teal);
+       padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 .btn-edit:hover { background: var(--teal); color: white; }
 
 .btn-danger, .btn-delete { color: var(--rose); background: transparent; border: 1px solid var(--rose); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
