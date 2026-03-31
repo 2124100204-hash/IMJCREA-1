@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\LibroController;
+use App\Http\Controllers\PedidoController;
 use App\Http\Controllers\Auth\LoginController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\FavoritoController;
@@ -118,6 +119,9 @@ Route::post('/admin/categorias/crear', [AdminController::class, 'crearCategoria'
       Route::post('/admin/libro/crear', [AdminController::class, 'crearLibro'])->name('admin.libro.crear');
         Route::post('/admin/libro/eliminar/{id}', [LibroController::class, 'eliminar'])->name('admin.libro.eliminar');
         Route::post('/admin/libro/actualizar/{id}', [LibroController::class, 'actualizar'])->name('admin.libro.actualizar');
+
+        // Gestión de devoluciones
+        Route::post('/admin/devolucion/procesar/{id}', [PedidoController::class, 'procesarDevolucion'])->name('admin.devolucion.procesar');
     });
 
 
@@ -147,6 +151,11 @@ Route::post('/admin/categorias/crear', [AdminController::class, 'crearCategoria'
         Route::post('/favorito/agregar', [FavoritoController::class, 'agregar'])->name('favorito.agregar');
         Route::post('/favorito/eliminar', [FavoritoController::class, 'eliminar'])->name('favorito.eliminar');
         Route::get('/favoritos', [FavoritoController::class, 'obtener'])->name('favoritos.obtener');
+
+        // Rutas de compras y devoluciones
+        Route::post('/comprar', [PedidoController::class, 'comprar'])->name('pedido.comprar');
+        Route::post('/devolver', [PedidoController::class, 'devolver'])->name('pedido.devolver');
+        Route::get('/mis-compras', [PedidoController::class, 'getComprasUsuario'])->name('pedido.compras');
     });
 
     /*

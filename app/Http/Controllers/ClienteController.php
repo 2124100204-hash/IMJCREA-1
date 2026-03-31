@@ -21,7 +21,7 @@ class ClienteController extends Controller
 
         // Pedidos del usuario con sus detalles y libros
         $pedidos = Pedido::where('usuario_id', $usuario->id)
-            ->with('detalles.libro')
+            ->with(['detalles.libro', 'detalles.devoluciones'])
             ->orderBy('created_at', 'desc')
             ->get();
 

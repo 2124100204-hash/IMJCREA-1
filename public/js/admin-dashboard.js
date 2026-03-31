@@ -18,8 +18,6 @@ function closeModal(id) {
         document.body.style.overflow = 'auto'; 
     }
 }
-
-// Cerrar al hacer clic fuera del contenido
 window.onclick = function (event) {
     if (event.target.classList.contains('modal')) {
         event.target.style.display = 'none';
@@ -27,15 +25,12 @@ window.onclick = function (event) {
     }
 };
 
-/* ── LIBROS ── */
 function prepararEdicionLibro(btn) {
     const id = btn.getAttribute('data-id');
-    
-    // 1. Configurar la URL del formulario (ajustada a tu web.php)
+
     const form = document.getElementById('formEditarLibro');
     if (form) form.action = `/admin/libro/actualizar/${id}`;
 
-    // 2. Llenar campos de texto simples
     const camposTexto = {
         'edit_titulo': 'data-titulo',
         'edit_descripcion': 'data-descripcion'

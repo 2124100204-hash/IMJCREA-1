@@ -103,6 +103,27 @@
             opacity:.85;
         }
 
+        .book-btn-return {
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 13px;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            background: #e74c3c;
+            box-shadow: 0 4px 14px rgba(231, 76, 60, 0.25);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .book-btn-return:hover {
+            transform: translateY(-1px);
+            opacity: 0.95;
+        }
+
         .experience-note{
             font-size:12px;
             margin-top:8px;

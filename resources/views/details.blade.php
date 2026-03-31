@@ -67,9 +67,9 @@
 
             <!-- Información del libro -->
             <div class="book-info">
-                <span class="book-category">{{ strtoupper($libro->categoria ?? 'General') }}</span>
+                <span class="book-category">{{ strtoupper($libro->categoria?->nombre ?? 'General') }}</span>
                 <h1>{{ $libro->titulo }}</h1>
-                <p class="book-author">Por {{ $libro->autor }}</p>
+                <p class="book-author">Por {{ $libro->autor?->nombre ?? 'Autor desconocido' }}</p>
 
                 <p class="book-description">
                     {{ $libro->descripcion ?? 'Libro sin descripción disponible.' }}
@@ -127,7 +127,17 @@
                             <button class="btn-primary" onclick="prestarAtencion()">
                                 <i class="fa fa-shopping-cart"></i> Comprar Ahora
                             </button>
-                            <button class="btn-secondary" onclick="agregarAlCarrito()">
+
+                            @if(!empty($ownedDetalle))
+                                <form method="POST" action="{{ route('pedido.devolver') }}" style="display:inline; margin-left:12px;">
+                                    @csrf
+                                    <input type="hidden" name="pedido_detalle_id" value="{{ $ownedDetalle->id }}">
+                                    <input type="hidden" name="cantidad_devuelta" value="1">
+                                    <button type="submit" class="btn-rollback" style="background:#e74c3c; color:white; border:none; border-radius:8px; padding:10px 16px;">Reembolsar</button>
+                                </form>
+                            @endif
+
+                            <button class="btn-secondary" onclick="agregarAlCarrito()" style="margin-left:12px;">
                                 <i class="fa fa-heart"></i> Agregar a Favoritos
                             </button>
                         @else

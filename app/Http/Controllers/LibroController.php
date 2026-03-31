@@ -3,38 +3,97 @@
 namespace App\Http\Controllers;
 
 use App\Models\Libro;
+use App\Models\Pedido;
+use App\Models\PedidoDetalle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LibroController extends Controller
 {
     public function index()
     {
         $libros = Libro::all();
+        $ownedLibroIds = [];
+
+        if (Auth::check()) {
+            $usuario = Auth::user();
+
+            $pedidosEntregados = Pedido::where('usuario_id', $usuario->id)
+                ->where('estado', 'entregado')
+                ->pluck('id');
+
+            $ownedDetalleByLibro = PedidoDetalle::whereIn('pedido_id', $pedidosEntregados)
+                ->where('estado', '!=', 'devuelto')
+                ->get()
+                ->groupBy('libro_id')
+                ->map(fn($group) => $group->first()->id)
+                ->toArray();
+
+            $ownedLibroIds = array_keys($ownedDetalleByLibro);
+        }
 
         return view('storebook', [
             'libros' => $libros,
             'filterTipo' => null,
+            'ownedLibroIds' => $ownedLibroIds,
+            'ownedDetalleByLibro' => $ownedDetalleByLibro ?? [],
         ]);
     }
 
     public function show($id)
     {
         $libro = Libro::with('formatos')->findOrFail($id);
+        $ownedDetalle = null;
+
+        if (Auth::check()) {
+            $usuario = Auth::user();
+
+            $ownedDetalle = PedidoDetalle::whereHas('pedido', function ($query) use ($usuario) {
+                $query->where('usuario_id', $usuario->id)
+                      ->where('estado', 'entregado');
+            })
+            ->where('libro_id', $libro->id)
+            ->where('estado', '!=', 'devuelto')
+            ->first();
+        }
+
         return view('details', [
             'libro' => $libro,
+            'ownedDetalle' => $ownedDetalle,
         ]);
     }
 
     public function tipo($tipo)
     {
-        // Delegate to porTipo but pass the filter to the view
         $libros = Libro::whereHas('formatos', function ($query) use ($tipo) {
             $query->where('formato', $tipo);
         })->get();
 
+        $ownedLibroIds = [];
+        $ownedDetalleByLibro = [];
+
+        if (Auth::check()) {
+            $usuario = Auth::user();
+
+            $pedidosEntregados = Pedido::where('usuario_id', $usuario->id)
+                ->where('estado', 'entregado')
+                ->pluck('id');
+
+            $ownedDetalleByLibro = PedidoDetalle::whereIn('pedido_id', $pedidosEntregados)
+                ->where('estado', '!=', 'devuelto')
+                ->get()
+                ->groupBy('libro_id')
+                ->map(fn($group) => $group->first()->id)
+                ->toArray();
+
+            $ownedLibroIds = array_keys($ownedDetalleByLibro);
+        }
+
         return view('storebook', [
             'libros' => $libros,
             'filterTipo' => $tipo,
+            'ownedLibroIds' => $ownedLibroIds,
+            'ownedDetalleByLibro' => $ownedDetalleByLibro,
         ]);
     }
 

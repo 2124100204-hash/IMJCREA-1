@@ -48,7 +48,40 @@
                 return;
             }
 
-            alert(`✓ Compra en proceso\nFormato: ${formato.dataset.formato}\nPrecio unitario: $${formato.dataset.precio}\nCantidad: ${cantidad}\nTotal: $${(parseFloat(formato.dataset.precio) * parseInt(cantidad)).toFixed(2)}`);
+            // Enviar AJAX para comprar
+            fetch('/comprar', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                },
+                body: JSON.stringify({
+                    libro_id: window.libroId,
+                    formato: formato.dataset.formato,
+                    cantidad: parseInt(cantidad)
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('✓ ' + data.message);
+                    // Actualizar stock en la UI
+                    const stockElement = formato.querySelector('.formato-stock');
+                    if (stockElement) {
+                        const currentStock = parseInt(stockElement.textContent.replace('Stock: ', '').replace('∞', '999'));
+                        if (currentStock !== 999) {
+                            const newStock = Math.max(0, currentStock - parseInt(cantidad));
+                            stockElement.textContent = `Stock: ${newStock}`;
+                        }
+                    }
+                } else {
+                    alert('ℹ ' + (data.message || 'Error al procesar la compra'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al procesar la compra');
+            });
         }
 
         function agregarAlCarrito() {

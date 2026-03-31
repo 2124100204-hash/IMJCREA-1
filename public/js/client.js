@@ -73,9 +73,57 @@ function confirmarCompra() {
     closeModal('buyModal');
 }
 
-// Cerrar al clickear fuera
 window.onclick = (e) => {
     if (e.target.classList.contains('modal')) e.target.style.display = "none";
+}
+
+function openPedidosModal() {
+    document.getElementById('pedidosModal').style.display = "flex";
+}
+
+function closePedidosModal() {
+    document.getElementById('pedidosModal').style.display = "none";
+}
+
+function openDevolucionModal(detalleId, titulo, cantidadMaxima) {
+    document.getElementById('pedidoDetalleId').value = detalleId;
+    document.getElementById('libroTitulo').value = titulo;
+    document.getElementById('cantidadDevuelta').max = cantidadMaxima;
+    document.getElementById('cantidadDevuelta').value = 1;
+    document.getElementById('devolucionModal').style.display = "flex";
+}
+
+function closeDevolucionModal() {
+    document.getElementById('devolucionModal').style.display = "none";
+}
+
+function submitDevolucion(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    
+    fetch('/devolver', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showToast('Solicitud Enviada', 'Tu solicitud de devolución ha sido enviada exitosamente.', 'success');
+            closeDevolucionModal();
+            // Recargar la página para actualizar el estado
+            setTimeout(() => location.reload(), 2000);
+        } else {
+            showToast('Error', 'Hubo un problema al procesar tu solicitud.', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Error', 'Hubo un problema al procesar tu solicitud.', 'error');
+    });
 }
 // Función para crear el Toast dinámicamente
 function showToast(title, message, type = 'success') {

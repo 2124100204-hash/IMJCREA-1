@@ -118,7 +118,7 @@
             <div class="book-body">
           <p class="book-category">{{ strtoupper($tipo) }}</p>
 <h3 class="book-title">{{ $libro->titulo }}</h3>
-<p class="book-author">{{ $libro->autor }}</p>
+<p class="book-author">{{ $libro->autor?->nombre ?? 'Autor desconocido' }}</p>
 
                 @if($tipo === 'ar')
                     <p class="experience-note">
@@ -143,6 +143,15 @@
                     <i class="fa {{ $current['icon'] }}"></i>
                     {{ $current['btn'] }}
                 </a>
+
+                @if(in_array($libro->id, $ownedLibroIds ?? []))
+                    <form method="POST" action="{{ route('pedido.devolver') }}" style="display:inline; margin-left:8px;">
+                        @csrf
+                        <input type="hidden" name="pedido_detalle_id" value="{{ $ownedDetalleByLibro[$libro->id] ?? '' }}" />
+                        <input type="hidden" name="cantidad_devuelta" value="1" />
+                        <button type="submit" class="book-btn book-btn-return" style="background:#e74c3c;">Reembolsar</button>
+                    </form>
+                @endif
             </div>
 
         </div>

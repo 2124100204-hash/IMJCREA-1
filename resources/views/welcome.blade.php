@@ -18,10 +18,8 @@
         <link rel="stylesheet" href="{{ asset('css/default.css') }}">
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
-      
     </head>
   <body>
-
 
     <canvas id="bg-canvas"></canvas>
     <div class="noise-overlay"></div>
