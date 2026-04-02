@@ -106,7 +106,6 @@ Route::middleware('auth.custom')->group(function () {
         Route::get('/admin/libros', [AdminController::class, 'libros'])->name('admin.libros');
         Route::get('/admin/usuarios', [AdminController::class, 'usuarios'])->name('admin.usuarios');
         Route::get('/admin/formatos', [AdminController::class, 'formatos'])->name('admin.formatos');
-Route::post('/admin/categorias/crear', [AdminController::class, 'crearCategoria'])->name('admin.categoria.crear');
         Route::post('/admin/autor/crear', [AdminController::class, 'crearAutor'])->name('admin.autor.crear');
         Route::post('/admin/categoria/crear', [AdminController::class, 'crearCategoria'])->name('admin.categoria.crear');
         // Gestión de empleados
@@ -118,10 +117,14 @@ Route::post('/admin/categorias/crear', [AdminController::class, 'crearCategoria'
         Route::post('/admin/empleado/crear', [AdminController::class, 'crearEmpleado'])->name('admin.empleado.crear');
       Route::post('/admin/libro/crear', [AdminController::class, 'crearLibro'])->name('admin.libro.crear');
         Route::post('/admin/libro/eliminar/{id}', [LibroController::class, 'eliminar'])->name('admin.libro.eliminar');
-        Route::post('/admin/libro/actualizar/{id}', [LibroController::class, 'actualizar'])->name('admin.libro.actualizar');
+        Route::post('/admin/libro/actualizar/{id}', [AdminController::class, 'actualizarLibro'])->name('admin.libro.actualizar');
 
         // Gestión de devoluciones
-        Route::post('/admin/devolucion/procesar/{id}', [PedidoController::class, 'procesarDevolucion'])->name('admin.devolucion.procesar');
+        Route::get('/admin/devoluciones', [AdminController::class, 'devoluciones'])->name('admin.devoluciones');
+        Route::post('/admin/devolucion/procesar/{id}', [AdminController::class, 'procesarDevolucion'])->name('admin.devolucion.procesar');
+        
+        // Gestión de pedidos
+        Route::post('/admin/pedido/{pedidoId}/estado', [AdminController::class, 'actualizarEstadoPedido'])->name('admin.pedido.estado');
     });
 
 
@@ -154,6 +157,7 @@ Route::post('/admin/categorias/crear', [AdminController::class, 'crearCategoria'
 
         // Rutas de compras y devoluciones
         Route::post('/comprar', [PedidoController::class, 'comprar'])->name('pedido.comprar');
+        Route::post('/procesar-compra', [PedidoController::class, 'procesarCompraCarrito'])->name('pedido.procesar.compra');
         Route::post('/devolver', [PedidoController::class, 'devolver'])->name('pedido.devolver');
         Route::get('/mis-compras', [PedidoController::class, 'getComprasUsuario'])->name('pedido.compras');
     });

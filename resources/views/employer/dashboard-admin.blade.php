@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dashboard Admin - {{ config('app.name', 'IMJCREA') }}</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=playfair-display:700,900|instrument-sans:400,600,700" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/default.css') }}">
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.0/dist/sweetalert2.all.min.js"></script>
 </head>
 <body>
 <div class="dashboard-container">
@@ -54,6 +56,11 @@
             <div class="modal-btn-icon">👥</div>
             <div class="modal-btn-title">Personal</div>
             <div class="contact-card-label">Admin / Empleados</div>
+        </button>
+        <button onclick="openModal('devolucionesModal')" class="modal-btn">
+            <div class="modal-btn-icon">📦</div>
+            <div class="modal-btn-title">Devoluciones</div>
+            <div class="contact-card-label">Gestión de Devoluciones</div>
         </button>
         <button onclick="openModal('ventasModal')" class="modal-btn">
             <div class="modal-btn-icon">📊</div>
@@ -136,8 +143,10 @@
     data-id="{{ $libro->id }}"
     data-titulo="{{ $libro->titulo }}"
     data-descripcion="{{ $libro->descripcion }}"
+    data-nivel-edad="{{ $libro->nivel_edad }}"
+    data-duracion="{{ $libro->duracion }}"
     data-autor="{{ $libro->autor_id }}" 
-    data-categoria="{{ $libro->categoria_id }}"
+    data-categoria-nombre="{{ $libro->categoria ? $libro->categoria->nombre : '' }}"
     data-formatos='@json($libro->formatos)'>
     Editar
 </button>
@@ -175,13 +184,36 @@
                             <option value="{{ $autor->id }}">{{ $autor->nombre }}</option>
                         @endforeach
                     </select>
+                    <button class="add-btn" type="button" onclick="openModal('nuevoAutorModal')" style="margin-top: 8px; padding: 6px 12px; font-size: 12px;">+ Nuevo Autor</button>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Categoría</label>
                     <input type="text" name="categoria_nombre" id="edit_categoria" list="categoriasList" class="form-input">
+                <button class="add-btn" type="button" onclick="openModal('nuevaCategoriaModal')" style="margin-top: 8px; padding: 6px 12px; font-size: 12px;">+ Nueva Categoría</button>
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <label class="form-label">Nivel de Edad</label>
+                    <select name="nivel_edad" id="edit_nivel_edad" class="form-input">
+                        <option value="">Seleccionar...</option>
+                        <option value="3+">3+</option>
+                        <option value="6+">6+</option>
+                        <option value="8+">8+</option>
+                        <option value="10+">10+</option>
+                        <option value="12+">12+</option>
+                        <option value="14+">14+</option>
+                        <option value="16+">16+</option>
+                        <option value="18+">18+</option>
+                        <option value="adulto">Adulto</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Duración</label>
+                    <input type="text" name="duracion" id="edit_duracion" class="form-input" placeholder="Ej: 45 min, 1.5 horas">
+                </div>
+                            </div>
 
             <div style="margin-top: 20px;">
                 <h3 style="font-size: 13px; color: #4a5568; margin-bottom: 10px;">FORMATOS Y PRECIOS</h3>
@@ -340,9 +372,25 @@
             </form>
         </div>
     </div>
+{{-- ══ MODAL: NUEVA CATEGORÍA ══ --}}
+<div id="nuevaCategoriaModal" class="modal" style="z-index:3000;">
+    <div class="modal-content-form" style="max-width:400px;margin-top:100px;">
+        <h3 class="modal-title-font">Agregar Nueva Categoría</h3>
+        <form action="{{ route('admin.categoria.crear') }}" method="POST">
+            @csrf
+            <div class="form-group">
+                <label class="form-label">Nombre de Categoría</label>
+                <input type="text" name="nombre" class="form-input" required placeholder="Ej: Ciencia Ficción">
+            </div>
+            <div class="btn-group">
+                <button type="button" onclick="closeModal('nuevaCategoriaModal')" class="cancel-btn">Cerrar</button>
+                <button type="submit" class="btn-save">Registrar</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 {{-- ══ MODAL: PERSONAL (LISTADO) ══ --}}
-<div id="empleadosModal" class="modal">{{-- ══ MODAL: PERSONAL (LISTADO) ══ --}}
 <div id="empleadosModal" class="modal">
     <div class="modal-content-large">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
@@ -375,9 +423,9 @@
                         <td style="text-align:right; white-space:nowrap;">
                             {{-- Botón Ver --}}
                             <button class="btn-ver"
-                                data-id="{{ $emp->id }}" 
+                                data-id="{{ $emp->id }}"
                                 data-nombre="{{ $emp->nombre }}"
-                                data-puesto="{{ $emp->puesto }}" 
+                                data-puesto="{{ $emp->puesto }}"
                                 data-curp="{{ $emp->curp }}"
                                 data-telefono="{{ $emp->telefono }}"
                                 data-salario="{{ $emp->salario }}"
@@ -386,10 +434,10 @@
                                 style="margin-right:5px;">Ver</button>
 
                             {{-- Botón Editar --}}
-                            <button class="btn-edit" 
-                                data-id="{{ $emp->id }}" 
+                            <button class="btn-edit"
+                                data-id="{{ $emp->id }}"
                                 data-nombre="{{ $emp->nombre }}"
-                                data-puesto="{{ $emp->puesto }}" 
+                                data-puesto="{{ $emp->puesto }}"
                                 data-curp="{{ $emp->curp }}"
                                 data-telefono="{{ $emp->telefono }}"
                                 data-salario="{{ $emp->salario }}"
@@ -404,64 +452,83 @@
         <button onclick="closeModal('empleadosModal')" class="cancel-btn" style="margin-top:20px;">Cerrar</button>
     </div>
 </div>
+
+{{-- ══ MODAL: DEVOLUCIONES (LISTADO) ══ --}}
+<div id="devolucionesModal" class="modal">
     <div class="modal-content-large">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-            <h2 class="modal-title-font" style="margin:0;">👥 Gestión de Personal</h2>
-            <button onclick="openModal('nuevoEmpleadoModal')" class="save-btn" style="padding:8px 16px;font-size:14px;">+ Nuevo Empleado</button>
+            <h2 class="modal-title-font" style="margin:0;">📦 Gestión de Devoluciones</h2>
         </div>
 
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>Empleado</th>
-                        <th>Puesto</th>
+                        <th>Cliente</th>
+                        <th>Libro</th>
+                        <th>Cantidad</th>
+                        <th>Monto</th>
+                        <th>Razón</th>
                         <th>Estado</th>
+                        <th>Fecha</th>
                         <th style="text-align:right;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(\App\Models\Empleado::with('usuario')->get() as $emp)
+                    @forelse($devoluciones ?? [] as $devolucion)
                     <tr>
-                        <td class="td-bold">{{ $emp->nombre }}</td>
-                        <td class="td-muted">{{ $emp->puesto }}</td>
+                        <td class="td-bold">
+                            {{ $devolucion->pedidoDetalle->pedido->usuario->nombre ?? 'N/A' }}
+                            <br><small style="color:#666;">{{ $devolucion->pedidoDetalle->pedido->usuario->email ?? '' }}</small>
+                        </td>
+                        <td class="td-bold">{{ $devolucion->pedidoDetalle->libro->titulo ?? 'N/A' }}</td>
+                        <td>{{ $devolucion->cantidad_devuelta }}</td>
+                        <td>${{ number_format($devolucion->monto_reembolsado, 2) }}</td>
+                        <td>{{ $devolucion->razon }}</td>
                         <td>
-                            @if($emp->usuario && $emp->usuario->activo)
-                                <span style="color:#2f855a; background:#f0fff4; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:600;">Activo</span>
+                            @switch($devolucion->estado)
+                                @case('solicitada')
+                                    <span style="color:#d69e2e; background:#fefcbf; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:600;">Pendiente</span>
+                                    @break
+                                @case('procesada')
+                                    <span style="color:#2f855a; background:#f0fff4; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:600;">Aprobada</span>
+                                    @break
+                                @case('rechazada')
+                                    <span style="color:#c53030; background:#fff5f5; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:600;">Rechazada</span>
+                                    @break
+                                @default
+                                    <span style="color:#666; background:#f7fafc; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:600;">{{ $devolucion->estado }}</span>
+                            @endswitch
+                        </td>
+                        <td>{{ $devolucion->created_at->format('d/m/Y H:i') }}</td>
+                        <td style="text-align:right; white-space:nowrap;">
+                            @if($devolucion->estado === 'solicitada')
+                            <form action="{{ route('admin.devolucion.procesar', $devolucion->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <input type="hidden" name="accion" value="aprobar">
+                                <button type="submit" class="btn-edit" style="background:#2f855a; margin-right:5px;">Aprobar</button>
+                            </form>
+                            <form action="{{ route('admin.devolucion.procesar', $devolucion->id) }}" method="POST" style="display:inline;">
+                                @csrf
+                                <input type="hidden" name="accion" value="rechazar">
+                                <button type="submit" class="btn-edit" style="background:#c53030;">Rechazar</button>
+                            </form>
                             @else
-                                <span style="color:#c53030; background:#fff5f5; padding:2px 8px; border-radius:10px; font-size:12px; font-weight:600;">Inactivo</span>
+                            <span style="color:#666; font-size:12px;">Procesada</span>
                             @endif
                         </td>
-                        <td style="text-align:right; white-space:nowrap;">
-                            {{-- Botón Ver --}}
-                            <button class="btn-ver"
-                                data-id="{{ $emp->id }}" 
-                                data-nombre="{{ $emp->nombre }}"
-                                data-puesto="{{ $emp->puesto }}" 
-                                data-curp="{{ $emp->curp }}"
-                                data-telefono="{{ $emp->telefono }}"
-                                data-salario="{{ $emp->salario }}"
-                                data-estado="{{ $emp->usuario ? 'activo' : 'inactivo' }}"
-                                onclick="prepararVerEmpleado(this)"
-                                style="margin-right:5px;">Ver más</button>
-
-                            {{-- Botón Editar --}}
-                            <button class="btn-edit" 
-                                data-id="{{ $emp->id }}" 
-                                data-nombre="{{ $emp->nombre }}"
-                                data-puesto="{{ $emp->puesto }}" 
-                                data-curp="{{ $emp->curp }}"
-                                data-telefono="{{ $emp->telefono }}"
-                                data-salario="{{ $emp->salario }}"
-                                data-estado="{{ $emp->usuario ? 'activo' : 'inactivo' }}"
-                                onclick="prepararEdicionEmpleado(this)">Editar</button>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="8" style="text-align:center; color:#666; padding:20px;">
+                            No hay devoluciones registradas
                         </td>
                     </tr>
-                    @endforeach
+                    @endforelse
                 </tbody>
             </table>
         </div>
-        <button onclick="closeModal('empleadosModal')" class="cancel-btn" style="margin-top:20px;">Cerrar</button>
+        <button onclick="closeModal('devolucionesModal')" class="cancel-btn" style="margin-top:20px;">Cerrar</button>
     </div>
 </div>
 {{-- ══ MODAL: VISTA DETALLADA DEL EMPLEADO ══ --}}
@@ -514,51 +581,257 @@
     <div id="nuevoEmpleadoModal" class="modal">
         <div class="modal-content-form">
             <h2 class="aside-title">👤 Nuevo Empleado</h2>
-            <form action="{{ route('admin.empleado.crear') }}" method="POST">
-                @csrf
-                <div class="form-group">
-                    <label class="form-label">Nombre completo</label>
-                    <input type="text" name="nombre" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Correo electrónico</label>
-                    <input type="email" name="email" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Contraseña</label>
-                    <input type="password" name="password" class="form-input" required>
-                </div>
-                <div class="btn-group">
-                    <button type="button" onclick="closeModal('nuevoEmpleadoModal')" class="cancel-btn">Cancelar</button>
-                    <button type="submit" class="btn-save">Registrar</button>
-                </div>
-            </form>
+
+            <div class="empleado-form-container">
+                <form action="{{ route('admin.empleado.crear') }}" method="POST">
+                    @csrf
+
+                    <div class="empleado-form-grid">
+                        {{-- Información Personal --}}
+                        <div class="empleado-form-section">
+                            <h3> Información Personal</h3>
+                            <div class="form-group">
+                                <label class="form-label">Nombre completo *</label>
+                                <input type="text" name="nombre" class="form-input" required placeholder="Juan Pérez García">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">CURP</label>
+                                <input type="text" name="curp" class="form-input" maxlength="18" placeholder="PEGJ900101HDFRRN00">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Teléfono</label>
+                                <input type="tel" name="telefono" class="form-input" placeholder="555-123-4567">
+                            </div>
+                        </div>
+
+                        {{-- Información Laboral --}}
+                        <div class="empleado-form-section">
+                            <h3> Información Laboral</h3>
+                            <div class="form-group">
+                                <label class="form-label">Puesto *</label>
+                                <select name="puesto" class="form-input" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="Gerente">Gerente</option>
+                                    <option value="Supervisor">Supervisor</option>
+                                    <option value="Vendedor">Vendedor</option>
+                                    <option value="Cajero">Cajero</option>
+                                    <option value="Almacenista">Almacenista</option>
+                                    <option value="Auxiliar">Auxiliar</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Departamento</label>
+                                <select name="departamento" class="form-input">
+                                    <option value="">Seleccionar</option>
+                                    <option value="Ventas">Ventas</option>
+                                    <option value="Almacén">Almacén</option>
+                                    <option value="Administración">Administración</option>
+                                    <option value="Atención al Cliente">Atención al Cliente</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Salario mensual (MXN)</label>
+                                <input type="number" name="salario" class="form-input" step="0.01" min="0" placeholder="8500.00">
+                            </div>
+                        </div>
+
+                        {{-- Información de Acceso --}}
+                        <div class="empleado-form-section empleado-form-full">
+                            <h3>🔐 Información de Acceso</h3>
+                            <div class="form-group">
+                                <label class="form-label">Correo electrónico *</label>
+                                <input type="email" name="email" class="form-input" required placeholder="empleado@empresa.com">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Contraseña *</label>
+                                <input type="password" name="password" class="form-input" required minlength="8" placeholder="Mínimo 8 caracteres">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Confirmar contraseña *</label>
+                                <input type="password" name="password_confirmation" class="form-input" required minlength="8" placeholder="Repetir contraseña">
+                            </div>
+                        </div>
+
+                        {{-- Domicilio --}}
+                        <div class="empleado-form-section empleado-form-full">
+                            <h3>🏠 Domicilio</h3>
+                            <div class="form-group">
+                                <label class="form-label">Dirección completa</label>
+                                <textarea name="domicilio" class="form-input" rows="2" placeholder="Calle, número, colonia, ciudad, estado, CP"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" onclick="closeModal('nuevoEmpleadoModal')" class="cancel-btn">Cancelar</button>
+                        <button type="submit" class="btn-save">Registrar Empleado</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
     {{-- ══ MODAL: VENTAS ══ --}}
     <div id="ventasModal" class="modal">
         <div class="modal-content-large">
-            <h2 class="modal-title-font">📊 Historial de Ventas</h2>
-            <div class="table-container">
-                <table>
-                    <thead><tr><th>ID</th><th>Libro</th><th>Cliente</th><th>Precio</th><th>Fecha</th></tr></thead>
-                    <tbody>
-                        @foreach($ventas as $v)
-                        <tr>
-                            <td>#{{ $v->id }}</td>
-                            <td>{{ $v->libro_titulo }}</td>
-                            <td>{{ $v->cliente_nombre }}</td>
-                            <td>${{ number_format($v->total, 2) }}</td>
-                            <td>{{ $v->created_at->format('d/m/Y') }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+            <h2 class="modal-title-font">📊 Gestión de Pedidos y Ventas</h2>
+            <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                <p style="margin: 0; color: #666; font-size: 14px;">
+                    <strong>Total de pedidos:</strong> {{ $pedidos->count() }} | 
+                    <strong>Ingresos totales:</strong> ${{ number_format($pedidos->sum('total'), 2) }}
+                </p>
             </div>
-            <button onclick="closeModal('ventasModal')" class="cancel-btn" style="margin-top:20px;">Cerrar</button>
+            
+            @if($pedidos->isEmpty())
+                <div style="padding: 30px; text-align: center; color: #999;">
+                    <p>📭 No hay pedidos registrados aún</p>
+                </div>
+            @else
+                <div class="table-container" style="max-height: 600px; overflow-y: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead style="position: sticky; top: 0; background: #f5f5f5;">
+                            <tr style="border-bottom: 2px solid #ddd;">
+                                <th style="padding: 12px; text-align: left;"> ID</th>
+                                <th style="padding: 12px; text-align: left;"> Cliente</th>
+                                <th style="padding: 12px; text-align: left;"> Libros</th>
+                                <th style="padding: 12px; text-align: right;">Total</th>
+                                <th style="padding: 12px; text-align: center;"> Fecha</th>
+                                <th style="padding: 12px; text-align: center;">Estado</th>
+                                <th style="padding: 12px; text-align: center;">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($pedidos as $pedido)
+                            <tr style="border-bottom: 1px solid #eee; hover-background: #f9f9f9;">
+                                <td style="padding: 12px;"><strong>#{{ $pedido->id }}</strong></td>
+                                <td style="padding: 12px;">
+                                    <div style="font-weight: 500;">{{ $pedido->usuario->name ?? 'Desconocido' }}</div>
+                                    <div style="font-size: 12px; color: #999;">{{ $pedido->usuario->email ?? '' }}</div>
+                                </td>
+                                <td style="padding: 12px;">
+                                    <div style="max-width: 250px;">
+                                        @foreach($pedido->detalles as $detalle)
+                                            <div style="font-size: 13px; margin: 4px 0;">
+                                                • <strong>{{ $detalle->libro->titulo ?? 'Libro desconocido' }}</strong>
+                                                <br>&nbsp;&nbsp;<span style="color: #999; font-size: 12px;">
+                                                    {{ ucfirst($detalle->formato) }} × {{ $detalle->cantidad }}
+                                                </span>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </td>
+                                <td style="padding: 12px; text-align: right; font-weight: bold; color: var(--amber);">
+                                    ${{ number_format($pedido->total, 2) }}
+                                </td>
+                                <td style="padding: 12px; text-align: center; font-size: 12px; color: #666;">
+                                    {{ $pedido->created_at->format('d/m/Y H:i') }}
+                                </td>
+                                <td style="padding: 12px; text-align: center;">
+                                    <span style="
+                                        padding: 6px 12px;
+                                        border-radius: 20px;
+                                        font-size: 12px;
+                                        font-weight: 600;
+                                        background: {{ $pedido->estado === 'entregado' ? '#d4edda' : ($pedido->estado === 'cancelado' ? '#f8d7da' : ($pedido->estado === 'enviado' ? '#cfe2ff' : '#fff3cd')) }};
+                                        color: {{ $pedido->estado === 'entregado' ? '#155724' : ($pedido->estado === 'cancelado' ? '#721c24' : ($pedido->estado === 'enviado' ? '#084298' : '#856404')) }};
+                                    ">
+                                        {{ ucfirst($pedido->estado) }}
+                                    </span>
+                                </td>
+                                <td style="padding: 12px; text-align: center;">
+                                    <button onclick="toggleDetallesPedido(this, {{ $pedido->id }})" class="save-btn" style="padding: 6px 12px; font-size: 12px; margin-bottom: 5px;">
+                                         Ver
+                                    </button>
+                                    <div class="detalles-pedido-{{ $pedido->id }}" style="display: none; margin-top: 10px; padding: 15px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee;">
+                                        <div style="margin-bottom: 12px;">
+                                            <label style="display: block; font-weight: 600; margin-bottom: 8px; font-size: 13px;">Cambiar estado:</label>
+                                            <select id="estado-{{ $pedido->id }}" style="
+                                                width: 100%;
+                                                padding: 8px;
+                                                border: 1px solid #ddd;
+                                                border-radius: 4px;
+                                                font-size: 13px;
+                                                background: white;
+                                                cursor: pointer;
+                                            ">
+                                                <option value="pendiente" {{ $pedido->estado === 'pendiente' ? 'selected' : '' }}>Pendiente</option>
+                                                <option value="confirmado" {{ $pedido->estado === 'confirmado' ? 'selected' : '' }}>Confirmado</option>
+                                                <option value="enviado" {{ $pedido->estado === 'enviado' ? 'selected' : '' }}>Enviado</option>
+                                                <option value="entregado" {{ $pedido->estado === 'entregado' ? 'selected' : '' }}>Entregado</option>
+                                                <option value="cancelado" {{ $pedido->estado === 'cancelado' ? 'selected' : '' }}>Cancelado</option>
+                                            </select>
+                                        </div>
+                                        <button onclick="guardarEstadoPedido({{ $pedido->id }})" class="save-btn" style="width: 100%; padding: 8px; font-size: 13px;">
+                                            ✓ Guardar cambios
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @endif
+            <button onclick="closeModal('ventasModal')" class="cancel-btn" style="margin-top:20px; width: 100%;">Cerrar</button>
         </div>
     </div>
+
+    <script>
+        function toggleDetallesPedido(button, pedidoId) {
+            const detalles = document.querySelector('.detalles-pedido-' + pedidoId);
+            if (detalles.style.display === 'none') {
+                detalles.style.display = 'block';
+                button.textContent = '▼ Ocultar';
+            } else {
+                detalles.style.display = 'none';
+                button.textContent = '📋 Ver';
+            }
+        }
+
+        function guardarEstadoPedido(pedidoId) {
+            const select = document.getElementById('estado-' + pedidoId);
+            const nuevoEstado = select.value;
+
+            fetch('/admin/pedido/' + pedidoId + '/estado', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                },
+                body: JSON.stringify({
+                    estado: nuevoEstado
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Éxito',
+                        text: data.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo actualizar el estado'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error de conexión',
+                    text: 'No se pudo procesar la solicitud'
+                });
+            });
+        }
+    </script>
 
     {{-- ══ MODAL: CONTACTO ══ --}}
     <div id="contactoModal" class="modal">

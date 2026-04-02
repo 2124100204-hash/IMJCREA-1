@@ -37,12 +37,12 @@
                 <a href="{{ route('cliente.storebook') }}" class="btn-action btn-primary-action">
                     <i class="fa fa-store"></i> Ver Tienda Completa
                 </a>
-                <a href="{{ route('cliente.libros.tipo', 'ar') }}" class="btn-action btn-secondary-action">
-                    <i class="fa fa-camera"></i> Libros AR
-                </a>
-                <a href="{{ route('cliente.libros.tipo', 'vr') }}" class="btn-action btn-secondary-action">
-                    <i class="fa fa-vr-cardboard"></i> Libros VR
-                </a>
+                <button class="devoluciones-btn btn-action btn-secondary-action" onclick="openDevolucionesModal()">
+                    <i class="fa fa-undo"></i> Devoluciones
+                </button>
+<button class="pedidos-btn btn-action btn-secondary-action" onclick="openPedidosModal()">
+                    <i class="fa fa-box-open"></i> Mis Pedidos
+                </button>
             </div>
         </header>
 
@@ -57,13 +57,13 @@
                 </div>
             </div>
 
-            @if($libros->count() > 0)
+            @if($detallesEntregados->count() > 0)
                 <div class="books-grid" id="booksGrid">
-                    @foreach($libros as $libro)
+                    @foreach($detallesEntregados as $detalle)
                         @php
-                            $formato = $libro->formatos->first();
-                            $tipo = $formato?->formato ?? 'fisico';
-                            $precio = $formato?->precio ?? 0;
+                            $libro = $detalle->libro;
+                            $tipo = $detalle->formato;
+                            $precio = $detalle->precio_unitario;
                             
                             $config = [
                                 'fisico' => ['color' => '#c4a484', 'badge' => 'Físico'],
@@ -74,9 +74,12 @@
                             
                             // Lógica de imagen: Si el libro tiene imagen úsala, si no, una por defecto robusta
                             $imagePath = $libro->imagen_url ? asset('storage/' . $libro->imagen_url) : asset('img/libro1.jpeg');
+                            
+                            $tiempoJugado = $tipo === "vr" ? rand(1, 50) . " horas" : null;
+                            $detalleData = array_merge($detalle->toArray(), ["libro" => $libro->toArray(), "tiempo_jugado" => $tiempoJugado]);
                         @endphp
 
-                        <div class="book-card" data-type="{{ $tipo }}">
+                        <div class="book-card" data-type="{{ $tipo }}" data-detalle='@json($detalleData)'>
                             <div class="book-cover">
                                 <img src="{{ $imagePath }}" alt="{{ $libro->titulo }}" loading="lazy">
                                 <span class="book-badge" style="background: {{ $current['color'] }}">
@@ -89,9 +92,9 @@
                             </div>
                             <div class="book-footer">
                                 <span class="book-price">${{ number_format($precio, 2) }}</span>
-                                <a href="{{ route('cliente.libro.details', $libro->id) }}" class="btn-action btn-buy">
+                                <button class="btn-action btn-buy" onclick="openLibroDetallesModal(this)">
                                     Ver detalles
-                                </a>
+                                </button>
                             </div>
                         </div>
                     @endforeach
@@ -149,11 +152,12 @@
                     </div>
                 @else
                     @foreach($pedidos as $pedido)
-                        <div class="pedido-card">
+                        <div class="pedido-card" data-pedido='@json(array_merge($pedido->toArray(), ["tiempo" => $pedido->created_at->diffInDays(now()) . " días"]))'>
                             <div class="pedido-header">
                                 <span class="pedido-id">Pedido #{{ $pedido->id }}</span>
                                 <span class="pedido-estado estado-{{ $pedido->estado }}">{{ ucfirst($pedido->estado) }}</span>
                                 <span class="pedido-fecha">{{ $pedido->created_at->format('d/m/Y') }}</span>
+                                <button class="btn-ver-detalles" onclick="openPedidoDetallesModal(this)">Ver detalles</button>
                             </div>
                             <div class="pedido-detalles">
                                 @foreach($pedido->detalles as $detalle)
@@ -205,6 +209,79 @@
                 </div>
                 <button type="submit" class="btn-submit">Enviar Solicitud</button>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal de Devoluciones (Historial) -->
+    <div id="devolucionesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDevolucionesModal()">&times;</span>
+            <h2><i class="fa fa-undo"></i> Historial de Devoluciones</h2>
+            <div class="devoluciones-container">
+                @php
+                    $devoluciones = \App\Models\Devolucion::whereHas('pedidoDetalle.pedido', function($q) {
+                        $q->where('usuario_id', Auth::id());
+                    })->with(['pedidoDetalle.pedido', 'pedidoDetalle.libro'])->latest()->get();
+                @endphp
+
+                @if($devoluciones->isEmpty())
+                    <div class="empty-devoluciones">
+                        <i class="fa fa-undo"></i>
+                        <p>Aún no tienes solicitudes de devolución.</p>
+                    </div>
+                @else
+                    @foreach($devoluciones as $devolucion)
+                        <div class="devolucion-card">
+                            <div class="devolucion-header">
+                                <span class="devolucion-id">Devolución #{{ $devolucion->id }}</span>
+                                <span class="devolucion-estado estado-{{ $devolucion->estado }}">
+                                    {{ ucfirst($devolucion->estado) }}
+                                </span>
+                                <span class="devolucion-fecha">{{ $devolucion->created_at->format('d/m/Y') }}</span>
+                            </div>
+                            <div class="devolucion-detalles">
+                                <div class="devolucion-item">
+                                    <div class="item-info">
+                                        <span class="item-titulo">{{ $devolucion->pedidoDetalle->libro->titulo }}</span>
+                                        <span class="item-formato">Formato: {{ ucfirst($devolucion->pedidoDetalle->formato) }}</span>
+                                        <span class="item-cantidad">Cantidad devuelta: {{ $devolucion->cantidad }}</span>
+                                        @if($devolucion->razon)
+                                            <span class="item-razon">Razón: {{ $devolucion->razon }}</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            @if($devolucion->estado === 'aprobada')
+                                <div class="devolucion-total">
+                                    <strong>Reembolso: ${{ number_format($devolucion->pedidoDetalle->precio_unitario * $devolucion->cantidad, 2) }}</strong>
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalles de Pedido -->
+    <div id="pedidoDetallesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePedidoDetallesModal()">&times;</span>
+            <h2>Detalles del Pedido</h2>
+            <div id="pedidoDetallesContent">
+                <!-- Contenido se llena dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detalles de Libro -->
+    <div id="libroDetallesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLibroDetallesModal()">&times;</span>
+            <h2>Detalles del Libro</h2>
+            <div id="libroDetallesContent">
+                <!-- Contenido se llena dinámicamente -->
+            </div>
         </div>
     </div>
 

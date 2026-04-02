@@ -10,8 +10,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/default.css') }}">
     <link rel="stylesheet" href="{{ asset('css/details.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
    <script src="{{ asset('js/app.js') }}" defer></script>
    <script src="{{ asset('js/details.js') }}" defer></script>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
     
 </head>
 <body>
@@ -25,6 +27,10 @@
                 <a href="{{ route('cliente.libros.tipo', 'vr') }}"><i class="fa fa-vr-cardboard"></i> VR</a>
             </div>
             <div class="navbar-right">
+                <div class="cart-icon" onclick="mostrarCarrito()" style="position: relative; cursor: pointer; margin-right: 20px;">
+                    <i class="fa fa-shopping-cart" style="font-size: 24px; color: #333;"></i>
+                    <span id="cart-count" style="position: absolute; top: -10px; right: -10px; background: #e74c3c; color: white; border-radius: 50%; padding: 2px 6px; font-size: 12px; display: none;">0</span>
+                </div>
                 <div class="user-info">
                     <div class="user-avatar">{{ strtoupper(substr(auth()->user()->nombre ?? 'U', 0, 1)) }}</div>
                     <span>{{ auth()->user()->nombre ?? 'Usuario' }}</span>
@@ -124,8 +130,8 @@
                     <div class="action-buttons">
                         @auth
                             <!-- Si está autenticado, botones normales -->
-                            <button class="btn-primary" onclick="prestarAtencion()">
-                                <i class="fa fa-shopping-cart"></i> Comprar Ahora
+                            <button class="btn-primary" onclick="agregarAlCarrito()">
+                                <i class="fa fa-shopping-cart"></i> Agregar al Carrito
                             </button>
 
                             @if(!empty($ownedDetalle))
@@ -137,13 +143,13 @@
                                 </form>
                             @endif
 
-                            <button class="btn-secondary" onclick="agregarAlCarrito()" style="margin-left:12px;">
+                            <button class="btn-secondary" onclick="agregarAFavoritos()" style="margin-left:12px;">
                                 <i class="fa fa-heart"></i> Agregar a Favoritos
                             </button>
                         @else
                             <!-- Si NO está autenticado, botones deshabilitados -->
                             <button class="btn-primary btn-disabled" onclick="mostrarLoginModal()">
-                                <i class="fa fa-shopping-cart"></i> Comprar Ahora
+                                <i class="fa fa-shopping-cart"></i> Agregar al Carrito
                             </button>
                             <button class="btn-secondary btn-disabled" onclick="mostrarLoginModal()">
                                 <i class="fa fa-heart"></i> Agregar a Favoritos
@@ -190,12 +196,93 @@
     <script>
         window.isAuthenticated = {{ auth()->check() ? 'true' : 'false' }};
         window.libroId = {{ $libro->id }};
+        window.libroTitulo = '{{ addslashes($libro->titulo) }}';
+        window.libroAutor = '{{ addslashes($libro->autor?->nombre ?? 'Autor desconocido') }}';
+        window.libroImagen = '{{ $libro->imagen_url ? asset('storage/' . $libro->imagen_url) : asset('img/libro1.jpeg') }}';
         window.routes = {
             favoritosObtener: '{{ route("favoritos.obtener") }}',
             favoritoAgregar: '{{ route("favorito.agregar") }}',
             favoritoEliminar: '{{ route("favorito.eliminar") }}'
         };
     </script>
+
+    <!-- Modal del Carrito -->
+    <div class="modal-auth" id="carritoModal" style="display: none;">
+        <div class="modal-auth-content" style="max-width: 800px; width: 90%;">
+            <button class="modal-auth-close" onclick="cerrarCarritoModal()">&times;</button>
+            <div class="modal-auth-icon">
+                <i class="fa fa-shopping-cart"></i>
+            </div>
+            <h2 class="modal-auth-title">Mi Carrito de Compras</h2>
+            
+            <div id="carrito-items" style="max-height: 400px; overflow-y: auto; margin: 20px 0;">
+                <!-- Items del carrito se cargarán aquí -->
+            </div>
+            
+            <div id="carrito-total" style="text-align: center; margin: 20px 0; font-size: 18px; font-weight: bold;">
+                Total: $0.00
+            </div>
+            
+            <div class="modal-auth-actions">
+                <button onclick="cerrarCarritoModal()" class="modal-auth-btn modal-auth-btn-secondary">
+                    <i class="fa fa-arrow-left"></i> Continuar Comprando
+                </button>
+                <button onclick="procederAlPago()" class="modal-auth-btn modal-auth-btn-primary" id="btn-checkout" style="display: none;">
+                    <i class="fa fa-credit-card"></i> Proceder al Pago
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Métodos de Pago -->
+    <div class="modal-auth" id="pagoModal" style="display: none;">
+        <div class="modal-auth-content" style="max-width: 600px; width: 90%;">
+            <button class="modal-auth-close" onclick="cerrarPagoModal()">&times;</button>
+            <div class="modal-auth-icon">
+                <i class="fa fa-credit-card"></i>
+            </div>
+            <h2 class="modal-auth-title">Método de Pago</h2>
+            
+            <div id="pago-resumen" style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                <!-- Resumen del pedido -->
+            </div>
+            
+            <div class="metodos-pago" style="margin: 20px 0;">
+                <div class="metodo-pago-option" onclick="seleccionarMetodo('tarjeta')" style="cursor: pointer; padding: 15px; border: 2px solid #ddd; border-radius: 8px; margin: 10px 0; display: flex; align-items: center;">
+                    <i class="fa fa-credit-card" style="font-size: 24px; margin-right: 15px; color: #007bff;"></i>
+                    <div>
+                        <strong>Tarjeta de Crédito/Débito</strong>
+                        <p style="margin: 5px 0 0 0; color: #666;">Visa, Mastercard, American Express</p>
+                    </div>
+                </div>
+                
+                <div class="metodo-pago-option" onclick="seleccionarMetodo('paypal')" style="cursor: pointer; padding: 15px; border: 2px solid #ddd; border-radius: 8px; margin: 10px 0; display: flex; align-items: center;">
+                    <i class="fa fa-paypal" style="font-size: 24px; margin-right: 15px; color: #0070ba;"></i>
+                    <div>
+                        <strong>PayPal</strong>
+                        <p style="margin: 5px 0 0 0; color: #666;">Pago seguro con PayPal</p>
+                    </div>
+                </div>
+                
+                <div class="metodo-pago-option" onclick="seleccionarMetodo('efectivo')" style="cursor: pointer; padding: 15px; border: 2px solid #ddd; border-radius: 8px; margin: 10px 0; display: flex; align-items: center;">
+                    <i class="fa fa-money-bill-wave" style="font-size: 24px; margin-right: 15px; color: #28a745;"></i>
+                    <div>
+                        <strong>Efectivo</strong>
+                        <p style="margin: 5px 0 0 0; color: #666;">Pago en tienda física</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-auth-actions">
+                <button onclick="volverAlCarrito()" class="modal-auth-btn modal-auth-btn-secondary">
+                    <i class="fa fa-arrow-left"></i> Volver al Carrito
+                </button>
+                <button onclick="confirmarCompra()" class="modal-auth-btn modal-auth-btn-primary" id="btn-confirmar" disabled>
+                    <i class="fa fa-check"></i> Confirmar Compra
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal de Autenticación -->
     <div class="modal-auth" id="loginModal">

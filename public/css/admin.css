@@ -111,7 +111,7 @@
     border-top: 5px solid var(--amber);
 }
 
-.modal-content-form { max-width: 500px; }
+.modal-content-form { max-width: 900px; }
 
 /* ── FORMULARIOS ── */
 /* Estilo refinado para los campos del formulario */
@@ -218,7 +218,29 @@ color: var(--ink);}
     transition: background 0.2s;
 }
 .save-btn:hover { background: var(--amber-soft); }
+.btn-editar{
+    background: var(--teal);
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
 
+}
+.add-btn {
+    background: var(--teal);
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.add-btn:hover {
+    background: #9daca9;
+    color: var(--ink);
+}
 .cancel-btn{
      box-shadow: 0 3px 12px rgba(18,160,144,0.3);
       color: white !important;
@@ -251,3 +273,77 @@ display: inline-flex;
 
 .btn-danger, .btn-delete { color: var(--rose); background: transparent; border: 1px solid var(--rose); padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: 600; }
 .btn-danger:hover { background: var(--rose); color: white; }
+
+/* ── FORMULARIO DE EMPLEADO ── */
+.empleado-form-container {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.empleado-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.empleado-form-section {
+    background: var(--paper-light);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.empleado-form-section h3 {
+    margin: 0 0 15px 0;
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.empleado-form-section .form-group {
+    margin-bottom: 15px;
+}
+
+.empleado-form-section .form-group:last-child {
+    margin-bottom: 0;
+}
+
+.empleado-form-section .form-label {
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.empleado-form-section .form-input,
+.empleado-form-section select,
+.empleado-form-section textarea {
+    padding: 10px 12px;
+    font-size: 13px;
+}
+
+/* Sección completa (sin grid) */
+.empleado-form-full {
+    grid-column: 1 / -1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .empleado-form-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .modal-content-form {
+        max-width: 95vw;
+        padding: 20px;
+    }
+
+    .empleado-form-container {
+        max-height: 80vh;
+    }
+}

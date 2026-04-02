@@ -28,7 +28,7 @@
     </p>
 @endif
 
-            <form action="{{ route('login.procesar') }}" method="POST">
+            <form action="{{ route('login.procesar', [], false) }}" method="POST">
                 @csrf
                 
                 <div class="form-group">
@@ -49,7 +49,7 @@
             </form>
       <div class="google-login">
         <p>O inicia sesión con Google</p>
-      <a href="{{ route('login.google') }}" class="btn-google">
+      <a href="{{ route('login.google', [], false) }}" class="btn-google">
         <img src="https://developers.google.com/identity/images/g-logo.png"  class="google-img"alt="Google">
         Continuar con Google
     </a>

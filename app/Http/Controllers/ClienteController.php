@@ -14,7 +14,17 @@ class ClienteController extends Controller
     {
         /** @var Usuario $usuario */
         $usuario = Auth::user();
-        $libros = Libro::all();
+        
+        // Libros del usuario: detalles de pedidos entregados
+        $detallesEntregados = $usuario->pedidos()
+            ->where('estado', 'entregado')
+            ->with('detalles.libro')
+            ->get()
+            ->pluck('detalles')
+            ->flatten()
+            ->where('estado', '!=', 'devuelto');
+        
+        $libros = $detallesEntregados->map->libro->unique('id');
 
         $favoritosIds = $usuario->favoritos ?? [];
         $favoritos = Libro::whereIn('id', $favoritosIds)->get();
@@ -25,7 +35,7 @@ class ClienteController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('cliente.dashboard', compact('libros', 'favoritos', 'usuario', 'pedidos'));
+        return view('cliente.dashboard', compact('detallesEntregados', 'favoritos', 'usuario', 'pedidos'));
     }
 
     public function tienda()

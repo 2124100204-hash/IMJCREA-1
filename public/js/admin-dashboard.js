@@ -33,7 +33,9 @@ function prepararEdicionLibro(btn) {
 
     const camposTexto = {
         'edit_titulo': 'data-titulo',
-        'edit_descripcion': 'data-descripcion'
+        'edit_descripcion': 'data-descripcion',
+        'edit_nivel_edad': 'data-nivel-edad',
+        'edit_duracion': 'data-duracion'
     };
 
     for (let [idInput, attr] of Object.entries(camposTexto)) {
@@ -41,15 +43,15 @@ function prepararEdicionLibro(btn) {
         if (input) input.value = btn.getAttribute(attr) || '';
     }
 
-    // 3. Llenar Selects (Autor y Categoría)
+    // 3. Llenar Selects (Autor) y Campo de Categoría
     const autorId = btn.getAttribute('data-autor');
-    const catId = btn.getAttribute('data-categoria');
+    const catNombre = btn.getAttribute('data-categoria-nombre');
 
     const selectAutor = document.getElementById('edit_autor_id');
-    const selectCat = document.getElementById('edit_categoria');
+    const inputCat = document.getElementById('edit_categoria');
 
     if (selectAutor) selectAutor.value = autorId;
-    if (selectCat) selectCat.value = catId;
+    if (inputCat) inputCat.value = catNombre;
 
     // 4. Limpiar y llenar Formatos (Físico, AR, VR)
     ['fisico', 'ar', 'vr'].forEach(f => {

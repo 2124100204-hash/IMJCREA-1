@@ -65,16 +65,16 @@ function openBuyModal(libroId, titulo, precio) {
     openModal('buyModal');
 }
 
-function confirmarCompra() {
-    const direccion = document.getElementById('direccionInput').value;
-    if (!direccion.trim()) return alert("Por favor, ingresa los datos de entrega.");
-    
-    alert(`¡Éxito! Has adquirido "${libroActual.titulo}" en formato ${libroActual.formato}.`);
-    closeModal('buyModal');
-}
-
 window.onclick = (e) => {
     if (e.target.classList.contains('modal')) e.target.style.display = "none";
+}
+
+function openDevolucionesModal() {
+    document.getElementById('devolucionesModal').style.display = "flex";
+}
+
+function closeDevolucionesModal() {
+    document.getElementById('devolucionesModal').style.display = "none";
 }
 
 function openPedidosModal() {
@@ -148,6 +148,75 @@ function showToast(title, message, type = 'success') {
         toast.style.animation = 'fadeOut 0.5s forwards';
         setTimeout(() => toast.remove(), 500);
     }, 4000);
+}
+
+function openPedidoDetallesModal(button) {
+    const pedidoCard = button.closest('.pedido-card');
+    const pedido = JSON.parse(pedidoCard.dataset.pedido);
+    
+    const content = document.getElementById('pedidoDetallesContent');
+    content.innerHTML = `
+        <div class="pedido-detalle-header">
+            <h3>Pedido #${pedido.id}</h3>
+            <p><strong>Fecha:</strong> ${new Date(pedido.created_at).toLocaleDateString('es-ES')}</p>
+            <p><strong>Estado:</strong> ${pedido.estado.charAt(0).toUpperCase() + pedido.estado.slice(1)}</p>
+            <p><strong>Tiempo transcurrido:</strong> ${pedido.tiempo}</p>
+            <p><strong>Total:</strong> $${parseFloat(pedido.total).toFixed(2)}</p>
+        </div>
+        <div class="pedido-detalle-libros">
+            <h4>Libros:</h4>
+            ${pedido.detalles.map(detalle => `
+                <div class="libro-detalle">
+                    <p><strong>Título:</strong> ${detalle.libro.titulo}</p>
+                    <p><strong>Formato:</strong> ${detalle.formato.charAt(0).toUpperCase() + detalle.formato.slice(1)}</p>
+                    <p><strong>Cantidad:</strong> ${detalle.cantidad}</p>
+                    <p><strong>Precio unitario:</strong> $${parseFloat(detalle.precio_unitario).toFixed(2)}</p>
+                    <p><strong>Estado:</strong> ${detalle.estado.charAt(0).toUpperCase() + detalle.estado.slice(1)}</p>
+                    ${pedido.estado === 'entregado' && detalle.estado !== 'devuelto' ? `<button class="btn-devolver" onclick="openDevolucionModal(${detalle.id}, '${detalle.libro.titulo}', ${detalle.cantidad})">Devolver</button>` : ''}
+                </div>
+            `).join('')}
+        </div>
+    `;
+    
+    document.getElementById('pedidoDetallesModal').style.display = "flex";
+}
+
+function closePedidoDetallesModal() {
+    document.getElementById('pedidoDetallesModal').style.display = "none";
+}
+
+function openLibroDetallesModal(button) {
+    const bookCard = button.closest('.book-card');
+    const detalle = JSON.parse(bookCard.dataset.detalle);
+    const libro = detalle.libro;
+    
+    const content = document.getElementById('libroDetallesContent');
+    content.innerHTML = `
+        <div class="libro-detalle-header">
+            <h3>${libro.titulo}</h3>
+            <p><strong>Autor:</strong> ${libro.autor ? libro.autor.nombre : 'Autor desconocido'}</p>
+            <p><strong>Formato:</strong> ${detalle.formato.charAt(0).toUpperCase() + detalle.formato.slice(1)}</p>
+            <p><strong>Precio:</strong> $${parseFloat(detalle.precio_unitario).toFixed(2)}</p>
+            ${detalle.tiempo_jugado ? `<p><strong>Tiempo jugado:</strong> ${detalle.tiempo_jugado}</p>` : ''}
+            <p><strong>Descripción:</strong> ${libro.descripcion || 'Sin descripción disponible'}</p>
+        </div>
+        <div class="libro-detalle-acciones">
+            <button class="btn-devolver" onclick="openDevolucionModal(${detalle.id}, '${libro.titulo}', ${detalle.cantidad})">Devolver</button>
+        </div>
+    `;
+    
+    document.getElementById('libroDetallesModal').style.display = "flex";
+}
+
+function closeLibroDetallesModal() {
+    document.getElementById('libroDetallesModal').style.display = "none";
+}
+
+function openDevolucionModalGeneral(libroId, titulo) {
+    // Asumir que es el primer detalle o algo; ajustar según lógica
+    // Para simplificar, usar un modal genérico o el existente
+    alert('Funcionalidad de devolución para libro: ' + titulo);
+    // Aquí podrías abrir el modal de devolución si hay pedido_detalle_id
 }
 
 // Confirmación de compra actualizada
