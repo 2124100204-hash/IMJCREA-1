@@ -135,6 +135,32 @@
                     <p class="empty-state">No has creado ningún libro aún</p>
                 @endif
 
+                <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+
+                <div style="margin-bottom: 20px;">
+                    <h3 style="color: #333; margin-bottom: 15px;">Registro de Bitácora</h3>
+                    @if(isset($bitacora) && $bitacora->count() > 0)
+                        <div class="table-container">
+                            <table>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Acción</th>
+                                    <th>Empleado</th>
+                                </tr>
+                                @foreach($bitacora as $log)
+                                    <tr>
+                                        <td>{{ \Carbon\Carbon::parse($log->fecha)->format("d/m/Y H:i") }}</td>
+                                        <td>{{ $log->accion }}</td>
+                                        <td>{{ $log->usuario_modificador ?? 'Empleado' }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
+                    @else
+                        <p class="empty-state">Aún no hay acciones registradas en la bitácora.</p>
+                    @endif
+                </div>
+
                 <div class="modal-footer">
                     <button type="button" onclick="closeModal('librosModal')" class="btn-3d btn-cerrar-modal">
   <span class="shadow"></span>

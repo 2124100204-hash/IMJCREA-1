@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/default.css') }}">
     <link rel="stylesheet" href="{{ asset('css/client.css') }}">
     <script src="{{ asset('js/client.js') }}"></script>
+  
 </head>
 <body>
     <nav class="navbar">
@@ -34,17 +35,32 @@
         <header class="welcome-card">
             <h1>¡Bienvenido a INMERSIA!</h1>
             <div class="action-buttons">
+                <button type="button" class="btn-action btn-primary-action" onclick="openModal('misDatosModal')">
+                    <i class="fa fa-user"></i> Mis datos
+                </button>
                 <a href="{{ route('cliente.storebook') }}" class="btn-action btn-primary-action">
                     <i class="fa fa-store"></i> Ver Tienda Completa
                 </a>
                 <button class="devoluciones-btn btn-action btn-secondary-action" onclick="openDevolucionesModal()">
                     <i class="fa fa-undo"></i> Devoluciones
                 </button>
-<button class="pedidos-btn btn-action btn-secondary-action" onclick="openPedidosModal()">
+                <button class="pedidos-btn btn-action btn-secondary-action" onclick="openPedidosModal()">
                     <i class="fa fa-box-open"></i> Mis Pedidos
                 </button>
             </div>
         </header>
+        @if(session('success'))
+            <div class="update-alert" style="background:#e6ffef;border-color:#5bbe84;color:#166534;">
+                <i class="fa fa-circle-check"></i>
+                {{ session('success') }}
+            </div>
+        @endif
+        @if(!empty($missingFields) && count($missingFields) > 0)
+            <div class="update-alert">
+                <i class="fa fa-exclamation-triangle"></i>
+                Falta actualizar: {{ implode(', ', $missingFields) }}.
+            </div>
+        @endif
 
         <section class="my-books-section">
             <div class="section-header">
@@ -137,6 +153,36 @@
         <button class="pedidos-btn" onclick="openPedidosModal()">
             <i class="fa fa-box-open"></i> Mis Pedidos
         </button>
+    </div>
+
+    <!-- Modal de Mis Datos -->
+    <div id="misDatosModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('misDatosModal')">&times;</span>
+            <h2>Mis Datos</h2>
+            @if ($errors->any())
+                <div class="update-alert" style="background:#ffe3e3;border-color:#fca5a5;color:#991b1b;">
+                    <i class="fa fa-exclamation-circle"></i>
+                    {{ $errors->first() }}
+                </div>
+            @endif
+            <form method="POST" action="{{ route('cliente.perfil.actualizar') }}" class="profile-form">
+                @csrf
+                <div class="form-group">
+                    <label for="nombre">Nombre completo</label>
+                    <input type="text" id="nombre" name="nombre" value="{{ old('nombre', $usuario->nombre ?? '') }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" name="email" value="{{ old('email', $usuario->email ?? '') }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="text" id="telefono" name="telefono" value="{{ old('telefono', $cliente->telefono ?? '') }}" placeholder="Opcional">
+                </div>
+                <button type="submit" class="save-btn">Guardar cambios</button>
+            </form>
+        </div>
     </div>
 
     <!-- Modal de Pedidos -->

@@ -171,6 +171,13 @@ class AdminController extends Controller
             'domicilio' => 'nullable|string|max:500'
         ]);
 
+        // Sanitizar teléfono
+        $telefono = $request->telefono;
+        if ($telefono) {
+            $telefono = preg_replace('/[^\d\s\-\(\)\+]/', '', $telefono);
+            $telefono = trim($telefono);
+        }
+
         // Crear el usuario primero
         $usuario = Usuario::create([
             'username' => $request->email, // Usar email como username
@@ -188,7 +195,7 @@ class AdminController extends Controller
             'puesto' => $request->puesto,
             'departamento' => $request->departamento,
             'salario' => $request->salario,
-            'telefono' => $request->telefono,
+            'telefono' => $telefono,
             'curp' => $request->curp,
             'domicilio' => $request->domicilio
         ]);

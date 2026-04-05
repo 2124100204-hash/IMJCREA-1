@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Libro;
 use App\Models\Pedido;
 use App\Models\Usuario;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +15,26 @@ class ClienteController extends Controller
     {
         /** @var Usuario $usuario */
         $usuario = Auth::user();
-        
+        $cliente = $usuario->cliente;
+
+        $missingFields = [];
+        if (!$usuario->nombre) {
+            $missingFields[] = 'Nombre';
+        }
+        if (!$usuario->email) {
+            $missingFields[] = 'Correo';
+        }
+        if (!$cliente) {
+            $missingFields[] = 'Perfil de cliente';
+        } else {
+            if (!$cliente->telefono) {
+                $missingFields[] = 'Teléfono';
+            }
+            if (!$cliente->correo) {
+                $missingFields[] = 'Correo en perfil';
+            }
+        }
+
         // Libros del usuario: detalles de pedidos entregados
         $detallesEntregados = $usuario->pedidos()
             ->where('estado', 'entregado')
@@ -35,7 +55,7 @@ class ClienteController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('cliente.dashboard', compact('detallesEntregados', 'favoritos', 'usuario', 'pedidos'));
+        return view('cliente.dashboard', compact('detallesEntregados', 'favoritos', 'usuario', 'pedidos', 'cliente', 'missingFields'));
     }
 
     public function tienda()

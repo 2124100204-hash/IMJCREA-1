@@ -193,76 +193,121 @@ class PedidoController extends Controller
 
     public function procesarCompraCarrito(Request $request)
     {
-        $request->validate([
-            'carrito' => 'required|array|min:1',
-            'carrito.*.libroId' => 'required|exists:libros,id',
-            'carrito.*.formato' => 'required|in:fisico,ar,vr',
-            'carrito.*.precio' => 'required|numeric|min:0',
-            'carrito.*.cantidad' => 'required|integer|min:1',
-            'metodo_pago' => 'required|in:tarjeta,paypal,efectivo',
-        ]);
+        try {
+            // Validación básica
+            if (!$request->has('carrito') || !is_array($request->carrito) || empty($request->carrito)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El carrito está vacío'
+                ], 400);
+            }
 
-        $usuario = Auth::user();
-        $carrito = $request->carrito;
-        $metodoPago = $request->metodo_pago;
+            if (!$request->has('metodo_pago')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Debe seleccionar un método de pago'
+                ], 400);
+            }
 
-        // Calcular total
-        $total = 0;
-        foreach ($carrito as $item) {
-            $total += $item['precio'] * $item['cantidad'];
-        }
+            $usuario = Auth::user();
+            if (!$usuario) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Debe iniciar sesión para continuar'
+                ], 401);
+            }
 
-        DB::transaction(function () use ($usuario, $carrito, $total, $metodoPago) {
-            // Crear pedido
-            $pedido = Pedido::create([
-                'usuario_id' => $usuario->id,
-                'estado' => 'pendiente',
-                'total' => $total,
-            ]);
+            $carrito = $request->carrito;
+            $metodoPago = $request->metodo_pago;
 
-            // Crear detalles y reducir stock
+            // Verificar idempotencia para evitar doble envío (ahora manejado por middleware)
+            $idempotencyKey = $request->header('Idempotency-Key') ?: md5(serialize($carrito) . $usuario->id . time());
+            $cacheKey = 'idempotency_' . $idempotencyKey;
+
+            if (\Cache::has($cacheKey)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Esta solicitud ya fue procesada anteriormente'
+                ], 409);
+            }
+
+            // Calcular total y validar items
+            $total = 0;
             foreach ($carrito as $item) {
-                $formato = LibroFormato::where('libro_id', $item['libroId'])
-                    ->where('formato', $item['formato'])
-                    ->first();
-
-                if (!$formato || $formato->stock < $item['cantidad']) {
-                    throw ValidationException::withMessages([
-                        'stock' => "Stock insuficiente para {$item['titulo']} en formato {$item['formato']}."
-                    ]);
+                if (!isset($item['libroId']) || !isset($item['formato']) || !isset($item['precio']) || !isset($item['cantidad'])) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Estructura de carrito inválida'
+                    ], 400);
                 }
+                $total += (float)$item['precio'] * (int)$item['cantidad'];
+            }
 
-                // Crear detalle
-                PedidoDetalle::create([
-                    'pedido_id' => $pedido->id,
-                    'libro_id' => $item['libroId'],
-                    'cantidad' => $item['cantidad'],
-                    'precio_unitario' => $item['precio'],
+            if ($total <= 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El total del pedido debe ser mayor a 0'
+                ], 400);
+            }
+
+            DB::transaction(function () use ($usuario, $carrito, $total, $metodoPago, $idempotencyKey, $cacheKey) {
+                // Crear pedido
+                $pedido = Pedido::create([
+                    'usuario_id' => $usuario->id,
                     'estado' => 'pendiente',
-                    'formato' => $item['formato'],
+                    'total' => $total,
                 ]);
 
-                // Reducir stock
-                $formato->decrement('stock', $item['cantidad']);
-            }
+                // Crear detalles y reducir stock con bloqueo optimista
+                foreach ($carrito as $item) {
+                    $formato = LibroFormato::where('libro_id', $item['libroId'])
+                        ->where('formato', $item['formato'])
+                        ->lockForUpdate() // Bloqueo pesimista para esta fila específica
+                        ->first();
 
-            // Aquí podrías agregar lógica adicional según el método de pago
-            // Por ejemplo, para "efectivo", marcar como pendiente de pago en tienda
-            if ($metodoPago === 'efectivo') {
-                // Lógica específica para pago en efectivo
-            } elseif ($metodoPago === 'tarjeta') {
-                // Lógica para procesamiento de tarjeta
-                $pedido->update(['estado' => 'pagado']);
-            } elseif ($metodoPago === 'paypal') {
-                // Lógica para PayPal
-                $pedido->update(['estado' => 'pagado']);
-            }
-        });
+                    if (!$formato) {
+                        throw new \Exception("Formato no encontrado para el libro {$item['libroId']}");
+                    }
 
-        return response()->json([
-            'success' => true, 
-            'message' => 'Compra procesada exitosamente. ' . 
-                        ($metodoPago === 'efectivo' ? 'Recuerda pasar por la tienda para recoger tu pedido y realizar el pago.' : 'Tu pedido ha sido confirmado.')
-        ]);
+                    if ($formato->stock < $item['cantidad']) {
+                        throw new \Exception("Stock insuficiente para {$item['titulo']} en formato {$item['formato']}. Solo quedan {$formato->stock} unidades disponibles.");
+                    }
+
+                    // Crear detalle
+                    PedidoDetalle::create([
+                        'pedido_id' => $pedido->id,
+                        'libro_id' => $item['libroId'],
+                        'cantidad' => $item['cantidad'],
+                        'precio_unitario' => $item['precio'],
+                        'estado' => 'pendiente',
+                        'formato' => $item['formato'],
+                    ]);
+
+                    // Reducir stock
+                    $formato->decrement('stock', $item['cantidad']);
+                }
+
+                // Actualizar estado según método de pago
+                if ($metodoPago === 'tarjeta' || $metodoPago === 'paypal') {
+                    $pedido->update(['estado' => 'procesando']);
+                }
+                // Para efectivo, mantener como pendiente
+
+                // Idempotencia manejada por middleware
+            });
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Compra procesada exitosamente. ' .
+                            ($metodoPago === 'efectivo' ? 'Recuerda pasar por la tienda para recoger tu pedido y realizar el pago.' : 'Tu pedido ha sido confirmado.')
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error en procesarCompraCarrito: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage() ?? 'Error al procesar la compra'
+            ], 500);
+        }
     }
 }

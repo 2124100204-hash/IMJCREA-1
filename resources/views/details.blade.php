@@ -243,36 +243,42 @@
             </div>
             <h2 class="modal-auth-title">Método de Pago</h2>
             
-            <div id="pago-resumen" style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+            <div id="pago-resumen" style="margin: 12px 0; padding: 12px; background: #f8f9fa; border-radius: 8px; font-size: 13px;">
                 <!-- Resumen del pedido -->
             </div>
             
-            <div class="metodos-pago" style="margin: 20px 0;">
-                <div class="metodo-pago-option" onclick="seleccionarMetodo('tarjeta')" style="cursor: pointer; padding: 15px; border: 2px solid #ddd; border-radius: 8px; margin: 10px 0; display: flex; align-items: center;">
-                    <i class="fa fa-credit-card" style="font-size: 24px; margin-right: 15px; color: #007bff;"></i>
+            <div class="metodos-pago" style="margin: 12px 0;">
+                <div class="metodo-pago-option" onclick="seleccionarMetodo(event, 'tarjeta')" style="cursor: pointer; padding: 10px 12px; border: 2px solid #ddd; border-radius: 8px; margin: 6px 0; display: flex; align-items: center;">
+                    <i class="fa fa-credit-card" style="font-size: 20px; margin-right: 12px; color: #007bff;"></i>
                     <div>
-                        <strong>Tarjeta de Crédito/Débito</strong>
-                        <p style="margin: 5px 0 0 0; color: #666;">Visa, Mastercard, American Express</p>
+                        <strong style="font-size: 13px;">Tarjeta de Crédito/Débito</strong>
+                        <p style="margin: 2px 0 0 0; color: #666; font-size: 12px;">Visa, Mastercard</p>
                     </div>
                 </div>
                 
-                <div class="metodo-pago-option" onclick="seleccionarMetodo('paypal')" style="cursor: pointer; padding: 15px; border: 2px solid #ddd; border-radius: 8px; margin: 10px 0; display: flex; align-items: center;">
-                    <i class="fa fa-paypal" style="font-size: 24px; margin-right: 15px; color: #0070ba;"></i>
+                <div class="metodo-pago-option" onclick="seleccionarMetodo(event, 'paypal')" style="cursor: pointer; padding: 10px 12px; border: 2px solid #ddd; border-radius: 8px; margin: 6px 0; display: flex; align-items: center;">
+                    <i class="fa fa-paypal" style="font-size: 20px; margin-right: 12px; color: #0070ba;"></i>
                     <div>
-                        <strong>PayPal</strong>
-                        <p style="margin: 5px 0 0 0; color: #666;">Pago seguro con PayPal</p>
+                        <strong style="font-size: 13px;">PayPal</strong>
+                        <p style="margin: 2px 0 0 0; color: #666; font-size: 12px;">Pago seguro</p>
                     </div>
                 </div>
                 
-                <div class="metodo-pago-option" onclick="seleccionarMetodo('efectivo')" style="cursor: pointer; padding: 15px; border: 2px solid #ddd; border-radius: 8px; margin: 10px 0; display: flex; align-items: center;">
-                    <i class="fa fa-money-bill-wave" style="font-size: 24px; margin-right: 15px; color: #28a745;"></i>
+                <div class="metodo-pago-option" onclick="seleccionarMetodo(event, 'efectivo')" style="cursor: pointer; padding: 10px 12px; border: 2px solid #ddd; border-radius: 8px; margin: 6px 0; display: flex; align-items: center;">
+                    <i class="fa fa-money-bill-wave" style="font-size: 20px; margin-right: 12px; color: #28a745;"></i>
                     <div>
-                        <strong>Efectivo</strong>
-                        <p style="margin: 5px 0 0 0; color: #666;">Pago en tienda física</p>
+                        <strong style="font-size: 13px;">Efectivo</strong>
+                        <p style="margin: 2px 0 0 0; color: #666; font-size: 12px;">Pago en tienda</p>
                     </div>
                 </div>
             </div>
-            
+
+            <div id="paymentDetailsContainer" style="display:none; margin: 8px 0; padding: 12px; background: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%); border: 1px solid #d1dce8; border-radius: 12px; box-shadow: 0 8px 16px rgba(15, 23, 42, 0.04); min-height: 0; max-height: 140px; overflow-y: auto;">
+            </div>
+            <div style="margin-bottom: 10px; color: #0d6efd; font-weight: 600; display: flex; align-items: center; gap: 6px; font-size: 12px;">
+                <i class="fa fa-shield-alt"></i>
+                Tus datos se envían de forma segura.
+            </div>
             <div class="modal-auth-actions">
                 <button onclick="volverAlCarrito()" class="modal-auth-btn modal-auth-btn-secondary">
                     <i class="fa fa-arrow-left"></i> Volver al Carrito

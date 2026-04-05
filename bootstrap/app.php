@@ -16,6 +16,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'usuario' => UsuarioMiddleware::class,
             'auth.custom' => \App\Http\Middleware\AuthCustom::class,
             'rol' => \App\Http\Middleware\VerificarRol::class,
+            'circuit_breaker' => \App\Http\Middleware\CircuitBreaker::class,
+            'idempotency' => \App\Http\Middleware\Idempotency::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

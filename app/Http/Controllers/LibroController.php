@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BitacoraUsuario;
 use App\Models\Libro;
 use App\Models\Pedido;
 use App\Models\PedidoDetalle;
@@ -119,7 +120,7 @@ class LibroController extends Controller
             'formato' => 'required|string|max:50'
         ]);
 
-        Libro::create([
+        $libro = Libro::create([
             'titulo' => $request->titulo,
             'autor' => $request->autor,
             'descripcion' => $request->descripcion,
@@ -127,13 +128,19 @@ class LibroController extends Controller
             'usuario_id' => session('usuario_id')
         ]);
 
+        $this->registrarBitacora("Creó libro: {$libro->titulo}");
+
         return back()->with('success', 'Libro creado correctamente');
     }
 
     public function eliminar($id)
     {
         $libro = Libro::findOrFail($id);
+        $titulo = $libro->titulo;
         $libro->delete();
+
+        $this->registrarBitacora("Eliminó libro: {$titulo}");
+
         return back()->with('success', 'Libro eliminado correctamente');
     }
 
@@ -154,6 +161,25 @@ class LibroController extends Controller
             'formato' => $request->formato
         ]);
 
+        $this->registrarBitacora("Actualizó libro: {$libro->titulo}");
+
         return back()->with('success', 'Libro actualizado correctamente');
+    }
+
+    protected function registrarBitacora(string $accion)
+    {
+        $usuarioId = session('usuario_id') ?? (Auth::check() ? Auth::id() : null);
+        $usuarioModificador = session('usuario_nombre') ?? session('usuario_username') ?? (Auth::check() ? optional(Auth::user())->name ?? optional(Auth::user())->username : 'Empleado');
+
+        if (!$usuarioId) {
+            return;
+        }
+
+        BitacoraUsuario::create([
+            'usuario_id' => $usuarioId,
+            'accion' => $accion,
+            'usuario_modificador' => $usuarioModificador,
+            'fecha' => now(),
+        ]);
     }
 }

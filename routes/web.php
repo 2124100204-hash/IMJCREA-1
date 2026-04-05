@@ -11,7 +11,6 @@ use App\Http\Controllers\Auth\LoginController;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\FavoritoController;
 
-
 /*
 |--------------------------------------------------------------------------
 | RUTAS PÚBLICAS
@@ -22,10 +21,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('welcome');
 
-
 Route::get('/contact', function(){
     return view('contact');
-})->name('contact');    
+})->name('contact');
 
 // Rutas públicas de login
 Route::get('/login', [AuthController::class, 'mostrarLogin'])->name('login');
@@ -40,14 +38,6 @@ Route::get('/libros/{tipo}', [LibroController::class, 'tipo'])->name('libros.tip
 // Ruta pública para ver detalles de un libro
 Route::get('/libro/{id}', [LibroController::class, 'show'])->name('libro.details');
 
-// Rutas protegidas
-
-// Alias adicional si necesitas route('inicio')
-Route::get('/inicio', function () {
-    return view('welcome');
-})->name('inicio');
-
-
 /*
 |--------------------------------------------------------------------------
 | AUTENTICACIÓN
@@ -55,23 +45,14 @@ Route::get('/inicio', function () {
 */
 
 // LOGIN
-Route::get('/login', [AuthController::class, 'mostrarLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.procesar');
 Route::get('/auth/google', function () {
     return Socialite::driver('google')->redirect();
 })->name('login.google');
 Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
-// Si en algún lugar usas route('mostrarLogin')
-Route::get('/mostrar-login', [AuthController::class, 'mostrarLogin'])->name('mostrarLogin');
-
 
 // REGISTRO
 Route::get('/register', [AuthController::class, 'mostrarRegistro'])->name('register');
 Route::post('/register', [AuthController::class, 'registrar'])->name('registrar');
-
-// Si en algún lugar usas route('mostrarRegistro')
-Route::get('/mostrar-registro', [AuthController::class, 'mostrarRegistro'])->name('mostrarRegistro');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -79,11 +60,14 @@ Route::get('/mostrar-registro', [AuthController::class, 'mostrarRegistro'])->nam
 |--------------------------------------------------------------------------
 */
 
-Route::middleware('auth.custom')->group(function () {
+Route::middleware(['auth.custom'])->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Dashboard Administrador
+    // Alias adicional si necesitas route('inicio')
+    Route::get('/inicio', function () {
+        return view('welcome');
+    })->name('inicio');
 
     /*
     |--------------------------------------------------------------------------
@@ -92,6 +76,27 @@ Route::middleware('auth.custom')->group(function () {
     */
     Route::middleware('rol:cliente')->group(function () {
         Route::get('/dashboard', [ClienteController::class, 'index'])->name('client.dashboard');
+        Route::post('/cliente/perfil/actualizar', [AuthController::class, 'actualizarPerfil'])->name('cliente.perfil.actualizar');
+
+        // Tienda autenticada para cliente
+        Route::get('/cliente/tienda', [LibroController::class, 'index'])->name('cliente.storebook');
+        Route::get('/cliente/libros/{tipo}', [LibroController::class, 'tipo'])->name('cliente.libros.tipo');
+
+        // Detalles de libro para cliente
+        Route::get('/cliente/libro/{id}', [LibroController::class, 'show'])->name('cliente.libro.details');
+
+        // Rutas de favoritos
+        Route::post('/favorito/agregar', [FavoritoController::class, 'agregar'])->name('favorito.agregar');
+        Route::post('/favorito/eliminar', [FavoritoController::class, 'eliminar'])->name('favorito.eliminar');
+        Route::get('/favoritos', [FavoritoController::class, 'obtener'])->name('favoritos.obtener');
+
+        // Rutas de compras y devoluciones
+        Route::middleware(['circuit_breaker', 'idempotency'])->group(function () {
+            Route::post('/comprar', [PedidoController::class, 'comprar'])->name('pedido.comprar');
+            Route::post('/procesar-compra', [PedidoController::class, 'procesarCompraCarrito'])->name('pedido.procesar.compra');
+            Route::post('/devolver', [PedidoController::class, 'devolver'])->name('pedido.devolver');
+        });
+        Route::get('/mis-compras', [PedidoController::class, 'getComprasUsuario'])->name('pedido.compras');
     });
 
     /*
@@ -99,67 +104,30 @@ Route::middleware('auth.custom')->group(function () {
     | ÁREA ADMIN
     |--------------------------------------------------------------------------
     */
-
-    Route::middleware('rol:admin')->group(function () {
-
+    Route::middleware(['rol:admin', 'circuit_breaker'])->group(function () {
         Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/admin/libros', [AdminController::class, 'libros'])->name('admin.libros');
         Route::get('/admin/usuarios', [AdminController::class, 'usuarios'])->name('admin.usuarios');
         Route::get('/admin/formatos', [AdminController::class, 'formatos'])->name('admin.formatos');
+
         Route::post('/admin/autor/crear', [AdminController::class, 'crearAutor'])->name('admin.autor.crear');
         Route::post('/admin/categoria/crear', [AdminController::class, 'crearCategoria'])->name('admin.categoria.crear');
+
         // Gestión de empleados
         Route::post('/admin/empleado/crear', [AdminController::class, 'crearEmpleado'])->name('admin.empleado.crear');
         Route::post('/admin/empleado/eliminar/{id}', [AdminController::class, 'eliminarEmpleado'])->name('admin.empleado.eliminar');
 
-        // Gestión de libros (Admin)
-
-        Route::post('/admin/empleado/crear', [AdminController::class, 'crearEmpleado'])->name('admin.empleado.crear');
-      Route::post('/admin/libro/crear', [AdminController::class, 'crearLibro'])->name('admin.libro.crear');
+        // Gestión de libros
+        Route::post('/admin/libro/crear', [AdminController::class, 'crearLibro'])->name('admin.libro.crear');
         Route::post('/admin/libro/eliminar/{id}', [LibroController::class, 'eliminar'])->name('admin.libro.eliminar');
         Route::post('/admin/libro/actualizar/{id}', [AdminController::class, 'actualizarLibro'])->name('admin.libro.actualizar');
 
         // Gestión de devoluciones
         Route::get('/admin/devoluciones', [AdminController::class, 'devoluciones'])->name('admin.devoluciones');
         Route::post('/admin/devolucion/procesar/{id}', [AdminController::class, 'procesarDevolucion'])->name('admin.devolucion.procesar');
-        
+
         // Gestión de pedidos
         Route::post('/admin/pedido/{pedidoId}/estado', [AdminController::class, 'actualizarEstadoPedido'])->name('admin.pedido.estado');
-    });
-
-
-    // Dashboard Empleado
-    Route::middleware('rol:empleado')->group(function () {
-        Route::get('/empleado/dashboard', [EmpleadoController::class, 'dashboard'])->name('empleado.dashboard');
-        Route::get('/empleado/libros', [EmpleadoController::class, 'libros'])->name('empleado.libros');
-
-        // Gestión de libros (Empleado)
-        Route::post('/empleado/libro/crear', [LibroController::class, 'crear'])->name('empleado.libro.crear');
-        Route::post('/empleado/libro/eliminar/{id}', [LibroController::class, 'eliminar'])->name('empleado.libro.eliminar');
-        Route::post('/empleado/libro/actualizar/{id}', [LibroController::class, 'actualizar'])->name('empleado.libro.actualizar');
-    });
-
-    // Dashboard Cliente
-    Route::middleware('rol:cliente')->group(function () {
-        Route::get('/cliente/dashboard', [ClienteController::class, 'dashboard'])->name('cliente.dashboard');
-        
-        // Tienda autenticada para cliente
-        Route::get('/cliente/tienda', [LibroController::class, 'index'])->name('cliente.storebook');
-        Route::get('/cliente/libros/{tipo}', [LibroController::class, 'tipo'])->name('cliente.libros.tipo');
-        
-        // Detalles de libro para cliente
-        Route::get('/cliente/libro/{id}', [LibroController::class, 'show'])->name('cliente.libro.details');
-        
-        // Rutas de favoritos
-        Route::post('/favorito/agregar', [FavoritoController::class, 'agregar'])->name('favorito.agregar');
-        Route::post('/favorito/eliminar', [FavoritoController::class, 'eliminar'])->name('favorito.eliminar');
-        Route::get('/favoritos', [FavoritoController::class, 'obtener'])->name('favoritos.obtener');
-
-        // Rutas de compras y devoluciones
-        Route::post('/comprar', [PedidoController::class, 'comprar'])->name('pedido.comprar');
-        Route::post('/procesar-compra', [PedidoController::class, 'procesarCompraCarrito'])->name('pedido.procesar.compra');
-        Route::post('/devolver', [PedidoController::class, 'devolver'])->name('pedido.devolver');
-        Route::get('/mis-compras', [PedidoController::class, 'getComprasUsuario'])->name('pedido.compras');
     });
 
     /*
@@ -169,7 +137,11 @@ Route::middleware('auth.custom')->group(function () {
     */
     Route::middleware('rol:empleado')->group(function () {
         Route::get('/empleado/dashboard', [EmpleadoController::class, 'dashboard'])->name('empleado.dashboard');
+        Route::get('/empleado/libros', [EmpleadoController::class, 'libros'])->name('empleado.libros');
+
+        // Gestión de libros
+        Route::post('/empleado/libro/crear', [LibroController::class, 'crear'])->name('empleado.libro.crear');
+        Route::post('/empleado/libro/eliminar/{id}', [LibroController::class, 'eliminar'])->name('empleado.libro.eliminar');
+        Route::post('/empleado/libro/actualizar/{id}', [LibroController::class, 'actualizar'])->name('empleado.libro.actualizar');
     });
-
-
 });
