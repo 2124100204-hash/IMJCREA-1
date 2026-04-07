@@ -250,3 +250,68 @@
     opacity:1;
 }
 
+.coupon-banner {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px auto;
+    max-width: 800px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px dashed #ccc;
+}
+
+.coupon-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.coupon-form label {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    color: #333;
+}
+
+.coupon-input-group {
+    display: flex;
+    gap: 0;
+    width: 100%;
+    max-width: 400px;
+}
+
+.coupon-input-group input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px 0 0 8px;
+    outline: none;
+}
+
+.coupon-input-group button {
+    padding: 10px 20px;
+    background: #6c3bd1; /* Color VR de tu config */
+    color: white;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.coupon-input-group button:hover {
+    background: #562eb1;
+}
+
+.alert-success {
+    margin-top: 15px;
+    color: #12a090;
+    font-weight: bold;
+    text-align: center;
+}
+
+.alert-error {
+    margin-top: 15px;
+    color: #e74c3c;
+    font-weight: bold;
+    text-align: center;
+}

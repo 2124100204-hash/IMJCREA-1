@@ -90,7 +90,7 @@ public function handleGoogleCallback() {
             return redirect()->route('cliente.dashboard');
 
         } catch (\Exception $e) {
-            return redirect()->route('mostrarLogin')->withErrors(['mensaje' => 'Error con Google: ' . $e->getMessage()]);
+            return redirect()->route('login')->withErrors(['mensaje' => 'Error con Google: ' . $e->getMessage()]);
         }
     }
     public function registrar(Request $request)
@@ -119,7 +119,7 @@ public function handleGoogleCallback() {
             return $usuario;
         });
 
-        return redirect()->route('mostrarLogin')->with('success', 'Registro exitoso. Ahora puedes iniciar sesión.');
+        return redirect()->route('login')->with('success', 'Registro exitoso. Ahora puedes iniciar sesión.');
     }
 
     private function crearPerfilCliente(Usuario $usuario, string $correo, string $nombre)
@@ -186,6 +186,6 @@ public function handleGoogleCallback() {
     {
         Auth::logout();
         session()->flush();
-        return redirect()->route('mostrarLogin');
+        return redirect()->route('login');
     }
 }

@@ -20,5 +20,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             LibroSeeder::class,
         ]);
+
+        // Llamar al seeder de cupones
+        $this->call([
+            CuponesSeeder::class,
+        ]);
     }
 }

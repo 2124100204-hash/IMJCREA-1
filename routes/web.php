@@ -64,7 +64,7 @@ Route::middleware(['auth.custom'])->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Alias adicional si necesitas route('inicio')
+      Route::post('/cupones/canjear', [App\Http\Controllers\CuponController::class, 'canjear'])->name('cupones.canjear');
     Route::get('/inicio', function () {
         return view('welcome');
     })->name('inicio');
@@ -75,7 +75,7 @@ Route::middleware(['auth.custom'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::middleware('rol:cliente')->group(function () {
-        Route::get('/dashboard', [ClienteController::class, 'index'])->name('client.dashboard');
+       Route::get('/dashboard', [ClienteController::class, 'dashboard'])->name('cliente.dashboard'); 
         Route::post('/cliente/perfil/actualizar', [AuthController::class, 'actualizarPerfil'])->name('cliente.perfil.actualizar');
 
         // Tienda autenticada para cliente
@@ -97,6 +97,10 @@ Route::middleware(['auth.custom'])->group(function () {
             Route::post('/devolver', [PedidoController::class, 'devolver'])->name('pedido.devolver');
         });
         Route::get('/mis-compras', [PedidoController::class, 'getComprasUsuario'])->name('pedido.compras');
+
+        // Rutas de cupones
+        Route::get('/cupones', [App\Http\Controllers\CuponController::class, 'index'])->name('cupones.index');
+      
     });
 
     /*

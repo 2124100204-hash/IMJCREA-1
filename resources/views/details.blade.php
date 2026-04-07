@@ -21,7 +21,7 @@
         <a href="{{ route('welcome') }}" class="navbar-logo">INMER<span>SIA</span></a>
         @auth
             <div class="navbar-links" id="navLinks">
-                <a href="{{ route('cliente.dashboard') }}"><i class="fa fa-home"></i> Mi Dashboard</a>
+                <a href="{{ route('cliente.dashboard') }}">Ir al Dashboard</a>
                 <a href="{{ route('cliente.storebook') }}"><i class="fa fa-store"></i> Tienda</a>
                 <a href="{{ route('cliente.libros.tipo', 'ar') }}"><i class="fa fa-camera"></i> AR</a>
                 <a href="{{ route('cliente.libros.tipo', 'vr') }}"><i class="fa fa-vr-cardboard"></i> VR</a>
@@ -194,16 +194,17 @@
 
     <!-- Global JS variables for details page -->
     <script>
-        window.isAuthenticated = {{ auth()->check() ? 'true' : 'false' }};
-        window.libroId = {{ $libro->id }};
-        window.libroTitulo = '{{ addslashes($libro->titulo) }}';
-        window.libroAutor = '{{ addslashes($libro->autor?->nombre ?? 'Autor desconocido') }}';
-        window.libroImagen = '{{ $libro->imagen_url ? asset('storage/' . $libro->imagen_url) : asset('img/libro1.jpeg') }}';
-        window.routes = {
-            favoritosObtener: '{{ route("favoritos.obtener") }}',
-            favoritoAgregar: '{{ route("favorito.agregar") }}',
-            favoritoEliminar: '{{ route("favorito.eliminar") }}'
-        };
+window.isAuthenticated = {{ auth()->check() ? 'true' : 'false' }};
+    window.libroId = {{ $libro->id }};
+    window.libroTitulo = '{{ addslashes($libro->titulo) }}';
+    window.libroAutor = '{{ addslashes($libro->autor?->nombre ?? 'Autor desconocido') }}';
+    window.libroImagen = '{{ $libro->imagen_url ? asset('storage/' . $libro->imagen_url) : asset('img/libro1.jpeg') }}';
+    window.routes = {
+        favoritosObtener: '{{ route("favoritos.obtener") }}',
+        favoritoAgregar: '{{ route("favorito.agregar") }}',
+        favoritoEliminar: '{{ route("favorito.eliminar") }}',
+        cuponesCanjear: '{{ route("cupones.canjear") }}' 
+    };
     </script>
 
     <!-- Modal del Carrito -->
@@ -236,60 +237,56 @@
 
     <!-- Modal de Métodos de Pago -->
     <div class="modal-auth" id="pagoModal" style="display: none;">
-        <div class="modal-auth-content" style="max-width: 600px; width: 90%;">
-            <button class="modal-auth-close" onclick="cerrarPagoModal()">&times;</button>
-            <div class="modal-auth-icon">
-                <i class="fa fa-credit-card"></i>
-            </div>
-            <h2 class="modal-auth-title">Método de Pago</h2>
-            
-            <div id="pago-resumen" style="margin: 12px 0; padding: 12px; background: #f8f9fa; border-radius: 8px; font-size: 13px;">
-                <!-- Resumen del pedido -->
-            </div>
-            
-            <div class="metodos-pago" style="margin: 12px 0;">
-                <div class="metodo-pago-option" onclick="seleccionarMetodo(event, 'tarjeta')" style="cursor: pointer; padding: 10px 12px; border: 2px solid #ddd; border-radius: 8px; margin: 6px 0; display: flex; align-items: center;">
-                    <i class="fa fa-credit-card" style="font-size: 20px; margin-right: 12px; color: #007bff;"></i>
-                    <div>
-                        <strong style="font-size: 13px;">Tarjeta de Crédito/Débito</strong>
-                        <p style="margin: 2px 0 0 0; color: #666; font-size: 12px;">Visa, Mastercard</p>
-                    </div>
-                </div>
-                
-                <div class="metodo-pago-option" onclick="seleccionarMetodo(event, 'paypal')" style="cursor: pointer; padding: 10px 12px; border: 2px solid #ddd; border-radius: 8px; margin: 6px 0; display: flex; align-items: center;">
-                    <i class="fa fa-paypal" style="font-size: 20px; margin-right: 12px; color: #0070ba;"></i>
-                    <div>
-                        <strong style="font-size: 13px;">PayPal</strong>
-                        <p style="margin: 2px 0 0 0; color: #666; font-size: 12px;">Pago seguro</p>
-                    </div>
-                </div>
-                
-                <div class="metodo-pago-option" onclick="seleccionarMetodo(event, 'efectivo')" style="cursor: pointer; padding: 10px 12px; border: 2px solid #ddd; border-radius: 8px; margin: 6px 0; display: flex; align-items: center;">
-                    <i class="fa fa-money-bill-wave" style="font-size: 20px; margin-right: 12px; color: #28a745;"></i>
-                    <div>
-                        <strong style="font-size: 13px;">Efectivo</strong>
-                        <p style="margin: 2px 0 0 0; color: #666; font-size: 12px;">Pago en tienda</p>
-                    </div>
-                </div>
+    <div class="modal-auth-content" style="max-width: 600px; width: 90%;">
+        <button class="modal-auth-close" onclick="cerrarPagoModal()">&times;</button>
+        <div class="modal-auth-icon">
+            <i class="fa fa-shopping-bag"></i>
+        </div>
+        <h2 class="modal-auth-title">Resumen de tu Pedido</h2>
+        
+        <div id="pago-resumen" style="margin: 12px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 14px; border: 1px solid #eee;">
             </div>
 
-            <div id="paymentDetailsContainer" style="display:none; margin: 8px 0; padding: 12px; background: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%); border: 1px solid #d1dce8; border-radius: 12px; box-shadow: 0 8px 16px rgba(15, 23, 42, 0.04); min-height: 0; max-height: 140px; overflow-y: auto;">
-            </div>
-            <div style="margin-bottom: 10px; color: #0d6efd; font-weight: 600; display: flex; align-items: center; gap: 6px; font-size: 12px;">
-                <i class="fa fa-shield-alt"></i>
-                Tus datos se envían de forma segura.
-            </div>
-            <div class="modal-auth-actions">
-                <button onclick="volverAlCarrito()" class="modal-auth-btn modal-auth-btn-secondary">
-                    <i class="fa fa-arrow-left"></i> Volver al Carrito
+        <div class="pago-cupon-section" id="seccion-cupon-pago" style="margin: 15px 0; padding: 15px; background: #fffceb; border: 1px dashed #e67e22; border-radius: 8px; transition: all 0.3s ease;">
+            <p style="margin: 0 0 10px 0; font-size: 13px; font-weight: bold; color: #d35400;">
+                <i class="fa fa-ticket-alt"></i> ¿Tienes un código promocional?
+            </p>
+            <div id="cupon-input-group" style="display: flex; gap: 8px;">
+                <input type="text" id="cupon_codigo" placeholder="Ingresa tu código aquí" 
+                       style="flex: 1; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; text-transform: uppercase;">
+                <button onclick="validarCuponEnPago()" id="btn-aplicar-cupon"
+                        style="background: #e67e22; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600;">
+                    Validar
                 </button>
-                <button onclick="confirmarCompra()" class="modal-auth-btn modal-auth-btn-primary" id="btn-confirmar" disabled>
-                    <i class="fa fa-check"></i> Confirmar Compra
-                </button>
+            </div>
+            <div id="cupon-mensaje" style="margin-top: 10px; font-size: 13px; display: none; padding: 8px; border-radius: 4px;"></div>
+        </div>
+        
+        <div class="metodos-pago" style="margin-top: 20px; border-top: 1px solid #eee; pt: 15px;">
+            <p style="font-size: 14px; font-weight: bold; margin-bottom: 12px; color: #333;">Selecciona cómo quieres pagar:</p>
+            <div class="metodo-pago-option" onclick="seleccionarMetodo(event, 'tarjeta')" style="cursor: pointer; padding: 12px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center;">
+                <i class="fa fa-credit-card" style="font-size: 20px; margin-right: 12px; color: #007bff;"></i>
+                <strong style="font-size: 13px;">Tarjeta de Crédito / Débito</strong>
+            </div>
+            
+            <div class="metodo-pago-option" onclick="seleccionarMetodo(event, 'paypal')" style="cursor: pointer; padding: 12px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center;">
+                <i class="fa fa-paypal" style="font-size: 20px; margin-right: 12px; color: #0070ba;"></i>
+                <strong style="font-size: 13px;">PayPal</strong>
             </div>
         </div>
-    </div>
 
+        <div id="paymentDetailsContainer" style="display:none; margin: 10px 0;"></div>
+
+        <div class="modal-auth-actions" style="margin-top: 20px;">
+            <button onclick="volverAlCarrito()" class="modal-auth-btn modal-auth-btn-secondary">
+                <i class="fa fa-arrow-left"></i> Modificar Carrito
+            </button>
+            <button onclick="confirmarCompra()" class="modal-auth-btn modal-auth-btn-primary" id="btn-confirmar" disabled>
+                <i class="fa fa-check"></i> Finalizar y Pagar
+            </button>
+        </div>
+    </div>
+</div>
     <!-- Modal de Autenticación -->
     <div class="modal-auth" id="loginModal">
         <div class="modal-auth-content">

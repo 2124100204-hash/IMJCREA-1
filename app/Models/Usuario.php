@@ -46,6 +46,11 @@ class Usuario extends Authenticatable
         return $this->hasOne(Cliente::class, 'usuario_id');
     }
 
+    public function canjes()
+    {
+        return $this->hasMany(Canje::class, 'usuario_id');
+    }
+
     // Ajustado a la columna 'tipo_usuario' de tu base de datos
 
     public function esAdmin()

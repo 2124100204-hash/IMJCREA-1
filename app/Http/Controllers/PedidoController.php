@@ -298,6 +298,7 @@ class PedidoController extends Controller
 
             return response()->json([
                 'success' => true,
+                'total' => number_format($total, 2, '.', ''),
                 'message' => 'Compra procesada exitosamente. ' .
                             ($metodoPago === 'efectivo' ? 'Recuerda pasar por la tienda para recoger tu pedido y realizar el pago.' : 'Tu pedido ha sido confirmado.')
             ]);
