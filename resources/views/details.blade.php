@@ -270,7 +270,7 @@ window.isAuthenticated = {{ auth()->check() ? 'true' : 'false' }};
             </div>
             
             <div class="metodo-pago-option" onclick="seleccionarMetodo(event, 'paypal')" style="cursor: pointer; padding: 12px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 10px; display: flex; align-items: center;">
-                <i class="fa fa-paypal" style="font-size: 20px; margin-right: 12px; color: #0070ba;"></i>
+                <i class="fa fa-paypal" style="font-size: 10px; margin-right: 6px; color: #0070ba;"></i>
                 <strong style="font-size: 13px;">PayPal</strong>
             </div>
         </div>

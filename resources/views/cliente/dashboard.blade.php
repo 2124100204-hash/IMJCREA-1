@@ -198,8 +198,14 @@
                     </div>
                 @else
                     @foreach($pedidos as $pedido)
-                        <div class="pedido-card" data-pedido='@json(array_merge($pedido->toArray(), ["tiempo" => $pedido->created_at->diffInDays(now()) . " días"]))'>
-                            <div class="pedido-header">
+@php
+    $pedidoData = $pedido->toArray();
+    $pedidoData['tiempo'] = $pedido->created_at->diffInDays(now()) . ' días';
+    $pedidoData['cupon_codigo'] = $pedido->cupon_codigo;
+    $pedidoData['cupon_premio'] = $pedido->cupon_premio;
+@endphp
+<div class="pedido-card" data-pedido='@json($pedidoData)'>
+                    <div class="pedido-header">
                                 <span class="pedido-id">Pedido #{{ $pedido->id }}</span>
                                 <span class="pedido-estado estado-{{ $pedido->estado }}">{{ ucfirst($pedido->estado) }}</span>
                                 <span class="pedido-fecha">{{ $pedido->created_at->format('d/m/Y') }}</span>

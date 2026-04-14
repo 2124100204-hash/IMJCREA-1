@@ -93,35 +93,48 @@ public function handleGoogleCallback() {
             return redirect()->route('login')->withErrors(['mensaje' => 'Error con Google: ' . $e->getMessage()]);
         }
     }
-    public function registrar(Request $request)
-    {
-        $request->validate([
-            'name'      => 'required|string|max:255',
-            'email'     => 'required|string|email|max:255|unique:usuarios,email',
-            'user_code' => 'required|string|max:255|unique:usuarios,codigo',
-            'password'  => 'required|string|min:8|confirmed',
+ public function registrar(Request $request)
+{
+  $request->validate([
+    'name'     => 'required|string|max:255',
+    'email'    => 'required|string|email|max:255|unique:usuarios,email',
+    'password' => 'required|string|min:8|confirmed',
+], [
+    'name.required'             => 'El nombre es obligatorio.',
+    'name.max'                  => 'El nombre no puede superar 255 caracteres.',
+    'email.required'            => 'El correo electrónico es obligatorio.',
+    'email.email'               => 'El correo electrónico no tiene un formato válido.',
+    'email.unique'              => 'Este correo ya está registrado.',
+    'password.required'         => 'La contraseña es obligatoria.',
+    'password.min'              => 'La contraseña debe tener al menos 8 caracteres.',
+    'password.confirmed'        => 'Las contraseñas no coinciden.',
+]);
+    $usuario = DB::transaction(function () use ($request) {
+        // Generar username único a partir del email
+        $username = Str::slug(explode('@', $request->email)[0]);
+
+        $baseUsername = $username;
+        $count = 1;
+        while (Usuario::where('username', $username)->exists()) {
+            $username = $baseUsername . $count++;
+        }
+
+        $usuario = Usuario::create([
+            'nombre'   => $request->name,
+            'username' => $username,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+            'rol'      => 'cliente',
+            'activo'   => true,
         ]);
 
-        $usuario = DB::transaction(function () use ($request) {
-            $usuario = Usuario::create([
-                'name'      => $request->name,
-                'username'  => $request->user_code,
-                'email'     => $request->email,
-                'codigo'    => $request->user_code,
-                'password'  => Hash::make($request->password),
-                'rol'       => 'cliente',
-                'nombre'    => $request->name,
-                'activo'    => true,
-            ]);
+        $this->crearPerfilCliente($usuario, $request->email, $request->name);
 
-            $this->crearPerfilCliente($usuario, $request->email, $request->name);
+        return $usuario;
+    });
 
-            return $usuario;
-        });
-
-        return redirect()->route('login')->with('success', 'Registro exitoso. Ahora puedes iniciar sesión.');
-    }
-
+    return redirect()->route('login')->with('success', 'Registro exitoso. Ahora puedes iniciar sesión.');
+}
     private function crearPerfilCliente(Usuario $usuario, string $correo, string $nombre)
     {
         $cliente = Cliente::where('usuario_id', $usuario->id)->first();

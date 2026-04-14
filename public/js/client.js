@@ -153,15 +153,38 @@ function showToast(title, message, type = 'success') {
 function openPedidoDetallesModal(button) {
     const pedidoCard = button.closest('.pedido-card');
     const pedido = JSON.parse(pedidoCard.dataset.pedido);
-    
+
+    // Formatear tiempo transcurrido
+    const diasRaw = parseFloat(pedido.tiempo);
+    let tiempoTexto = '';
+    if (isNaN(diasRaw) || diasRaw < 1) {
+        tiempoTexto = 'Hoy';
+    } else if (diasRaw < 2) {
+        tiempoTexto = '1 día';
+    } else {
+        tiempoTexto = Math.floor(diasRaw) + ' días';
+    }
+
+    // Cupón
+    const cuponHtml = pedido.cupon_codigo
+        ? `<div style="background:#fff8e1;border:1px solid #f9a825;border-radius:8px;padding:10px 14px;margin-top:10px;display:flex;align-items:center;gap:10px;">
+                <span style="font-size:20px;">🎁</span>
+                <div>
+                    <p style="margin:0;font-size:13px;font-weight:bold;color:#e67e22;">Premio canjeado</p>
+                    <p style="margin:0;font-size:13px;color:#555;">Código <b>${pedido.cupon_codigo}</b>: ${pedido.cupon_premio || ''}</p>
+                </div>
+           </div>`
+        : '';
+
     const content = document.getElementById('pedidoDetallesContent');
     content.innerHTML = `
         <div class="pedido-detalle-header">
             <h3>Pedido #${pedido.id}</h3>
             <p><strong>Fecha:</strong> ${new Date(pedido.created_at).toLocaleDateString('es-ES')}</p>
             <p><strong>Estado:</strong> ${pedido.estado.charAt(0).toUpperCase() + pedido.estado.slice(1)}</p>
-            <p><strong>Tiempo transcurrido:</strong> ${pedido.tiempo}</p>
+            <p><strong>Tiempo transcurrido:</strong> ${tiempoTexto}</p>
             <p><strong>Total:</strong> $${parseFloat(pedido.total).toFixed(2)}</p>
+            ${cuponHtml}
         </div>
         <div class="pedido-detalle-libros">
             <h4>Libros:</h4>
@@ -172,12 +195,14 @@ function openPedidoDetallesModal(button) {
                     <p><strong>Cantidad:</strong> ${detalle.cantidad}</p>
                     <p><strong>Precio unitario:</strong> $${parseFloat(detalle.precio_unitario).toFixed(2)}</p>
                     <p><strong>Estado:</strong> ${detalle.estado.charAt(0).toUpperCase() + detalle.estado.slice(1)}</p>
-                    ${pedido.estado === 'entregado' && detalle.estado !== 'devuelto' ? `<button class="btn-devolver" onclick="openDevolucionModal(${detalle.id}, '${detalle.libro.titulo}', ${detalle.cantidad})">Devolver</button>` : ''}
+                    ${pedido.estado === 'entregado' && detalle.estado !== 'devuelto'
+                        ? `<button class="btn-devolver" onclick="openDevolucionModal(${detalle.id}, '${detalle.libro.titulo}', ${detalle.cantidad})">Devolver</button>`
+                        : ''}
                 </div>
             `).join('')}
         </div>
     `;
-    
+
     document.getElementById('pedidoDetallesModal').style.display = "flex";
 }
 

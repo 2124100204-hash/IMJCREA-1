@@ -281,6 +281,8 @@ class PedidoController extends Controller
                         'precio_unitario' => $item['precio'],
                         'estado' => 'pendiente',
                         'formato' => $item['formato'],
+                        'cupon_codigo' => $request->cupon['codigo'] ?? null,   
+                         'cupon_premio' => $request->cupon['premio'] ?? null,
                     ]);
 
                     // Reducir stock
